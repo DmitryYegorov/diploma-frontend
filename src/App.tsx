@@ -1,10 +1,10 @@
 import React from "react";
-import Header from "./components/Header";
+import AppRouter from "./router";
 
 function App() {
   return (
     <>
-      <Header />
+      <AppRouter />
     </>
   );
 }
