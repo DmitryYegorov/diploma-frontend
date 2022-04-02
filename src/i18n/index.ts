@@ -17,7 +17,7 @@ i18n
     fallbackLng: "en",
     debug: false,
     keySeparator: ".",
-    ns: ["common"],
+    ns: ["common", "auth"],
     defaultNS: "common",
     interpolation: {
       escapeValue: false,
