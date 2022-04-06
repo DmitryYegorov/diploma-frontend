@@ -19,7 +19,7 @@ type Props = {
   key: string;
   author: string;
   name: string;
-  createdAt: Date;
+  createdAt: string;
 };
 
 const SubjectItem: React.FC<Props> = ({ key, name, createdAt, author }) => {
@@ -27,7 +27,9 @@ const SubjectItem: React.FC<Props> = ({ key, name, createdAt, author }) => {
 
   return (
     <Paper elevation={3} className={classes.root}>
-      <Typography className={classes.padding}>{name}</Typography>
+      <Typography className={classes.name} component="div">
+        {name}
+      </Typography>
       <Divider />
       <List>
         <ListItem disablePadding>
@@ -49,6 +51,13 @@ const SubjectItem: React.FC<Props> = ({ key, name, createdAt, author }) => {
       </List>
     </Paper>
   );
+};
+
+SubjectItem.defaultProps = {
+  key: "none",
+  author: "none",
+  createdAt: "none",
+  name: "none",
 };
 
 export default SubjectItem;

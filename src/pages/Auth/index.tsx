@@ -1,5 +1,5 @@
-import React, { useEffect, useLayoutEffect } from "react";
-import { Paper, Stack } from "@mui/material";
+import React, { useLayoutEffect } from "react";
+import { Paper, Stack, Container } from "@mui/material";
 import FormInputText from "../../components/FormInputText";
 import ButtonSubmit from "../../components/ButtonSubmit";
 import { useTranslation } from "react-i18next";
@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import * as AuthTypes from "../../typings/auth";
 import { loginAction } from "../../store/reducers/Auth/ActionCreators";
+import Logo from "../../components/Logo";
 import { useNavigate } from "react-router-dom";
 
 const Auth: React.FC = () => {
@@ -28,28 +29,41 @@ const Auth: React.FC = () => {
     if (isAuthenticated) {
       navigate("/main");
     }
-  }, [dispatch, isAuthenticated]);
+  }, [isAuthenticated, dispatch]);
 
   return (
-    <Paper className={classes.root}>
-      <Stack spacing={3}>
-        <FormInputText
-          label={t("auth:emailLabel")}
-          name={"email"}
-          control={control}
-        />
-        <FormInputText
-          label={t("auth:passwordLabel")}
-          name={"password"}
-          type={"password"}
-          control={control}
-        />
-        <ButtonSubmit
-          label={t("auth:loginBtnLabel")}
-          onClick={handleSubmit(onSubmitLoginData)}
-        />
+    <Container>
+      <Stack
+        style={{
+          display: "flex",
+          alignItems: "center",
+          flexDirection: "column",
+          marginTop: "300px",
+        }}
+        spacing={5}
+      >
+        <Logo />
+        <Paper className={classes.root}>
+          <Stack spacing={3}>
+            <FormInputText
+              label={t("auth:emailLabel")}
+              name={"email"}
+              control={control}
+            />
+            <FormInputText
+              label={t("auth:passwordLabel")}
+              name={"password"}
+              type={"password"}
+              control={control}
+            />
+            <ButtonSubmit
+              label={t("auth:loginBtnLabel")}
+              onClick={handleSubmit(onSubmitLoginData)}
+            />
+          </Stack>
+        </Paper>
       </Stack>
-    </Paper>
+    </Container>
   );
 };
 
