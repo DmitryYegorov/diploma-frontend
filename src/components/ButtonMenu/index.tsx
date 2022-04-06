@@ -2,10 +2,13 @@ import React from "react";
 import { Button } from "@mui/material";
 import { useStyles } from "./styled";
 
-const ButtonMenu: (props: {
+type Props = {
   label: string;
   icon: React.ReactElement;
-}) => JSX.Element = (props) => {
+  onClick: () => void;
+};
+
+const ButtonMenu: React.FC<Props> = (props) => {
   const { label, icon } = props;
 
   const classes = useStyles();
@@ -16,6 +19,7 @@ const ButtonMenu: (props: {
       variant={"outlined"}
       startIcon={icon}
       size={"large"}
+      onClick={props.onClick}
     >
       {label}
     </Button>

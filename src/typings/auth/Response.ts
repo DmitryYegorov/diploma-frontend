@@ -1,5 +1,7 @@
+import { User } from "../user";
+
 export interface Login {
   access: string;
   refresh: string;
-  user: any;
+  user: User;
 }
