@@ -1,19 +1,22 @@
 import React, { useLayoutEffect } from "react";
 import {
+  Button,
   Container,
-  Table,
-  TableRow,
-  TableCell,
-  TableHead,
   Paper,
   Stack,
-  Button,
+  Table,
+  TableCell,
+  TableHead,
+  TableRow,
 } from "@mui/material";
-import { Create as CreateIcon, Add as AddIcon } from "@mui/icons-material";
+import { Add as AddIcon, Create as CreateIcon } from "@mui/icons-material";
 import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
 import { fetchScheduleTimesAction } from "../../../store/reducers/ScheduleTime/ActionCreators";
 import ClassCell from "./components/ClassCell";
 import { useStyles } from "./styled";
+import { useNavigate } from "react-router-dom";
+import { mapDateToTime } from "../../../helpers";
+import { WeekDay } from "../../../typings/enum";
 
 const Schedule: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -21,6 +24,7 @@ const Schedule: React.FC = () => {
     (state) => state.scheduleTime
   );
   const classes = useStyles();
+  const navigation = useNavigate();
 
   useLayoutEffect(() => {
     if (!isLoading) {
@@ -33,7 +37,11 @@ const Schedule: React.FC = () => {
       <Stack spacing={3}>
         <Paper elevation={3} className={classes.root}>
           <Stack spacing={1} direction="row">
-            <Button variant="contained" startIcon={<AddIcon />}>
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              onClick={() => navigation("create")}
+            >
               Создать
             </Button>
             <Button variant="contained" startIcon={<CreateIcon />}>
@@ -57,14 +65,16 @@ const Schedule: React.FC = () => {
             {list &&
               list.map((item) => (
                 <TableRow>
-                  <TableCell>{`${item.startTime} - ${item.endTime}`}</TableCell>
-                  <ClassCell />
-                  <ClassCell />
-                  <ClassCell />
-                  <ClassCell />
-                  <ClassCell />
-                  <ClassCell />
-                  <ClassCell />
+                  <TableCell>{`${mapDateToTime(
+                    new Date(item.startTime)
+                  )} - ${mapDateToTime(new Date(item.endTime))}`}</TableCell>
+                  <ClassCell weekDay={WeekDay.MONDAY} />
+                  <ClassCell weekDay={WeekDay.TUESDAY} />
+                  <ClassCell weekDay={WeekDay.WEDNESDAY} />
+                  <ClassCell weekDay={WeekDay.THURSDAY} />
+                  <ClassCell weekDay={WeekDay.FRIDAY} />
+                  <ClassCell weekDay={WeekDay.SATURDAY} />
+                  <ClassCell weekDay={WeekDay.SUNDAY} />
                 </TableRow>
               ))}
           </Table>
