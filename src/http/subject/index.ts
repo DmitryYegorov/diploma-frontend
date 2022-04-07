@@ -7,3 +7,7 @@ export const getSubjectsList = async () => {
 export const addNewSubject = async (data: any) => {
   return http.post("/subject", data);
 };
+
+// export const updateSubject = async (data: any) => {
+//   return http.post("/subject", data);
+// };

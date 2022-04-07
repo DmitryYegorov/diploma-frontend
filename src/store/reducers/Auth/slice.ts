@@ -11,9 +11,9 @@ interface AuthState {
 const initialState: AuthState = {
   isAuthenticated: false,
   data: {
-    user: {},
-    access: "",
-    refresh: "",
+    user: JSON.parse(localStorage.getItem("userData") || "null"),
+    access: localStorage.getItem("access") || "",
+    refresh: localStorage.getItem("refresh") || "",
   },
   error: "",
   isLoading: false,
@@ -34,6 +34,20 @@ export const authSlice = createSlice({
     },
     authFetch(state) {
       state.isLoading = true;
+    },
+    refreshTokenFetch(state) {
+      state.isLoading = true;
+    },
+    refreshTokenSuccess(state, action) {
+      state.data.access = action.payload.token;
+    },
+    refreshTokenFailed(state, action) {
+      state.error = action.payload.message;
+      state.data = { user: null, refresh: "", access: "" };
+      state.isAuthenticated = false;
+      localStorage.removeItem("userData");
+      localStorage.removeItem("access");
+      localStorage.removeItem("refresh");
     },
   },
   extraReducers: {},

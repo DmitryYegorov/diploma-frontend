@@ -7,6 +7,7 @@ type Props = {
   name: string;
   type?: "text" | "password";
   control: any;
+  value?: string;
 };
 
 const FormInputText: React.FC<Props> = (props) => {
@@ -19,8 +20,10 @@ const FormInputText: React.FC<Props> = (props) => {
           label={props.label}
           size={"small"}
           onChange={onChange}
-          value={value}
+          value={props.value}
           type={props.type}
+          focused={!!props.value}
+          fullWidth
         />
       )}
       name={props.name}

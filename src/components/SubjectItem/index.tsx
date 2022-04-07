@@ -20,14 +20,21 @@ type Props = {
   author: string;
   name: string;
   createdAt: string;
+  onClick?: () => void;
 };
 
-const SubjectItem: React.FC<Props> = ({ key, name, createdAt, author }) => {
+const SubjectItem: React.FC<Props> = ({
+  key,
+  name,
+  createdAt,
+  author,
+  onClick,
+}) => {
   const classes = useStyles();
 
   return (
-    <Paper elevation={3} className={classes.root}>
-      <Typography className={classes.name} component="div">
+    <Paper elevation={5} className={classes.root}>
+      <Typography className={classes.name} component="div" onClick={onClick}>
         {name}
       </Typography>
       <Divider />

@@ -8,3 +8,7 @@ export const login = async (
 ): Promise<AxiosResponse<AuthTypes.Response.Login>> => {
   return http.post("/auth/login", data);
 };
+
+export const refresh = async (access: string) => {
+  return http.post("/auth/refresh", { access });
+};

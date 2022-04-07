@@ -5,6 +5,7 @@ import { Box } from "@mui/material";
 
 import RequireAuth from "./RequireAuth";
 import { useAppSelector } from "../hooks/redux";
+import Header from "../components/Header";
 
 const AuthPage = lazy(() => import("../pages/Auth"));
 const MainPage = lazy(() => import("../pages/Main"));
@@ -14,6 +15,8 @@ const SubjectPage = lazy(() => import("../pages/Subject"));
 const AppRouter = (): JSX.Element => {
   const classes = useStyles();
   const { isAuthenticated } = useAppSelector((state) => state.auth);
+  const access = localStorage.getItem("access");
+  const userData = JSON.parse(localStorage.getItem("userData") || "null");
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -22,6 +25,7 @@ const AppRouter = (): JSX.Element => {
           path="/"
           element={
             <>
+              {!!userData && <Header />}
               <Box className={classes.main}>
                 <Outlet />
               </Box>
@@ -31,7 +35,7 @@ const AppRouter = (): JSX.Element => {
           <Route
             path="/*"
             element={
-              <RequireAuth isAuthenticated={isAuthenticated}>
+              <RequireAuth isAuthenticated={!!userData}>
                 <Routes>
                   <Route path={"main"} element={<MainPage />} />
                   <Route

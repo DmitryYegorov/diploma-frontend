@@ -1,6 +1,7 @@
 import { AppDispatch } from "../../index";
-import { getSubjectsList } from "../../../http/subject";
+import { addNewSubject, getSubjectsList } from "../../../http/subject";
 import { subjectSlice } from "./slice";
+import { Subject } from "../../../models/Subject";
 
 export const fetchSubjectsAction = () => async (dispatch: AppDispatch) => {
   try {
@@ -11,3 +12,15 @@ export const fetchSubjectsAction = () => async (dispatch: AppDispatch) => {
     dispatch(subjectSlice.actions.fetchSubjectsFailed(e));
   }
 };
+
+export const createSubjectAction =
+  (data: Subject) => async (dispatch: AppDispatch) => {
+    try {
+      dispatch(subjectSlice.actions.createSubjectFetch());
+      const res = await addNewSubject(data);
+      dispatch(subjectSlice.actions.createSubjectSuccess(res.data));
+      dispatch(fetchSubjectsAction());
+    } catch (e) {
+      dispatch(subjectSlice.actions.createSubjectFailed(e));
+    }
+  };

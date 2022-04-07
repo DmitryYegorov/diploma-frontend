@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { Subject } from "../../../models/Subject";
+import schedule from "../../../pages/LoadAccounting/Schedule";
 
 interface SubjectState {
   error: string;
@@ -15,32 +16,23 @@ const initialState: SubjectState = {
   isLoading: false,
 };
 
-export const subjectSlice = createSlice({
-  name: "subject",
+export const scheduleTime = createSlice({
+  name: "scheduleTime",
   initialState,
   reducers: {
-    fetchSubjectsSuccess(state, action) {
+    fetchScheduleTimeSuccess(state, action) {
       const { payload } = action;
       state.list = payload.list;
       state.total = payload.total;
     },
-    fetchSubjectsFailed(state, action) {
+    fetchScheduleTimeFailed(state, action) {
       state.error = action.payload.message;
     },
-    fetchSubjects(state) {
+    fetchScheduleTime(state) {
       state.isLoading = true;
-    },
-    createSubjectFetch(state) {
-      state.isLoading = true;
-    },
-    createSubjectSuccess(state, action) {
-      state.isLoading = false;
-    },
-    createSubjectFailed(state, action) {
-      state.error = action.payload.message;
     },
   },
   extraReducers: {},
 });
 
-export default subjectSlice.reducer;
+export default scheduleTime.reducer;
