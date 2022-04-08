@@ -20,6 +20,8 @@ import { Room } from "../../../../../models/Room";
 import { ClassType, Week } from "../../../../../typings/enum";
 import subject from "../../../../Subject";
 import { fetchGroupsWithFacultiesAction } from "../../../../../store/reducers/Group/ActionCreators";
+import { GroupWithFaculty } from "../../../../../models/Group";
+import { setClassToSchedule } from "../../../../../http/schedule";
 
 type Props = {
   weekDay: number;
@@ -66,13 +68,15 @@ const CellForm: React.FC<Props> = ({ weekDay, scheduleTime }) => {
     subject: string;
     week: Week;
     room: string;
-    classType: ClassType;
+    type: ClassType;
+    groups: Array<GroupWithFaculty>;
   }>({
     defaultValues: {
       week: Week.FIRST,
       subject: "",
       room: "",
-      classType: ClassType.LAB,
+      type: ClassType.LAB,
+      groups: [],
     },
   });
 
@@ -90,21 +94,24 @@ const CellForm: React.FC<Props> = ({ weekDay, scheduleTime }) => {
     register("subject", { required: true });
     register("week", { required: true });
     register("room", { required: true });
-    register("classType", { required: true });
+    register("type", { required: true });
+    register("groups", { required: true });
   }, [register]);
 
-  const setClass = (data: any) => {
+  const setClass = async (data: any) => {
     const roomId = rootState.room.list.find((r) => r.room === data.room)!.id;
 
-    // eslint-disable-next-line no-console
-    console.log({
+    const request = {
       subjectId: data.subject,
       week: data.week,
-      type: data.classType,
+      type: data.type,
       roomId,
       weekDay,
-      scheduleTime,
-    });
+      scheduleTimeId: scheduleTime,
+      groupIds: data.groups.map((g: GroupWithFaculty) => g.id),
+    };
+
+    await setClassToSchedule([request]);
   };
 
   return (
@@ -144,7 +151,7 @@ const CellForm: React.FC<Props> = ({ weekDay, scheduleTime }) => {
           <Select
             labelId="type"
             label="Type"
-            onChange={(e) => setValue("classType", e.target.value as ClassType)}
+            onChange={(e) => setValue("type", e.target.value as ClassType)}
           >
             {classTypeMapLabel.map((c) => (
               <MenuItem value={c.type}>{c.label}</MenuItem>
@@ -165,15 +172,14 @@ const CellForm: React.FC<Props> = ({ weekDay, scheduleTime }) => {
         <Autocomplete
           multiple
           id="tags-standard"
-          options={rootState.group.list.map((g) => g.label)}
+          options={rootState.group.list}
+          getOptionLabel={(option) => option.label}
           fullWidth
+          onChange={(event, newValue) => {
+            setValue("groups", newValue);
+          }}
           renderInput={(params) => (
-            <TextField
-              {...params}
-              variant="standard"
-              label="Multiple values"
-              placeholder="Favorites"
-            />
+            <TextField {...params} label="Группы" placeholder="Favorites" />
           )}
         />
       </Stack>

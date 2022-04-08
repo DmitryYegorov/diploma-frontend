@@ -4,14 +4,19 @@ import ModalWindow from "../../../../../components/ModalWindow";
 import { useStyles } from "./styled";
 import { useForm } from "react-hook-form";
 import ClassForm from "../ClassForm";
-import { WeekDay } from "../../../../../typings/enum";
+import { WeekDay, Week } from "../../../../../typings/enum";
 
 type Props = {
   weekDay: WeekDay;
   scheduleTimeId: string;
+  classValue?: any;
 };
 
-const ClassCell: React.FC<Props> = ({ weekDay, scheduleTimeId }) => {
+const ClassCell: React.FC<Props> = ({
+  weekDay,
+  scheduleTimeId,
+  classValue,
+}) => {
   const classes = useStyles();
 
   const { control } = useForm();
@@ -22,10 +27,24 @@ const ClassCell: React.FC<Props> = ({ weekDay, scheduleTimeId }) => {
       <TableCell
         className={classes.root}
         onClick={() => setOpenModal(!openModal)}
+        align="center"
+        style={{ width: 150 }}
       >
-        <Typography variant="body2">Теория Цвета (ФИТ-10)</Typography>
-        <Divider />
-        <Typography> - </Typography>
+        {!classValue?.[Week.WEEKLY] ? (
+          <>
+            <Typography variant="body2">
+              {classValue?.[Week.FIRST]?.[0]?.subject.shortName || "-"}
+            </Typography>
+            <Divider />
+            <Typography>
+              {classValue?.[Week.SECOND]?.[0]?.subject.shortName || "-"}
+            </Typography>
+          </>
+        ) : (
+          <Typography variant="body2">
+            {classValue?.[Week.WEEKLY]?.[0]?.subject.shortName || "-"}
+          </Typography>
+        )}
       </TableCell>
 
       <ModalWindow

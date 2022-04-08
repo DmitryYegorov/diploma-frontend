@@ -5,6 +5,7 @@ import scheduleTimeReducer from "./reducers/ScheduleTime/slice";
 import semesterReducer from "./reducers/Semester/slice";
 import roomReducer from "./reducers/Room/slice";
 import groupReducer from "./reducers/Group/slice";
+import scheduleClassesReducer from "./reducers/ScheduleClass/slice";
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
   semester: semesterReducer,
   room: roomReducer,
   group: groupReducer,
+  scheduleClasses: scheduleClassesReducer,
 });
 
 export const setupStore = () =>
