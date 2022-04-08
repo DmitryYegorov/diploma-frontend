@@ -68,13 +68,34 @@ const Schedule: React.FC = () => {
                   <TableCell>{`${mapDateToTime(
                     new Date(item.startTime)
                   )} - ${mapDateToTime(new Date(item.endTime))}`}</TableCell>
-                  <ClassCell weekDay={WeekDay.MONDAY} />
-                  <ClassCell weekDay={WeekDay.TUESDAY} />
-                  <ClassCell weekDay={WeekDay.WEDNESDAY} />
-                  <ClassCell weekDay={WeekDay.THURSDAY} />
-                  <ClassCell weekDay={WeekDay.FRIDAY} />
-                  <ClassCell weekDay={WeekDay.SATURDAY} />
-                  <ClassCell weekDay={WeekDay.SUNDAY} />
+                  <ClassCell
+                    weekDay={WeekDay.MONDAY}
+                    scheduleTimeId={item.id}
+                  />
+                  <ClassCell
+                    weekDay={WeekDay.TUESDAY}
+                    scheduleTimeId={item.id}
+                  />
+                  <ClassCell
+                    weekDay={WeekDay.WEDNESDAY}
+                    scheduleTimeId={item.id}
+                  />
+                  <ClassCell
+                    weekDay={WeekDay.THURSDAY}
+                    scheduleTimeId={item.id}
+                  />
+                  <ClassCell
+                    weekDay={WeekDay.FRIDAY}
+                    scheduleTimeId={item.id}
+                  />
+                  <ClassCell
+                    weekDay={WeekDay.SATURDAY}
+                    scheduleTimeId={item.id}
+                  />
+                  <ClassCell
+                    weekDay={WeekDay.SUNDAY}
+                    scheduleTimeId={item.id}
+                  />
                 </TableRow>
               ))}
           </Table>

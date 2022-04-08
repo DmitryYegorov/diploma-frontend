@@ -1,5 +1,6 @@
 import React from "react";
 import { TextField, Autocomplete } from "@mui/material";
+import { useForm, Controller } from "react-hook-form";
 
 type Props = {
   options: Array<any>;
@@ -17,7 +18,9 @@ const SelectAutoComplete: React.FC<Props> = ({ options, label, keyLabel }) => {
     <Autocomplete
       disablePortal
       options={mappedOptions}
-      renderInput={(params) => <TextField {...params} label={label} />}
+      renderInput={(params) => (
+        <TextField {...params} label={label} value={"wjqojqo"} />
+      )}
     />
   );
 };

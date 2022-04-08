@@ -8,9 +8,10 @@ import { WeekDay } from "../../../../../typings/enum";
 
 type Props = {
   weekDay: WeekDay;
+  scheduleTimeId: string;
 };
 
-const ClassCell: React.FC<Props> = ({ weekDay }) => {
+const ClassCell: React.FC<Props> = ({ weekDay, scheduleTimeId }) => {
   const classes = useStyles();
 
   const { control } = useForm();
@@ -32,7 +33,7 @@ const ClassCell: React.FC<Props> = ({ weekDay }) => {
         setOpen={() => setOpenModal(!open)}
         label={"Установка занятия"}
       >
-        <ClassForm />
+        <ClassForm weekDay={weekDay} scheduleTime={scheduleTimeId} />
       </ModalWindow>
     </>
   );
