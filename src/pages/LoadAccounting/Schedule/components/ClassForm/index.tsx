@@ -22,6 +22,7 @@ import subject from "../../../../Subject";
 import { fetchGroupsWithFacultiesAction } from "../../../../../store/reducers/Group/ActionCreators";
 import { GroupWithFaculty } from "../../../../../models/Group";
 import { setClassToSchedule } from "../../../../../http/schedule";
+import { fetchScheduleClassForAuthTeacherAction } from "../../../../../store/reducers/ScheduleClass/ActionCreators";
 
 type Props = {
   weekDay: number;
@@ -112,6 +113,7 @@ const CellForm: React.FC<Props> = ({ weekDay, scheduleTime }) => {
     };
 
     await setClassToSchedule([request]);
+    dispatch(fetchScheduleClassForAuthTeacherAction());
   };
 
   return (

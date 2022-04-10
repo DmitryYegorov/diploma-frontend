@@ -1,6 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Subject } from "../../../models/Subject";
-import schedule from "../../../pages/LoadAccounting/Schedule";
 
 interface ScheduleState {
   error: string;

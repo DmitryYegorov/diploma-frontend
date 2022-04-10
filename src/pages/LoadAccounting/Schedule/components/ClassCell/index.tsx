@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Divider, TableCell, Typography } from "@mui/material";
+import { Divider, Stack, TableCell, Typography } from "@mui/material";
 import ModalWindow from "../../../../../components/ModalWindow";
 import { useStyles } from "./styled";
 import { useForm } from "react-hook-form";
@@ -22,6 +22,56 @@ const ClassCell: React.FC<Props> = ({
   const { control } = useForm();
   const [openModal, setOpenModal] = useState(false);
 
+  const ClassWeekly = () => {
+    const weeklyClass = classValue?.[Week.WEEKLY]?.[0];
+
+    return (
+      <Typography variant="body1">
+        {weeklyClass?.subject.shortName || "-"}
+        <Stack>
+          {weeklyClass &&
+            weeklyClass.groups.map((g: string) => (
+              <Typography variant="body2">{g}</Typography>
+            ))}
+        </Stack>
+      </Typography>
+    );
+  };
+
+  const ClassNonWeekly = () => {
+    const firstWeek = classValue?.[Week.FIRST]?.[0];
+    const secondWeek = classValue?.[Week.SECOND]?.[0];
+
+    return (
+      <Stack spacing={2}>
+        <Typography variant="body1">
+          {(firstWeek?.subject &&
+            `${firstWeek?.subject?.shortName} (${firstWeek.room})`) ||
+            "-"}
+
+          <Stack>
+            {firstWeek?.groups?.length &&
+              firstWeek.groups.map((g: string) => (
+                <Typography variant="body2">{g}</Typography>
+              ))}
+          </Stack>
+        </Typography>
+        <Typography variant="body1">
+          {(secondWeek?.subject &&
+            `${secondWeek?.subject?.shortName} (${secondWeek.room})`) ||
+            "-"}
+
+          <Stack>
+            {secondWeek?.groups?.length &&
+              secondWeek.groups.map((g: string) => (
+                <Typography variant="body2">{g}</Typography>
+              ))}
+          </Stack>
+        </Typography>
+      </Stack>
+    );
+  };
+
   return (
     <>
       <TableCell
@@ -30,21 +80,7 @@ const ClassCell: React.FC<Props> = ({
         align="center"
         style={{ width: 150 }}
       >
-        {!classValue?.[Week.WEEKLY] ? (
-          <>
-            <Typography variant="body2">
-              {classValue?.[Week.FIRST]?.[0]?.subject.shortName || "-"}
-            </Typography>
-            <Divider />
-            <Typography>
-              {classValue?.[Week.SECOND]?.[0]?.subject.shortName || "-"}
-            </Typography>
-          </>
-        ) : (
-          <Typography variant="body2">
-            {classValue?.[Week.WEEKLY]?.[0]?.subject.shortName || "-"}
-          </Typography>
-        )}
+        {!classValue?.[Week.WEEKLY] ? <ClassNonWeekly /> : <ClassWeekly />}
       </TableCell>
 
       <ModalWindow
