@@ -4,5 +4,6 @@
   "profileSetting": "Настройки аккаунта",
   "scheduleControl": "Управление расписанием",
   "calendar": "Календарь",
-  "subjectControl": "Управление список дисциплин"
+  "subjectControl": "Управление список дисциплин",
+  "usersList": "Список пользователей"
 }

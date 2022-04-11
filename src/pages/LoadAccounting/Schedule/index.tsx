@@ -8,6 +8,7 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  Typography,
 } from "@mui/material";
 import { Add as AddIcon, Create as CreateIcon } from "@mui/icons-material";
 import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
@@ -41,18 +42,9 @@ const Schedule: React.FC = () => {
     <Container>
       <Stack spacing={3}>
         <Paper elevation={3} className={classes.root}>
-          <Stack spacing={1} direction="row">
-            <Button
-              variant="contained"
-              startIcon={<AddIcon />}
-              onClick={() => navigation("create")}
-            >
-              Создать
-            </Button>
-            <Button variant="contained" startIcon={<CreateIcon />}>
-              Редактировать
-            </Button>
-          </Stack>
+          <Typography variant="h6">
+            Моё расписание на текущий семестр
+          </Typography>
         </Paper>
 
         <Paper elevation={3}>

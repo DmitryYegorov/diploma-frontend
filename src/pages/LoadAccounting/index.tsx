@@ -6,6 +6,10 @@ const ScheduleCreatePage = lazy(
   () => import("../LoadAccounting/Schedule/CreateSchedule")
 );
 const CalendarPage = lazy(() => import("../LoadAccounting/Calendar"));
+const UsersPage = lazy(() => import("../../pages/LoadAccounting/Users/List"));
+const UserDashboard = lazy(
+  () => import("../../pages/LoadAccounting/Users/Dashboard")
+);
 
 const LoadAccountingPage = () => {
   return (
@@ -18,6 +22,15 @@ const LoadAccountingPage = () => {
           <Routes>
             <Route index element={<SchedulePage />} />
             <Route path={"create"} element={<ScheduleCreatePage />} />
+          </Routes>
+        }
+      />
+      <Route
+        path={"users/*"}
+        element={
+          <Routes>
+            <Route index element={<UsersPage />} />
+            <Route path={":id"} element={<UserDashboard />} />
           </Routes>
         }
       />

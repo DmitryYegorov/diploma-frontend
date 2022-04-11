@@ -39,6 +39,7 @@ const DrawerComponent: React.FC<DrawerProps> = ({
     { key: "main", label: t("common:mainMenu"), tooltip: "main" },
     { key: "subject", label: t("common:subjectControl"), tooltip: "" },
     { key: "schedule", label: t("common:scheduleControl"), tooltip: "" },
+    { key: "usersList", label: t("common:usersList"), tooltip: "" },
   ];
 
   const {
