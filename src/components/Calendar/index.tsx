@@ -56,14 +56,13 @@ const Appointment: React.FC<Appointments.AppointmentProps> = (props) => {
 
 const Calendar: React.FC<Props> = ({ appointments }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const { addedAppointment, editingAppointment, appointmentChanges, list } =
-    useAppSelector((state) => state.event);
+  const { list } = useAppSelector((state) => state.event);
 
   const dispatch = useAppDispatch();
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  const commitChanges = async (data: ChangeSet, appointmentsList) => {
+  const commitChanges = async (data: ChangeSet) => {
     const { added, changed, deleted } = data;
 
     if (added) {
@@ -75,9 +74,6 @@ const Calendar: React.FC<Props> = ({ appointments }) => {
     if (changed) {
       const eventId = Object.keys(changed)[0];
       const changedData = changed[eventId];
-      const appointment = appointmentsList.find(
-        (app: any) => app.id === eventId
-      );
       const res = await updateEvent(changedData, eventId);
 
       // eslint-disable-next-line no-console
@@ -96,9 +92,7 @@ const Calendar: React.FC<Props> = ({ appointments }) => {
           currentDate={currentDate}
           onCurrentDateChange={(date) => setCurrentDate(date)}
         />
-        <EditingState
-          onCommitChanges={(data) => commitChanges(data, appointments)}
-        />
+        <EditingState onCommitChanges={commitChanges} />
         <EditRecurrenceMenu />
         <MonthView />
         <WeekView startDayHour={8} endDayHour={21} />
