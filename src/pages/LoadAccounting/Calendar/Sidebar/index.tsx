@@ -1,11 +1,20 @@
 import React from "react";
-import { Box } from "@mui/material";
+import { Box, Paper, Stack } from "@mui/material";
+import { useStyles } from "./styled";
 
 const Sidebar: React.FC = () => {
+  const classes = useStyles();
+
   return (
-    <Box>
-      <h1>Sidebar</h1>
-    </Box>
+    <Paper className={classes.padding}>
+      <Stack spacing={3}>
+        <h1>Sidebar</h1>
+        <h1>Sidebar</h1>
+        <h1>Sidebar</h1>
+        <h1>Sidebar</h1>
+        <h1>Sidebar</h1>
+      </Stack>
+    </Paper>
   );
 };
 

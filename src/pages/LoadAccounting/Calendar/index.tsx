@@ -16,11 +16,11 @@ const CalendarPage: React.FC = () => {
     if (!list.length) {
       dispatch(fetchAllEventsAction());
     }
-  });
+  }, [dispatch]);
 
   return (
     <Container>
-      <Calendar appointments={list} />
+      <Calendar appointments={list} />;
     </Container>
   );
 };

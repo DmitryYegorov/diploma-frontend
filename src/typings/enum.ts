@@ -4,9 +4,6 @@ export enum UserRole {
 }
 
 export enum EventType {
-  LECTION = "LECTION",
-  PRACTICE_CLASS = "PRACTICE_CLASS",
-  LAB = "LAB",
   CONSULTATION = "CONSULTATION",
   COURSE_WORK = "COURSE_WORK",
   EXAM = "EXAM",

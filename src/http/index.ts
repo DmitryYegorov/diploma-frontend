@@ -36,11 +36,14 @@ http.interceptors.response.use(
           localStorage.setItem("access", res.data.token);
           http.defaults.headers.common.Authorization = `Bearer ${res.data.token}`;
           return http(originalRequest);
+        })
+        .catch((e) => {
+          alert(e.message);
+          localStorage.removeItem("access");
+          localStorage.removeItem("refresh");
+          localStorage.removeItem("userData");
         });
     }
-    localStorage.removeItem("access");
-    localStorage.removeItem("refresh");
-    localStorage.removeItem("userData");
     return Promise.reject(error);
   }
 );
