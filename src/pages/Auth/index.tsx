@@ -1,5 +1,5 @@
 import React, { useLayoutEffect } from "react";
-import { Paper, Stack, Container } from "@mui/material";
+import { Paper, Stack, Container, Alert } from "@mui/material";
 import FormInputText from "../../components/FormInputText";
 import ButtonSubmit from "../../components/ButtonSubmit";
 import { useTranslation } from "react-i18next";
@@ -16,7 +16,9 @@ const Auth: React.FC = () => {
   const classes = useStyles();
   const { handleSubmit, control } = useForm<AuthTypes.Request.Login>();
   const dispatch = useAppDispatch();
-  const { isAuthenticated } = useAppSelector((state) => state.auth);
+  const { isAuthenticated, error, isLoading } = useAppSelector(
+    (state) => state.auth
+  );
   const navigate = useNavigate();
 
   const { t } = useTranslation(["common", "auth"], { i18n });
@@ -38,13 +40,14 @@ const Auth: React.FC = () => {
           display: "flex",
           alignItems: "center",
           flexDirection: "column",
-          marginTop: "300px",
+          marginTop: "200px",
         }}
         spacing={5}
       >
         <Logo />
         <Paper className={classes.root}>
           <Stack spacing={3}>
+            {error && !isLoading && <Alert severity="error">{error}</Alert>}
             <FormInputText
               label={t("auth:emailLabel")}
               name={"email"}

@@ -2,13 +2,13 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
-  Drawer,
-  ListItemText,
-  List,
   Divider,
-  Tooltip,
+  Drawer,
   IconButton,
+  List,
   ListItem,
+  ListItemText,
+  Tooltip,
 } from "@material-ui/core";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 
@@ -17,6 +17,7 @@ import { useStyles } from "./styled";
 import { useAppSelector } from "../../hooks/redux";
 
 import i18n from "../../i18n";
+import { UserRole } from "../../typings/enum";
 
 type DrawerProps = {
   open: boolean;
@@ -33,18 +34,22 @@ const DrawerComponent: React.FC<DrawerProps> = ({
   const navigate = useNavigate();
 
   const { t } = useTranslation(["common"], { i18n });
+  const {
+    data: { user },
+  } = useAppSelector((state) => state.auth);
 
   const menu = [
     { key: "calendar", label: t("common:calendar"), tooltip: "calendar" },
     { key: "main", label: t("common:mainMenu"), tooltip: "main" },
-    { key: "subject", label: t("common:subjectControl"), tooltip: "" },
     { key: "schedule", label: t("common:scheduleControl"), tooltip: "" },
-    { key: "usersList", label: t("common:usersList"), tooltip: "" },
   ];
 
-  const {
-    data: { user },
-  } = useAppSelector((state) => state.auth);
+  if ([UserRole.ADMIN, UserRole.MANAGER].includes(user.role as UserRole)) {
+    menu.push(
+      { key: "usersList", label: t("common:usersList"), tooltip: "" },
+      { key: "subject", label: t("common:subjectControl"), tooltip: "" }
+    );
+  }
 
   const handleNavigation = (key: string) => {
     const path = MENU_LINKS[key];

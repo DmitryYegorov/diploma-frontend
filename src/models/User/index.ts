@@ -4,7 +4,7 @@ export enum Roles {
 }
 
 export interface User {
-  id?: string;
+  id: string;
   email?: string;
   firstName?: string;
   middleName?: string | null;

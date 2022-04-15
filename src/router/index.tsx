@@ -1,13 +1,14 @@
 import React, { lazy, Suspense } from "react";
 import { Routes, Route, Outlet } from "react-router-dom";
 import { useStyles } from "./styled";
-import { Box } from "@mui/material";
+import { Box, CircularProgress, Container } from "@mui/material";
 
 import RequireAuth from "./RequireAuth";
 import { useAppSelector } from "../hooks/redux";
 import Header from "../components/Header";
 
 const AuthPage = lazy(() => import("../pages/Auth"));
+const RegisterPage = lazy(() => import("../pages/Register"));
 const MainPage = lazy(() => import("../pages/Main"));
 const LoadAccountingPage = lazy(() => import("../pages/LoadAccounting"));
 const SubjectPage = lazy(() => import("../pages/Subject"));
@@ -19,7 +20,19 @@ const AppRouter = (): JSX.Element => {
   const userData = JSON.parse(localStorage.getItem("userData") || "null");
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense
+      fallback={
+        <Container
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+          }}
+        >
+          <CircularProgress />
+        </Container>
+      }
+    >
       <Routes>
         <Route
           path="/"
@@ -53,6 +66,7 @@ const AppRouter = (): JSX.Element => {
         </Route>
 
         <Route path="auth/*" element={<AuthPage />} />
+        <Route path="register" element={<RegisterPage />} />
       </Routes>
     </Suspense>
   );

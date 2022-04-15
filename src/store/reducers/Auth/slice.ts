@@ -3,19 +3,21 @@ import { createSlice } from "@reduxjs/toolkit";
 
 interface AuthState {
   isAuthenticated: boolean;
-  error: string;
+  registerSuccess: boolean;
+  error: null | string;
   data: { user: User; access: string; refresh: string };
   isLoading: boolean;
 }
 
 const initialState: AuthState = {
   isAuthenticated: false,
+  registerSuccess: false,
   data: {
     user: JSON.parse(localStorage.getItem("userData") || "null"),
     access: localStorage.getItem("access") || "",
     refresh: localStorage.getItem("refresh") || "",
   },
-  error: "",
+  error: null,
   isLoading: false,
 };
 
@@ -28,26 +30,30 @@ export const authSlice = createSlice({
       state.data.user = action.payload.user;
       state.data.refresh = action.payload.refresh;
       state.data.access = action.payload.access;
+      state.isLoading = false;
     },
     authFailed(state, action) {
       state.error = action.payload.message;
+      state.isLoading = false;
     },
     authFetch(state) {
       state.isLoading = true;
+      state.data.user = null;
     },
-    refreshTokenFetch(state) {
-      state.isLoading = true;
-    },
-    refreshTokenSuccess(state, action) {
-      state.data.access = action.payload.token;
-    },
-    refreshTokenFailed(state, action) {
-      state.error = action.payload.message;
-      state.data = { user: null, refresh: "", access: "" };
+
+    registerSuccess(state, action) {
       state.isAuthenticated = false;
-      localStorage.removeItem("userData");
-      localStorage.removeItem("access");
-      localStorage.removeItem("refresh");
+      state.registerSuccess = true;
+      state.error = "";
+      state.isLoading = false;
+    },
+    registerFailed(state, action) {
+      state.error = action.payload.message;
+      state.isLoading = false;
+    },
+    registerFetch(state) {
+      state.isLoading = true;
+      state.error = "";
     },
   },
   extraReducers: {},

@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig, AxiosError } from "axios";
 
 const baseURL = "http://localhost:5000";
 
@@ -37,8 +37,7 @@ http.interceptors.response.use(
           http.defaults.headers.common.Authorization = `Bearer ${res.data.token}`;
           return http(originalRequest);
         })
-        .catch((e) => {
-          alert(e.message);
+        .catch(() => {
           localStorage.removeItem("access");
           localStorage.removeItem("refresh");
           localStorage.removeItem("userData");
