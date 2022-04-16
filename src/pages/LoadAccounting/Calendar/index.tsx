@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { Box, Container, Grid, Stack } from "@mui/material";
 import Calendar from "../../../components/Calendar";
-import Sidebar from "./Sidebar";
 import { useStyles } from "./styled";
 import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
 import { fetchAllEventsAction } from "../../../store/reducers/Event/ActionCreators";
@@ -13,14 +12,14 @@ const CalendarPage: React.FC = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (!list.length) {
+    if (!isLoading) {
       dispatch(fetchAllEventsAction());
     }
   }, [dispatch]);
 
   return (
     <Container>
-      <Calendar appointments={list} />;
+      <Calendar appointments={list} />
     </Container>
   );
 };

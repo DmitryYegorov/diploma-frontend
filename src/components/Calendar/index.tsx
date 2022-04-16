@@ -28,6 +28,7 @@ import AppointmentFormLayout from "./AppointmentFormLayout";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { addNewEvent, removeEvent, updateEvent } from "../../http/event";
 import { fetchAllEventsAction } from "../../store/reducers/Event/ActionCreators";
+import { Typography } from "@mui/material";
 
 type Props = {
   appointments: { title: string; startDate: Date; endDate: Date }[];
@@ -44,7 +45,6 @@ const Appointment: React.FC<Appointments.AppointmentProps> = (props) => {
             }
           : {}
       }
-      onClick={props.data.isScheduleClass ? undefined : props.onClick}
       onDoubleClick={
         props.data.isScheduleClass ? undefined : props.onDoubleClick
       }
@@ -105,7 +105,7 @@ const Calendar: React.FC<Props> = ({ appointments }) => {
         <TodayButton />
 
         <Appointments appointmentComponent={Appointment} />
-        <AppointmentTooltip showOpenButton showDeleteButton showCloseButton />
+        <AppointmentTooltip showCloseButton />
         <AppointmentForm basicLayoutComponent={AppointmentFormLayout} />
       </Scheduler>
     </Paper>

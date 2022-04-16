@@ -2,9 +2,6 @@ import React, { lazy } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 
 const SchedulePage = lazy(() => import("../LoadAccounting/Schedule"));
-const ScheduleCreatePage = lazy(
-  () => import("../LoadAccounting/Schedule/CreateSchedule")
-);
 const CalendarPage = lazy(() => import("../LoadAccounting/Calendar"));
 const UsersPage = lazy(() => import("../../pages/LoadAccounting/Users/List"));
 const UserDashboard = lazy(
@@ -21,7 +18,6 @@ const LoadAccountingPage = () => {
         element={
           <Routes>
             <Route index element={<SchedulePage />} />
-            <Route path={"create"} element={<ScheduleCreatePage />} />
           </Routes>
         }
       />

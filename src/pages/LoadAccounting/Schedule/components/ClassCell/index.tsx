@@ -5,6 +5,7 @@ import { useStyles } from "./styled";
 import { useForm } from "react-hook-form";
 import ClassForm from "../ClassForm";
 import { WeekDay, Week } from "../../../../../typings/enum";
+import ConfirmationDialog from "../../../../../components/ConfirmationDialog";
 
 type Props = {
   weekDay: WeekDay;
@@ -27,7 +28,9 @@ const ClassCell: React.FC<Props> = ({
 
     return (
       <Typography variant="body1">
-        {weeklyClass?.subject.shortName || "-"}
+        {(weeklyClass?.subject &&
+          `${weeklyClass?.subject?.shortName} (${weeklyClass.room})`) ||
+          "-"}
         <Stack>
           {weeklyClass &&
             weeklyClass.groups.map((g: string) => (
@@ -44,10 +47,11 @@ const ClassCell: React.FC<Props> = ({
 
     return (
       <Stack spacing={2}>
-        <Typography variant="body1">
+        <Typography variant="body2">
           {(firstWeek?.subject &&
-            `${firstWeek?.subject?.shortName} (${firstWeek.room})`) ||
-            "-"}
+            `| ${firstWeek?.subject?.shortName} (${firstWeek.room})`) || (
+            <div style={{ display: "none" }} />
+          )}
 
           <Stack>
             {firstWeek?.groups?.length &&
@@ -56,10 +60,9 @@ const ClassCell: React.FC<Props> = ({
               ))}
           </Stack>
         </Typography>
-        <Typography variant="body1">
-          {(secondWeek?.subject &&
-            `${secondWeek?.subject?.shortName} (${secondWeek.room})`) ||
-            "-"}
+        <Typography variant="body2" style={{ borderTop: "1px solid #ececec" }}>
+          {secondWeek?.subject &&
+            `|| ${secondWeek?.subject?.shortName} (${secondWeek.room})`}
 
           <Stack>
             {secondWeek?.groups?.length &&
@@ -78,7 +81,7 @@ const ClassCell: React.FC<Props> = ({
         className={classes.root}
         onClick={() => setOpenModal(!openModal)}
         align="center"
-        style={{ width: 150 }}
+        style={{ width: 150, border: "1px solid #ececec" }}
       >
         {!classValue?.[Week.WEEKLY] ? <ClassNonWeekly /> : <ClassWeekly />}
       </TableCell>
@@ -88,7 +91,19 @@ const ClassCell: React.FC<Props> = ({
         setOpen={() => setOpenModal(!open)}
         label={"Установка занятия"}
       >
-        <ClassForm weekDay={weekDay} scheduleTime={scheduleTimeId} />
+        <>
+          {classValue?.[Week.WEEKLY] ||
+          classValue?.[Week.SECOND] ||
+          classValue?.[Week.FIRST] ? (
+            <ConfirmationDialog
+              title={"Внимание"}
+              content={
+                "При установке занятия в занятую ячейку данные из нее будут стерты и записаны новые!"
+              }
+            />
+          ) : null}
+          <ClassForm weekDay={weekDay} scheduleTime={scheduleTimeId} />
+        </>
       </ModalWindow>
     </>
   );

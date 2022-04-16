@@ -54,7 +54,7 @@ const classTypeMapLabel = [
     label: "Лекция",
   },
   {
-    type: ClassType.LAB,
+    type: ClassType.PRACTICE_CLASS,
     label: "Практическое занятие",
   },
 ];
@@ -112,7 +112,7 @@ const CellForm: React.FC<Props> = ({ weekDay, scheduleTime }) => {
       groupIds: data.groups.map((g: GroupWithFaculty) => g.id),
     };
 
-    await setClassToSchedule([request]);
+    await setClassToSchedule(request);
     dispatch(fetchScheduleClassForAuthTeacherAction());
   };
 
