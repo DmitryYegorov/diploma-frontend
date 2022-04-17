@@ -36,7 +36,7 @@ const UsersPage: React.FC = () => {
     if (id && !isLoading) {
       dispatch(fetchOneUserAction(id));
     }
-  }, [dispatch]);
+  }, [id, dispatch]);
 
   const isActive = selectedUser && selectedUser.isActive;
 
