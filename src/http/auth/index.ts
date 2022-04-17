@@ -1,11 +1,15 @@
 import { http } from "../index";
 import * as AuthTypes from "../../typings/auth";
 import { AxiosResponse } from "axios";
-import { FieldValues, UnpackNestedValue } from "react-hook-form";
-import { Login } from "../../typings/auth/Request";
+import { UnpackNestedValue } from "react-hook-form";
 
 export const login = async (
-  data: UnpackNestedValue<FieldValues>
-): Promise<AxiosResponse<Login>> => {
-  return http.post("/auth/login", data);
+  data: UnpackNestedValue<AuthTypes.Request.Login>
+): Promise<AxiosResponse<AuthTypes.Response.Login>> =>
+  http.post("/auth/login", data);
+
+export const refresh = async (access: string) => {
+  return http.post("/auth/refresh", { access });
 };
+
+export const register = async (data: any) => http.post("/auth/register", data);

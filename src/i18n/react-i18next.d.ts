@@ -1,11 +1,17 @@
 import "react-i18next";
 
-import common from "../../public/locales/en/common.json";
-import auth from "../../public/locales/en/auth.json";
+import common from "../../public/locales/ru/common.json";
+import auth from "../../public/locales/ru/auth.json";
+import weekDay from "../../public/locales/ru/weekDay.json";
+import role from "../../public/locales/ru/role.json";
+import event from "../../public/locales/ru/event.json";
 
 declare module "react-i18next" {
   interface Resources {
     common: typeof common;
     auth: typeof auth;
+    weekDay: typeof weekDay;
+    role: typeof role;
+    event: typeof event;
   }
 }

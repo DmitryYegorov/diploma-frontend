@@ -2,15 +2,27 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 import { Provider } from "react-redux";
-import configureStore from "./redux/configureStore";
+import { setupStore } from "./store";
 import reportWebVitals from "./reportWebVitals";
+import { createTheme, ThemeProvider } from "@mui/material";
 
-const store = configureStore();
+const store = setupStore();
+
+const customTheme = createTheme({
+  palette: {
+    primary: {
+      main: "#1976d2",
+      contrastText: "white",
+    },
+  },
+});
 
 ReactDOM.render(
   <Provider store={store}>
     <React.StrictMode>
-      <App />
+      <ThemeProvider theme={customTheme}>
+        <App />
+      </ThemeProvider>
     </React.StrictMode>
   </Provider>,
   document.getElementById("root")

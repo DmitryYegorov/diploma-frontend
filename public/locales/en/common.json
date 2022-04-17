@@ -1,3 +1,9 @@
 {
-  "eDepartment": "E-Department"
+  "eDepartment": "E-Department",
+  "mainMenu": "Main view",
+  "profileSetting": "Account setting",
+  "scheduleControl": "Schedule control",
+  "calendar": "Calendar",
+  "subjectControl": "Subjects control",
+  "usersList": "Employees List"
 }

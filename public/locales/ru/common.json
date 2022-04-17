@@ -1,3 +1,9 @@
 {
-  "eDepartment": "Е-Кафедра"
+  "eDepartment": "Е-Кафедра",
+  "mainMenu": "Стартовая страница",
+  "profileSetting": "Настройки аккаунта",
+  "scheduleControl": "Управление расписанием",
+  "calendar": "Календарь",
+  "subjectControl": "Управление список дисциплин",
+  "usersList": "Список пользователей"
 }
