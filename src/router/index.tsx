@@ -12,6 +12,9 @@ const RegisterPage = lazy(() => import("../pages/Register"));
 const MainPage = lazy(() => import("../pages/Main"));
 const LoadAccountingPage = lazy(() => import("../pages/LoadAccounting"));
 const SubjectPage = lazy(() => import("../pages/Subject"));
+const ScheduleDepartmentPage = lazy(
+  () => import("../pages/ScheduleDepartment")
+);
 
 const AppRouter = (): JSX.Element => {
   const classes = useStyles();
@@ -55,7 +58,10 @@ const AppRouter = (): JSX.Element => {
                     path={"load-accounting/*"}
                     element={<LoadAccountingPage />}
                   />
-
+                  <Route
+                    path={"schedule/:semesterId"}
+                    element={<ScheduleDepartmentPage />}
+                  />
                   <Route path={"subject"} element={<SubjectPage />} />
                 </Routes>
               </RequireAuth>

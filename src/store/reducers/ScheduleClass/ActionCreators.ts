@@ -1,5 +1,8 @@
 import { AppDispatch } from "../../index";
-import { getScheduleClassesForAuthenticatedTeacher } from "../../../http/schedule";
+import {
+  getScheduleClassesForAuthenticatedTeacher,
+  getScheduleDepartmentBySemester,
+} from "../../../http/schedule";
 import { scheduleClasses } from "./slice";
 
 export const fetchScheduleClassForAuthTeacherAction =
@@ -10,5 +13,22 @@ export const fetchScheduleClassForAuthTeacherAction =
       dispatch(scheduleClasses.actions.fetchScheduleClassesSuccess(res.data));
     } catch (e) {
       dispatch(scheduleClasses.actions.fetchScheduleClassesFailed(e));
+    }
+  };
+
+export const fetchScheduleClassofDepartmentBySemesterIdAction =
+  (semesterId: string) => async (dispatch: AppDispatch) => {
+    try {
+      dispatch(scheduleClasses.actions.fetchScheduleClassesOfDepartment());
+      const res = await getScheduleDepartmentBySemester(semesterId);
+      dispatch(
+        scheduleClasses.actions.fetchScheduleClassesOfDepartmentSuccess(
+          res.data
+        )
+      );
+    } catch (e) {
+      dispatch(
+        scheduleClasses.actions.fetchScheduleClassesOfDepartmentFailed(e)
+      );
     }
   };

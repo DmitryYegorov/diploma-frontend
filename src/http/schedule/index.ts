@@ -16,3 +16,6 @@ export const setClassToSchedule = async (data: {
 export const getScheduleClassesForAuthenticatedTeacher = async (): Promise<
   AxiosResponse<Record<string, string | number | undefined>>
 > => http.get("/schedule");
+
+export const getScheduleDepartmentBySemester = async (semesterId: string) =>
+  http.get(`/schedule/department/${semesterId}`);
