@@ -26,14 +26,14 @@ import i18n from "../../../../i18n";
 
 const UsersPage: React.FC = () => {
   const classes = useStyles();
-  const { selectedUser, isLoading } = useAppSelector((state) => state.user);
+  const { selectedUser } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
   const { id } = useParams();
 
   const { t } = useTranslation(["auth", "role"], { i18n });
 
   useLayoutEffect(() => {
-    if (id && !isLoading) {
+    if (id) {
       dispatch(fetchOneUserAction(id));
     }
   }, [id, dispatch]);

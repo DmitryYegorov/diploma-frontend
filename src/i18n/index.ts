@@ -17,7 +17,7 @@ i18n
     fallbackLng: "en",
     debug: false,
     keySeparator: ".",
-    ns: ["common", "auth", "weekDays", "role", "event"],
+    ns: ["common", "auth", "weekDays", "role", "event", "calendar"],
     defaultNS: "common",
     interpolation: {
       escapeValue: false,

@@ -12,7 +12,7 @@ interface SemesterState {
 
 const initialState: SemesterState = {
   data: {
-    id: "",
+    id: "60308ce8-7d29-4c3d-b695-3597a8ca6d64",
     startDate: new Date(),
     endDate: new Date(),
   },

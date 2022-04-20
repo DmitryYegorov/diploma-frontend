@@ -19,16 +19,9 @@ import {
 import { useNavigate } from "react-router-dom";
 
 const UsersList: React.FC = () => {
-  const rootState = useAppSelector((state) => state);
-  const dispatch = useAppDispatch();
+  const userStore = useAppSelector((state) => state.user);
 
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!rootState.user.isLoading) {
-      dispatch(fetchUsersAction());
-    }
-  }, [dispatch]);
 
   return (
     <Container>
@@ -49,7 +42,7 @@ const UsersList: React.FC = () => {
             </TableCell>
           </TableHead>
           <TableBody>
-            {rootState.user.list.map((u) => (
+            {userStore.list.map((u) => (
               <TableRow>
                 <TableCell>
                   <Typography variant="body2">{`${u.firstName} ${u.middleName} ${u.lastName}`}</Typography>
