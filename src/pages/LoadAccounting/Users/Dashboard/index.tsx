@@ -32,7 +32,7 @@ const UsersPage: React.FC = () => {
 
   const { t } = useTranslation(["auth", "role"], { i18n });
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (id) {
       dispatch(fetchOneUserAction(id));
     }

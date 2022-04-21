@@ -5,11 +5,11 @@ import { useAppDispatch } from "./hooks/redux";
 import { fetchUsersAction } from "./store/reducers/Users/ActionCreators";
 
 function App() {
-  const dispatch = useAppDispatch();
-
-  React.useEffect(() => {
-    dispatch(fetchUsersAction());
-  }, [dispatch]);
+  // const dispatch = useAppDispatch();
+  //
+  // React.useEffect(() => {
+  //   dispatch(fetchUsersAction());
+  // }, [dispatch]);
 
   return (
     <>

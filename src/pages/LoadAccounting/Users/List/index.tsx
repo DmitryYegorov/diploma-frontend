@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   IconButton,
@@ -17,9 +17,15 @@ import {
   ManageAccounts as ManageAccountsIcon,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { getUsersList } from "../../../../http/user";
+import { User } from "../../../../models/User";
 
 const UsersList: React.FC = () => {
-  const userStore = useAppSelector((state) => state.user);
+  const [users, setUsers] = useState<User[]>([]);
+
+  React.useEffect(() => {
+    getUsersList().then((res) => setUsers(res.data.list));
+  });
 
   const navigate = useNavigate();
 
@@ -42,7 +48,7 @@ const UsersList: React.FC = () => {
             </TableCell>
           </TableHead>
           <TableBody>
-            {userStore.list.map((u) => (
+            {users.map((u) => (
               <TableRow>
                 <TableCell>
                   <Typography variant="body2">{`${u.firstName} ${u.middleName} ${u.lastName}`}</Typography>
