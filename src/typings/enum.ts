@@ -37,3 +37,9 @@ export enum WeekDay {
   FRIDAY,
   SATURDAY,
 }
+
+export enum ScheduleClassUpdateType {
+  SWAP = "SWAP",
+  CANCEL = "CANCEL",
+  RESCHEDULED = "RESCHEDULED",
+}

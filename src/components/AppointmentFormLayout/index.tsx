@@ -1,11 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
   Box,
-  Grid,
-  Paper,
   Stack,
   TextField,
   Typography,
@@ -23,6 +21,7 @@ import Button from "@mui/material/Button";
 import { useForm } from "react-hook-form";
 import { SwapTeacher } from "../../typings/schedule";
 import { swapTeacher } from "../../http/schedule";
+import RescheduleClassForm from "../RescheduleClassForm";
 
 const RecurrenceLayoutComponent: React.FC<
   AppointmentForm.RecurrenceLayoutProps
@@ -76,7 +75,7 @@ const AppointmentFormLayout: React.FC<AppointmentForm.BasicLayoutProps> = (
 ) => {
   const dispatch = useAppDispatch();
   const userStore = useAppSelector((state) => state.user);
-  const { t } = useTranslation(["calendar"], { i18n });
+  const { t } = useTranslation(["calendar", "common"], { i18n });
 
   // eslint-disable-next-line no-console
   console.log(props.appointmentData);
@@ -135,11 +134,16 @@ const AppointmentFormLayout: React.FC<AppointmentForm.BasicLayoutProps> = (
               variant="contained"
               onClick={handleSubmit(swapTeacherRequest)}
             >
-              Send
+              {t("common:send")}
             </Button>
           </Stack>
         </AccordionDetails>
       </Accordion>
+
+      <RescheduleClassForm
+        scheduleClassId={props.appointmentData.id!}
+        classDate={props.appointmentData.startDate}
+      />
     </AppointmentForm.BasicLayout>
   );
 };

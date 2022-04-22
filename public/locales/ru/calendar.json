@@ -5,5 +5,9 @@
   "notesLabel": "Примечание",
   "commitCommand": "Сохранить",
   "moreInfo": "Детали",
-  "swapSetup": "Заменить преподавателя"
+  "swapSetup": "Заменить преподавателя",
+  "rescheduleClassAccordionLabel": "Перенести занятие/Отменить",
+  "rescheduleClass": "Перенести",
+  "cancelClass": "Отменить",
+  "selectDateLabel": "Выберите дату"
 }

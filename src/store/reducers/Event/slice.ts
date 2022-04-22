@@ -8,6 +8,7 @@ interface EventState {
   editingAppointment: any | undefined;
   total: number;
   isLoading: boolean;
+  selectedDate: Date;
 }
 
 const initialState: EventState = {
@@ -18,6 +19,7 @@ const initialState: EventState = {
   editingAppointment: {},
   error: "",
   isLoading: false,
+  selectedDate: new Date(),
 };
 
 export const eventsSlice = createSlice({
@@ -46,6 +48,10 @@ export const eventsSlice = createSlice({
     },
     changeEditingAppointment(state, action) {
       state.editingAppointment = action.payload.editingAppointment;
+    },
+
+    getPeriod(state, action) {
+      state.selectedDate = action.payload;
     },
   },
   extraReducers: {},

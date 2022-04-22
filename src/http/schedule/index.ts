@@ -1,6 +1,6 @@
 import { http } from "../index";
 import { AxiosResponse } from "axios";
-import { SwapTeacher } from "../../typings/schedule";
+import { SwapTeacher, UpdateScheduleClass } from "../../typings/schedule";
 
 export const getTimes = async () => http.get("/schedule/time");
 
@@ -26,3 +26,6 @@ export const getScheduleClassesToCalendar = async () =>
 
 export const swapTeacher = async (data: SwapTeacher) =>
   http.post("/schedule/swap-teacher", data);
+
+export const updateScheduleClass = async (data: UpdateScheduleClass) =>
+  http.post("/schedule/update", data);
