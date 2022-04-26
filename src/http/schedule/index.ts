@@ -1,6 +1,7 @@
 import { http } from "../index";
 import { AxiosResponse } from "axios";
 import { SwapTeacher, UpdateScheduleClass } from "../../typings/schedule";
+import moment from "moment";
 
 export const getTimes = async () => http.get("/schedule/time");
 
@@ -29,3 +30,14 @@ export const swapTeacher = async (data: SwapTeacher) =>
 
 export const updateScheduleClass = async (data: UpdateScheduleClass) =>
   http.post("/schedule/update", data);
+
+export const getUpdatesLogs = async (
+  startDate: Date | string,
+  endDate: Date | string
+) => {
+  return http.get(
+    `schedule/updates-list?startDate=${moment(startDate).format(
+      "yyyy-MM-DD"
+    )}&endDate=${moment(endDate).format("yyyy-MM-DD")}`
+  );
+};

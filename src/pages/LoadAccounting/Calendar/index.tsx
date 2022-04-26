@@ -7,7 +7,7 @@ import { useStyles } from "./styled";
 import { useTranslation } from "react-i18next";
 
 import i18n from "../../../i18n";
-import { AppointmentMarkColors } from "../../../components/Appointment/styled";
+import { AppointmentMarkColors } from "../../../helpers";
 import { ClassType } from "../../../typings/enum";
 import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
 

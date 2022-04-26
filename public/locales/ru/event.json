@@ -11,5 +11,11 @@
   "LAB": "Лабораторная работа",
   "LECTION": "Лекция",
   "PRACTICE_CLASS": "Практическое занятие",
-  "SWAP": "Замена"
+  "SWAP": "Замена",
+  "rescheduledTo": "Перенос на",
+  "updateType": {
+    "CANCEL": "Отмена",
+    "RESCHEDULED": "Перенос",
+    "SWAP": "Замена"
+  }
 }

@@ -1,5 +1,7 @@
 import moment from "moment";
-import { ClassType, EventType } from "../typings/enum";
+import { ClassType, EventType, ScheduleClassUpdateType } from "../typings/enum";
+import { deepOrange, cyan, blue, lightBlue } from "@mui/material/colors";
+
 export const mapDateToTime = (date: Date): string => {
   return moment(date).format("HH:mm");
 };
@@ -20,3 +22,10 @@ export const classTypes = [
   { value: ClassType.LECTION, label: "Лекция" },
   { value: ClassType.PRACTICE_CLASS, label: "Практ. занятие" },
 ];
+
+export const AppointmentMarkColors: Record<string, string> = {
+  [ClassType.LAB]: blue[500],
+  [ClassType.LECTION]: lightBlue[800],
+  [ClassType.PRACTICE_CLASS]: cyan[800],
+  [ScheduleClassUpdateType.SWAP]: deepOrange[500],
+};
