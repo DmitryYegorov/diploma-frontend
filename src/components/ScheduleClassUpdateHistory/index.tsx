@@ -5,6 +5,9 @@ import { useStyles } from "./styled";
 import { getUpdatesLogs } from "../../http/schedule";
 import { useAsyncFn } from "react-use";
 import Item from "./Item";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux";
+import { getPeriod } from "../../store/reducers/Event/slice";
+import { fetchUpdateLogsAction } from "../../store/reducers/Event/ActionCreators";
 
 type Props = {
   selectedDate: Date;
@@ -12,20 +15,16 @@ type Props = {
 
 const ScheduleClassUpdateHistory: React.FC<Props> = ({ selectedDate }) => {
   const classes = useStyles();
+  const dispatch = useAppDispatch();
 
-  const [log, setLog] = useState([]);
+  const { updateLogs } = useAppSelector((state) => state.event);
 
   const startDate = moment(selectedDate).startOf("month").toDate();
   const endDate = moment(selectedDate).endOf("month").toDate();
 
-  const [{ value, loading }, fetchLogs] = useAsyncFn(async () => {
-    const res = await getUpdatesLogs(startDate, endDate);
-    return res.data;
-  }, [startDate, endDate]);
-
   useEffect(() => {
-    fetchLogs();
-  }, []);
+    dispatch(fetchUpdateLogsAction(startDate, endDate));
+  }, [dispatch, selectedDate]);
 
   return (
     <Paper className={classes.padding}>
@@ -33,9 +32,8 @@ const ScheduleClassUpdateHistory: React.FC<Props> = ({ selectedDate }) => {
       <Typography variant="h6">
         {startDate.toLocaleDateString()} - {endDate.toLocaleDateString()}
       </Typography>
-      {!loading &&
-        value &&
-        value.map((item: any) => (
+      {!!updateLogs.length &&
+        updateLogs.map((item: any) => (
           <Item
             type={item.type}
             scheduleClass={item.scheduleClass}

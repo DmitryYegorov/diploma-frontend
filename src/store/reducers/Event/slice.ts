@@ -3,9 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 interface EventState {
   error: string;
   list: Array<any>;
-  addedAppointment: any;
-  appointmentChanges: any;
-  editingAppointment: any | undefined;
+  updateLogs: Array<any>;
   total: number;
   isLoading: boolean;
   selectedDate: Date;
@@ -14,9 +12,7 @@ interface EventState {
 const initialState: EventState = {
   list: [],
   total: 0,
-  addedAppointment: {},
-  appointmentChanges: {},
-  editingAppointment: {},
+  updateLogs: [],
   error: "",
   isLoading: false,
   selectedDate: new Date(),
@@ -40,14 +36,10 @@ export const eventsSlice = createSlice({
       state.isLoading = true;
     },
 
-    changeAddedAppointment(state, action) {
-      state.addedAppointment = action.payload.addedAppointment;
-    },
-    changeAppointmentChanges(state, action) {
-      state.appointmentChanges = action.payload.appointmentChanges;
-    },
-    changeEditingAppointment(state, action) {
-      state.editingAppointment = action.payload.editingAppointment;
+    fetchUpdateLogsSuccess(state, action) {
+      const { payload } = action;
+      state.updateLogs = payload;
+      state.isLoading = false;
     },
 
     getPeriod(state, action) {
@@ -57,10 +49,6 @@ export const eventsSlice = createSlice({
   extraReducers: {},
 });
 
-export const {
-  changeAddedAppointment,
-  changeAppointmentChanges,
-  changeEditingAppointment,
-} = eventsSlice.actions;
+export const { getPeriod } = eventsSlice.actions;
 
 export default eventsSlice.reducer;

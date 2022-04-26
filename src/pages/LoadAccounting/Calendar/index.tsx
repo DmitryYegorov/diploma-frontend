@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box, Grid, Paper, Stack, Typography } from "@mui/material";
 import Calendar from "../../../components/Calendar";
 import ScheduleClassUpdateHistory from "../../../components/ScheduleClassUpdateHistory";
@@ -10,6 +10,7 @@ import i18n from "../../../i18n";
 import { AppointmentMarkColors } from "../../../helpers";
 import { ClassType } from "../../../typings/enum";
 import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
+import { getPeriod } from "../../../store/reducers/Event/slice";
 
 const CalendarPage: React.FC = () => {
   const classes = useStyles();
@@ -17,6 +18,10 @@ const CalendarPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const { selectedDate } = useAppSelector((state) => state.event);
   const { t } = useTranslation(["event"], { i18n });
+
+  useEffect(() => {
+    dispatch(getPeriod(selectedDate));
+  }, [dispatch]);
 
   return (
     <Grid container spacing={3}>

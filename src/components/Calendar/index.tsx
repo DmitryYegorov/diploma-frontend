@@ -24,6 +24,7 @@ import CustomAppointmentForm from "../AppointmentFormLayout";
 import Appointment from "../Appointment";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { fetchAllClassesAction } from "../../store/reducers/Event/ActionCreators";
+import { getPeriod } from "../../store/reducers/Event/slice";
 
 const TimeTableCell: React.FC<MonthView.TimeTableCellProps> = (props) => (
   <MonthView.TimeTableCell {...props} onDoubleClick={() => undefined} />
@@ -43,7 +44,10 @@ const Calendar: React.FC = () => {
       <Scheduler data={list} locale="ru-RU">
         <ViewState
           currentDate={currentDate}
-          onCurrentDateChange={(date) => setCurrentDate(date)}
+          onCurrentDateChange={(date) => {
+            dispatch(getPeriod(date));
+            setCurrentDate(date);
+          }}
         />
         <MonthView timeTableCellComponent={TimeTableCell} />
         <WeekView startDayHour={8} endDayHour={21} />
