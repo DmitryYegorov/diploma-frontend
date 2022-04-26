@@ -22,6 +22,7 @@ import {
 import { useState } from "react";
 import CustomAppointmentForm from "../AppointmentFormLayout";
 import Appointment from "../Appointment";
+import AppointmentTooltipLayout from "../AppointmentTooltip";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { fetchAllClassesAction } from "../../store/reducers/Event/ActionCreators";
 import { getPeriod } from "../../store/reducers/Event/slice";
@@ -60,7 +61,11 @@ const Calendar: React.FC = () => {
         <TodayButton />
 
         <Appointments appointmentComponent={Appointment} />
-        <AppointmentTooltip showCloseButton showOpenButton />
+        <AppointmentTooltip
+          showCloseButton
+          showOpenButton
+          layoutComponent={AppointmentTooltipLayout}
+        />
         <CustomAppointmentForm />
       </Scheduler>
     </Paper>
