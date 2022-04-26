@@ -7,5 +7,15 @@
 "DIPLOMA_DESIGN": "Дипломное проектирование",
 "POSTGRADUATE": "Магистранты" ,
 "PRACTICE": "Практика" ,
-"STATE_EXAMINATION_BOARD": "ГЭК"
+"STATE_EXAMINATION_BOARD": "ГЭК",
+  "LAB": "Лабораторная работа",
+  "LECTION": "Лекция",
+  "PRACTICE_CLASS": "Практическое занятие",
+  "SWAP": "Замена",
+  "rescheduledTo": "Перенос на",
+  "updateType": {
+    "CANCEL": "Отмена",
+    "RESCHEDULED": "Перенос",
+    "SWAP": "Замена"
+  }
 }

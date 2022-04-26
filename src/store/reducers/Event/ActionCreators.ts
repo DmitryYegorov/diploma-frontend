@@ -1,27 +1,28 @@
 import { AppDispatch } from "../../index";
-import { getAllEvents, addNewEvent } from "../../../http/event";
 import { eventsSlice } from "./slice";
+import {
+  getScheduleClassesToCalendar,
+  getUpdatesLogs,
+} from "../../../http/schedule";
 
-export const fetchAllEventsAction = () => async (dispatch: AppDispatch) => {
+export const fetchAllClassesAction = () => async (dispatch: AppDispatch) => {
   try {
     dispatch(eventsSlice.actions.fetchEvents());
-    const res = await getAllEvents();
+    const res = await getScheduleClassesToCalendar();
     dispatch(eventsSlice.actions.fetchEventsSuccess(res.data));
   } catch (e) {
     dispatch(eventsSlice.actions.fetchEventsFailed(e));
   }
 };
 
-export const addNewAppointmentAction =
-  (data: any) => async (dispatch: AppDispatch) => {
-    await addNewEvent(data);
-    dispatch(fetchAllEventsAction());
+export const fetchUpdateLogsAction =
+  (startDate: Date | string, endDate: Date | string) =>
+  async (dispatch: AppDispatch) => {
+    try {
+      dispatch(eventsSlice.actions.fetchEvents());
+      const res = await getUpdatesLogs(startDate, endDate);
+      dispatch(eventsSlice.actions.fetchUpdateLogsSuccess(res.data));
+    } catch (e) {
+      dispatch(eventsSlice.actions.fetchEventsFailed(e));
+    }
   };
-
-export const changeAppointmentChangesAction =
-  (data: any) => (dispatch: AppDispatch) =>
-    dispatch(eventsSlice.actions.changeAppointmentChanges(data));
-
-export const changeEditingAppointmentAction =
-  (data: any) => (dispatch: AppDispatch) =>
-    dispatch(eventsSlice.actions.changeEditingAppointment(data));

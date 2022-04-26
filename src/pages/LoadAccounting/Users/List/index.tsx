@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   IconButton,
@@ -17,18 +17,17 @@ import {
   ManageAccounts as ManageAccountsIcon,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { getUsersList } from "../../../../http/user";
+import { User } from "../../../../models/User";
 
 const UsersList: React.FC = () => {
-  const rootState = useAppSelector((state) => state);
-  const dispatch = useAppDispatch();
+  const [users, setUsers] = useState<User[]>([]);
+
+  React.useEffect(() => {
+    getUsersList().then((res) => setUsers(res.data.list));
+  });
 
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!rootState.user.isLoading) {
-      dispatch(fetchUsersAction());
-    }
-  }, [dispatch]);
 
   return (
     <Container>
@@ -49,7 +48,7 @@ const UsersList: React.FC = () => {
             </TableCell>
           </TableHead>
           <TableBody>
-            {rootState.user.list.map((u) => (
+            {users.map((u) => (
               <TableRow>
                 <TableCell>
                   <Typography variant="body2">{`${u.firstName} ${u.middleName} ${u.lastName}`}</Typography>

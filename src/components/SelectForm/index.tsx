@@ -22,7 +22,11 @@ const SelectForm: React.FC<Props> = ({
   return (
     <FormControl fullWidth style={{ marginTop: 20 }}>
       <InputLabel id="select-label">{label}</InputLabel>
-      <Select value={value || ""} onChange={handleChange} label={label}>
+      <Select
+        {...(value ? { value } : {})}
+        onChange={handleChange}
+        label={label}
+      >
         {options.map((option) => (
           <MenuItem value={option.value}>{option.label}</MenuItem>
         ))}
