@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Box, Grid, Paper, Stack, Typography } from "@mui/material";
+import { Container, Grid, Paper, Stack, Typography } from "@mui/material";
 import Calendar from "../../../components/Calendar";
 import ScheduleClassUpdateHistory from "../../../components/ScheduleClassUpdateHistory";
 import { Circle } from "@mui/icons-material";
@@ -24,42 +24,46 @@ const CalendarPage: React.FC = () => {
   }, [dispatch]);
 
   return (
-    <Grid container spacing={3}>
-      <Grid item xs={12}>
-        <Paper className={classes.padding}>
-          <Stack direction="row" spacing={3}>
-            <Stack spacing={0.5} direction="row">
-              <Circle style={{ color: AppointmentMarkColors[ClassType.LAB] }} />
-              <Typography> {t("event:LAB")}</Typography>
+    <Container>
+      <Grid container spacing={3}>
+        <Grid item xs={12}>
+          <Paper className={classes.padding}>
+            <Stack direction="row" spacing={3}>
+              <Stack spacing={0.5} direction="row">
+                <Circle
+                  style={{ color: AppointmentMarkColors[ClassType.LAB] }}
+                />
+                <Typography> {t("event:LAB")}</Typography>
+              </Stack>
+              <Stack spacing={0.5} direction="row">
+                <Circle
+                  style={{ color: AppointmentMarkColors[ClassType.LECTION] }}
+                />
+                <Typography> {t("event:LECTION")}</Typography>
+              </Stack>
+              <Stack spacing={0.5} direction="row">
+                <Circle
+                  style={{
+                    color: AppointmentMarkColors[ClassType.PRACTICE_CLASS],
+                  }}
+                />
+                <Typography> {t("event:PRACTICE_CLASS")}</Typography>
+              </Stack>
+              <Stack spacing={0.5} direction="row">
+                <Circle style={{ color: AppointmentMarkColors.SWAP }} />
+                <Typography> {t("event:SWAP")}</Typography>
+              </Stack>
             </Stack>
-            <Stack spacing={0.5} direction="row">
-              <Circle
-                style={{ color: AppointmentMarkColors[ClassType.LECTION] }}
-              />
-              <Typography> {t("event:LECTION")}</Typography>
-            </Stack>
-            <Stack spacing={0.5} direction="row">
-              <Circle
-                style={{
-                  color: AppointmentMarkColors[ClassType.PRACTICE_CLASS],
-                }}
-              />
-              <Typography> {t("event:PRACTICE_CLASS")}</Typography>
-            </Stack>
-            <Stack spacing={0.5} direction="row">
-              <Circle style={{ color: AppointmentMarkColors.SWAP }} />
-              <Typography> {t("event:SWAP")}</Typography>
-            </Stack>
-          </Stack>
-        </Paper>
+          </Paper>
+        </Grid>
+        <Grid item xs={8}>
+          <Calendar />
+        </Grid>
+        <Grid item xs={4}>
+          <ScheduleClassUpdateHistory selectedDate={selectedDate} />
+        </Grid>
       </Grid>
-      <Grid item xs={8}>
-        <Calendar />
-      </Grid>
-      <Grid item xs={4}>
-        <ScheduleClassUpdateHistory selectedDate={selectedDate} />
-      </Grid>
-    </Grid>
+    </Container>
   );
 };
 

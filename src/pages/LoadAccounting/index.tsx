@@ -7,6 +7,7 @@ const UsersPage = lazy(() => import("../../pages/LoadAccounting/Users/List"));
 const UserDashboard = lazy(
   () => import("../../pages/LoadAccounting/Users/Dashboard")
 );
+const StudyLoadPage = lazy(() => import("../../pages/StudyLoad"));
 
 const LoadAccountingPage = () => {
   return (
@@ -27,6 +28,14 @@ const LoadAccountingPage = () => {
           <Routes>
             <Route index element={<UsersPage />} />
             <Route path={":id"} element={<UserDashboard />} />
+          </Routes>
+        }
+      />
+      <Route
+        path={"study-load/*"}
+        element={
+          <Routes>
+            <Route index element={<StudyLoadPage />} />
           </Routes>
         }
       />

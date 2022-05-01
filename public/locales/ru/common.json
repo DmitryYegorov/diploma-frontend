@@ -2,12 +2,21 @@
   "eDepartment": "Е-Кафедра",
   "mainMenu": "Стартовая страница",
   "profileSetting": "Настройки аккаунта",
-  "scheduleControl": "Управление расписанием",
+  "scheduleControl": "Расписание",
   "calendar": "Календарь",
-  "subjectControl": "Управление список дисциплин",
-  "usersList": "Список пользователей",
+  "subjectControl": "Дисциплины",
+  "usersList": "Пользователи",
   "type": "Тип",
   "send": "Отправить",
   "reason": "Причина",
-  "teacher": "Преподаватель"
+  "teacher": "Преподаватель",
+  "studyLoading": {
+    "label": "Учебная нагрузка",
+    "createNew": "Создать"
+  },
+  "actions": "Действия",
+  "rowsPerPage": "Кол-во на странице",
+  "title": "Название",
+  "createdAt": "Дата создания",
+  "nameLabel": "Название"
 }

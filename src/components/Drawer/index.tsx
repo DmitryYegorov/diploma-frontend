@@ -42,6 +42,7 @@ const DrawerComponent: React.FC<DrawerProps> = ({
     { key: "calendar", label: t("common:calendar"), tooltip: "calendar" },
     { key: "main", label: t("common:mainMenu"), tooltip: "main" },
     { key: "schedule", label: t("common:scheduleControl"), tooltip: "" },
+    { key: "studyLoad", label: t("common:studyLoading.label"), tooltip: "" },
   ];
 
   if ([UserRole.ADMIN, UserRole.MANAGER].includes(user.role as UserRole)) {

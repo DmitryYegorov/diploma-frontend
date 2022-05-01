@@ -9,5 +9,7 @@
   "rescheduleClassAccordionLabel": "Перенести занятие/Отменить",
   "rescheduleClass": "Перенести",
   "cancelClass": "Отменить",
-  "selectDateLabel": "Выберите дату"
+  "selectDateLabel": "Выберите дату",
+  "startDate": "Начало",
+  "endDate": "Конец"
 }

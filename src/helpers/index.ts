@@ -1,6 +1,19 @@
 import moment from "moment";
-import { ClassType, EventType, ScheduleClassUpdateType } from "../typings/enum";
-import { deepOrange, cyan, blue, lightBlue } from "@mui/material/colors";
+import {
+  ClassType,
+  EventType,
+  ReportState,
+  ScheduleClassUpdateType,
+} from "../typings/enum";
+import {
+  deepOrange,
+  cyan,
+  blue,
+  lightBlue,
+  blueGrey,
+  green,
+} from "@mui/material/colors";
+import { ModeEdit, Done, DoneAll } from "@mui/icons-material";
 
 export const mapDateToTime = (date: Date): string => {
   return moment(date).format("HH:mm");
@@ -28,4 +41,10 @@ export const AppointmentMarkColors: Record<string, string> = {
   [ClassType.LECTION]: lightBlue[800],
   [ClassType.PRACTICE_CLASS]: cyan[800],
   [ScheduleClassUpdateType.SWAP]: deepOrange[500],
+};
+
+export const ReportStateConfig: Record<ReportState, any> = {
+  [ReportState.DRAFT]: { color: blueGrey[600] },
+  [ReportState.SENT]: { color: deepOrange[700] },
+  [ReportState.APPROVED]: { color: green[800] },
 };
