@@ -9,16 +9,19 @@ import {
 } from "@mui/material";
 import { Add as AddIcon } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
-import i18n from "../../../i18n";
+import i18n from "../../i18n";
 import { useStyles } from "./styled";
-import { Column, Direction } from "../../../components/TableList/typings";
-import TableList from "../../../components/TableList";
-import ModalWindow from "../../../components/ModalWindow";
-import CreateReportForm from "../components/CreateReportForm";
-import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
-import { fetchReportsAction } from "../../../store/reducers/Report/ActionCreators";
-import { ReportStateConfig } from "../../../helpers";
-import { ReportState } from "../../../typings/enum";
+import { Column, Direction } from "../../components/TableList/typings";
+import TableList from "../../components/TableList";
+import ModalWindow from "../../components/ModalWindow";
+import CreateReportForm from "../../components/CreateReportForm";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux";
+import {
+  clearLoadedClassesAction,
+  fetchReportsAction,
+} from "../../store/reducers/Report/ActionCreators";
+import { ReportStateConfig } from "../../helpers";
+import { ReportState } from "../../typings/enum";
 import { useNavigate } from "react-router-dom";
 
 const ReportsList: React.FC = () => {
@@ -93,7 +96,7 @@ const ReportsList: React.FC = () => {
                 ),
               };
             })}
-            onRowClick={(id) => navigate(`${id}`)}
+            onRowClick={(id) => navigate(id)}
             sort={Direction.ASC}
             setSort={() => undefined}
             columns={columns}

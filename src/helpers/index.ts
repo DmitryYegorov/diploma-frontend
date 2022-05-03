@@ -13,7 +13,6 @@ import {
   blueGrey,
   green,
 } from "@mui/material/colors";
-import { ModeEdit, Done, DoneAll } from "@mui/icons-material";
 
 export const mapDateToTime = (date: Date): string => {
   return moment(date).format("HH:mm");
@@ -30,6 +29,7 @@ export const eventTypes = [
   { value: EventType.PRACTICE, label: "Практика" },
   { value: EventType.STATE_EXAMINATION_BOARD, label: "ГЭК" },
 ];
+
 export const classTypes = [
   { value: ClassType.LAB, label: "Лаб. работа" },
   { value: ClassType.LECTION, label: "Лекция" },

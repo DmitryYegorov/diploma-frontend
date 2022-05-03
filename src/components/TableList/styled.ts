@@ -29,10 +29,6 @@ export const useStyles = makeStyles((theme: Theme) =>
         },
       },
     },
-    row: {
-      "&:hover": {
-        cursor: "pointer",
-      },
-    },
+    row: {},
   })
 );

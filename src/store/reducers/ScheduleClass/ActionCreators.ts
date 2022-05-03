@@ -1,15 +1,15 @@
 import { AppDispatch } from "../../index";
 import {
-  getScheduleClassesForAuthenticatedTeacher,
+  getScheduleClassesBySemesterId,
   getScheduleDepartmentBySemester,
 } from "../../../http/schedule";
 import { scheduleClasses } from "./slice";
 
-export const fetchScheduleClassForAuthTeacherAction =
-  () => async (dispatch: AppDispatch) => {
+export const fetchScheduleClassesOfTeacherBySemesterId =
+  (semesterId: string) => async (dispatch: AppDispatch) => {
     try {
       dispatch(scheduleClasses.actions.fetchScheduleClasses());
-      const res = await getScheduleClassesForAuthenticatedTeacher();
+      const res = await getScheduleClassesBySemesterId(semesterId);
       dispatch(scheduleClasses.actions.fetchScheduleClassesSuccess(res.data));
     } catch (e) {
       dispatch(scheduleClasses.actions.fetchScheduleClassesFailed(e));

@@ -5,10 +5,10 @@ import {
   FormControl,
   Select,
   Button,
-  Stack,
-  Box,
+  Container,
   TextField,
   Autocomplete,
+  Grid,
 } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../../../../hooks/redux";
 import { useEffect, useState } from "react";
@@ -16,13 +16,16 @@ import { fetchSubjectsAction } from "../../../../../store/reducers/Subject/Actio
 import { Save as SaveIcon } from "@mui/icons-material";
 import { useForm } from "react-hook-form";
 import { fetchRoomsAction } from "../../../../../store/reducers/Room/ActionCreators";
-import { Room } from "../../../../../models/Room";
 import { ClassType, Week } from "../../../../../typings/enum";
 import subject from "../../../../Subject";
 import { fetchGroupsWithFacultiesAction } from "../../../../../store/reducers/Group/ActionCreators";
 import { GroupWithFaculty } from "../../../../../models/Group";
 import { setClassToSchedule } from "../../../../../http/schedule";
-import { fetchScheduleClassForAuthTeacherAction } from "../../../../../store/reducers/ScheduleClass/ActionCreators";
+import { fetchScheduleClassesOfTeacherBySemesterId } from "../../../../../store/reducers/ScheduleClass/ActionCreators";
+import DatePicker from "../../../../../components/DatePicker";
+import { useTranslation } from "react-i18next";
+
+import i18n from "../../../../../i18n";
 
 type Props = {
   weekDay: number;
@@ -63,7 +66,10 @@ const CellForm: React.FC<Props> = ({ weekDay, scheduleTime }) => {
   const rootState = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
 
-  const [weekly, setWeekly] = useState(false);
+  const { t } = useTranslation(["common", "calendar"], { i18n });
+
+  const [startDate, setStartDate] = useState<Date | string | null>(null);
+  const [endDate, setEndDate] = useState<Date | string | null>(null);
 
   const { handleSubmit, setValue, register } = useForm<{
     subject: string;
@@ -71,6 +77,8 @@ const CellForm: React.FC<Props> = ({ weekDay, scheduleTime }) => {
     room: string;
     type: ClassType;
     groups: Array<GroupWithFaculty>;
+    startDate?: Date | string | null;
+    endDate?: Date | string | null;
   }>({
     defaultValues: {
       week: Week.FIRST,
@@ -97,6 +105,8 @@ const CellForm: React.FC<Props> = ({ weekDay, scheduleTime }) => {
     register("room", { required: true });
     register("type", { required: true });
     register("groups", { required: true });
+    register("startDate");
+    register("endDate");
   }, [register]);
 
   const setClass = async (data: any) => {
@@ -110,91 +120,131 @@ const CellForm: React.FC<Props> = ({ weekDay, scheduleTime }) => {
       weekDay,
       scheduleTimeId: scheduleTime,
       groupIds: data.groups.map((g: GroupWithFaculty) => g.id),
+      startDate: data.startDate,
+      endDate: data.endDate,
+      semesterId: rootState.semester.selectedSemester.id,
     };
 
     await setClassToSchedule(request);
-    dispatch(fetchScheduleClassForAuthTeacherAction());
+    dispatch(
+      fetchScheduleClassesOfTeacherBySemesterId(
+        rootState.semester.selectedSemester.id
+      )
+    );
   };
 
   return (
-    <Stack width={"600px"} spacing={2}>
-      <Stack direction="row" spacing={2}>
-        <FormControl variant="standard" sx={{ width: 250 }}>
-          <InputLabel id="week">Неделя</InputLabel>
-          <Select
-            labelId="week"
-            id="weekId"
-            label="Неделя"
-            onChange={(e) => setValue("week", e.target.value as Week)}
-          >
-            {weekMapLabel.map((w) => (
-              <MenuItem value={w.week}>{w.label}</MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <FormControl variant="standard" sx={{ width: 250 }}>
-          <InputLabel id="subject">Дисциплина</InputLabel>
-          <Select
-            labelId="subject"
-            label="Дисциплина"
-            onChange={(e) => setValue("subject", e.target.value as string)}
-          >
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
-            {rootState.subject.list &&
-              rootState.subject.list.map((s) => (
-                <MenuItem value={s.id}>{s.name}</MenuItem>
+    <Container>
+      <Grid container spacing={2}>
+        <Grid item xs={4}>
+          <FormControl variant="standard" fullWidth>
+            <InputLabel id="week">Неделя</InputLabel>
+            <Select
+              labelId="week"
+              id="weekId"
+              label="Неделя"
+              onChange={(e) => setValue("week", e.target.value as Week)}
+            >
+              {weekMapLabel.map((w) => (
+                <MenuItem value={w.week}>{w.label}</MenuItem>
               ))}
-          </Select>
-        </FormControl>
-        <FormControl variant="standard" sx={{ width: 250 }}>
-          <InputLabel id="classType">Тип занятия</InputLabel>
-          <Select
-            labelId="type"
-            label="Type"
-            onChange={(e) => setValue("type", e.target.value as ClassType)}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item xs={4}>
+          <FormControl variant="standard" fullWidth>
+            <InputLabel id="subject">Дисциплина</InputLabel>
+            <Select
+              labelId="subject"
+              label="Дисциплина"
+              onChange={(e) => setValue("subject", e.target.value as string)}
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              {rootState.subject.list &&
+                rootState.subject.list.map((s) => (
+                  <MenuItem value={s.id}>{s.name}</MenuItem>
+                ))}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item xs={4}>
+          <FormControl variant="standard" fullWidth>
+            <InputLabel id="classType">Тип занятия</InputLabel>
+            <Select
+              labelId="type"
+              label="Type"
+              onChange={(e) => setValue("type", e.target.value as ClassType)}
+            >
+              {classTypeMapLabel.map((c) => (
+                <MenuItem value={c.type}>{c.label}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item xs={4}>
+          <Autocomplete
+            disablePortal
+            options={rootState.room.list.map((r) => r.room)}
+            onChange={(e, options) => setValue("room", `${options}`)}
+            fullWidth
+            renderInput={(params) => (
+              <TextField {...params} label={"Аудитория"} fullWidth />
+            )}
+          />
+        </Grid>
+        <Grid item xs={4}>
+          <DatePicker
+            label={t("calendar:startDate")}
+            onChange={(newValue) => {
+              setValue("startDate", newValue);
+              setStartDate(newValue);
+            }}
+            value={startDate}
+          />
+        </Grid>
+        <Grid item xs={4}>
+          <DatePicker
+            label={t("calendar:endDate")}
+            onChange={(newValue) => {
+              setValue("endDate", newValue);
+              setEndDate(newValue);
+            }}
+            value={endDate}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <Autocomplete
+            multiple
+            id="tags-standard"
+            options={rootState.group.list}
+            getOptionLabel={(option) => option.label}
+            fullWidth
+            onChange={(event, newValue) => {
+              setValue("groups", newValue);
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Группы"
+                placeholder="Favorites"
+                fullWidth
+              />
+            )}
+          />
+        </Grid>
+        <Grid item>
+          <Button
+            startIcon={<SaveIcon />}
+            variant="contained"
+            onClick={handleSubmit(setClass)}
           >
-            {classTypeMapLabel.map((c) => (
-              <MenuItem value={c.type}>{c.label}</MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </Stack>
-      <Stack spacing={2}>
-        <Autocomplete
-          disablePortal
-          options={rootState.room.list.map((r) => r.room)}
-          onChange={(e, options) => setValue("room", `${options}`)}
-          fullWidth
-          renderInput={(params) => (
-            <TextField {...params} label={"Аудитория"} />
-          )}
-        />
-        <Autocomplete
-          multiple
-          id="tags-standard"
-          options={rootState.group.list}
-          getOptionLabel={(option) => option.label}
-          fullWidth
-          onChange={(event, newValue) => {
-            setValue("groups", newValue);
-          }}
-          renderInput={(params) => (
-            <TextField {...params} label="Группы" placeholder="Favorites" />
-          )}
-        />
-      </Stack>
-      <Box>
-        <Button
-          startIcon={<SaveIcon />}
-          variant="contained"
-          onClick={handleSubmit(setClass)}
-        >
-          Сохранить
-        </Button>
-      </Box>
-    </Stack>
+            Сохранить
+          </Button>
+        </Grid>
+      </Grid>
+    </Container>
   );
 };
 

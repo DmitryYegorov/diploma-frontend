@@ -2,20 +2,22 @@ import { createSlice } from "@reduxjs/toolkit";
 
 interface SemesterState {
   error: string;
-  data: {
+  selectedSemester: {
     id: string;
     startDate: Date;
     endDate: Date;
   };
+  list: Array<any>;
   isLoading: boolean;
 }
 
 const initialState: SemesterState = {
-  data: {
-    id: "60308ce8-7d29-4c3d-b695-3597a8ca6d64",
+  selectedSemester: {
+    id: "",
     startDate: new Date(),
     endDate: new Date(),
   },
+  list: [],
   error: "",
   isLoading: false,
 };
@@ -24,16 +26,28 @@ export const semesterSlice = createSlice({
   name: "semester",
   initialState,
   reducers: {
-    fetchCurrentSemester(state) {
+    fetchSemester(state) {
       state.isLoading = true;
     },
-    fetchCurrentSemesterSuccess(state, action) {
+    fetchSemesterSuccess(state, action) {
       state.isLoading = false;
-      state.data.id = action.payload.id;
-      state.data.startDate = action.payload.startDate;
-      state.data.endDate = action.payload.endDate;
+      state.selectedSemester.id = action.payload.id;
+      state.selectedSemester.startDate = action.payload.startDate;
+      state.selectedSemester.endDate = action.payload.endDate;
     },
-    fetchCurrentSemesterFailed(state, action) {
+    fetchSemesterFailed(state, action) {
+      state.isLoading = false;
+      state.error = action.payload.message;
+    },
+
+    fetchList(state) {
+      state.isLoading = true;
+    },
+    fetchListSuccess(state, action) {
+      state.isLoading = false;
+      state.list = action.payload.list;
+    },
+    fetchListFailed(state, action) {
       state.isLoading = false;
       state.error = action.payload.message;
     },

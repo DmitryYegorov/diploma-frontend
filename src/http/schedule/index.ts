@@ -3,9 +3,7 @@ import { AxiosResponse } from "axios";
 import { SwapTeacher, UpdateScheduleClass } from "../../typings/schedule";
 import moment from "moment";
 
-export const getTimes = async () => http.get("/schedule/time");
-
-export const setClassToSchedule = async (data: {
+type SetScheduleClass = {
   subjectId: any;
   week: any;
   type: any;
@@ -13,11 +11,20 @@ export const setClassToSchedule = async (data: {
   weekDay: number;
   scheduleTimeId: string;
   groupIds: any;
-}) => http.post("/schedule", data);
+  startDate: Date | string | null;
+  endDate: Date | string | null;
+  semesterId: string;
+};
 
-export const getScheduleClassesForAuthenticatedTeacher = async (): Promise<
-  AxiosResponse<Record<string, string | number | undefined>>
-> => http.get("/schedule");
+export const getTimes = async () => http.get("/schedule/time");
+
+export const setClassToSchedule = async (data: SetScheduleClass) =>
+  http.post("/schedule", data);
+
+export const getScheduleClassesBySemesterId = async (
+  semesterId: string
+): Promise<AxiosResponse<Record<string, string | number | undefined>>> =>
+  http.get(`/schedule/semester/${semesterId}`);
 
 export const getScheduleDepartmentBySemester = async (semesterId: string) =>
   http.get(`/schedule/department/${semesterId}`);
@@ -41,3 +48,6 @@ export const getUpdatesLogs = async (
     )}&endDate=${moment(endDate).format("yyyy-MM-DD")}`
   );
 };
+
+export const loadScheduleClassesToReport = async (reportId: string) =>
+  http.get(`/schedule/report/${reportId}`);

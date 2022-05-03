@@ -63,10 +63,7 @@ const UsersList: React.FC = () => {
                 </TableCell>
                 <TableCell>
                   <Typography variant="body2">
-                    <IconButton
-                      color="primary"
-                      onClick={() => navigate(`${u.id}`)}
-                    >
+                    <IconButton color="primary" onClick={() => navigate(u.id)}>
                       <ManageAccountsIcon />
                     </IconButton>
                   </Typography>

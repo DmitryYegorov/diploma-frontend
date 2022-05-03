@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Grid, TextField } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import i18n from "../../../../i18n";
+import i18n from "../../i18n";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DesktopDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import Button from "@mui/material/Button";
 import { useForm } from "react-hook-form";
-import { createReport } from "../../../../http/report";
+import { createReport } from "../../http/report";
 
 const CreateReportForm: React.FC = () => {
   const { t } = useTranslation(["common", "calendar"], { i18n });

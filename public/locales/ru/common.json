@@ -18,5 +18,6 @@
   "rowsPerPage": "Кол-во на странице",
   "title": "Название",
   "createdAt": "Дата создания",
-  "nameLabel": "Название"
+  "nameLabel": "Название",
+  "semesterLabel": "Семестер"
 }

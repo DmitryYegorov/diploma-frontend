@@ -163,19 +163,19 @@ const TableList = <T extends { id?: number | string }>({
         />
       )}
 
-      <Paper className={classes.pagination}>
-        <TablePagination
-          classes={{ toolbar: classes.toolbar }}
-          labelRowsPerPage={isDesktop ? t("common:rowsPerPage") : ""}
-          rowsPerPageOptions={[5, 10, 20, 50]}
-          component="div"
-          count={count}
-          rowsPerPage={rowsPerPage}
-          page={currentPage}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Paper>
+      {/*<Paper className={classes.pagination}>*/}
+      {/*  <TablePagination*/}
+      {/*    classes={{ toolbar: classes.toolbar }}*/}
+      {/*    labelRowsPerPage={isDesktop ? t("common:rowsPerPage") : ""}*/}
+      {/*    rowsPerPageOptions={[5, 10, 20, 50]}*/}
+      {/*    component="div"*/}
+      {/*    count={count}*/}
+      {/*    rowsPerPage={rowsPerPage}*/}
+      {/*    page={currentPage}*/}
+      {/*    onPageChange={handleChangePage}*/}
+      {/*    onRowsPerPageChange={handleChangeRowsPerPage}*/}
+      {/*  />*/}
+      {/*</Paper>*/}
     </>
   );
 };
