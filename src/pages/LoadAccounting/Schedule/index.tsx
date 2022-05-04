@@ -10,6 +10,9 @@ import {
   TableHead,
   TableRow,
   Typography,
+  Collapse,
+  CircularProgress,
+  Box,
 } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
 import { fetchScheduleTimesAction } from "../../../store/reducers/ScheduleTime/ActionCreators";
@@ -34,6 +37,8 @@ const Schedule: React.FC = () => {
   const rootState = useAppSelector((state) => state);
   const classes = useStyles();
 
+  const [loading, setLoading] = useState(true);
+
   const semesterOptions = rootState.semester.list.map((s) => ({
     label: s.name,
     value: s.id,
@@ -49,6 +54,7 @@ const Schedule: React.FC = () => {
         )
       );
     }
+    setTimeout(() => setLoading(!loading), 3000);
   }, [dispatch, rootState.semester.selectedSemester.id]);
 
   return (
@@ -72,75 +78,83 @@ const Schedule: React.FC = () => {
 
         <Grid item xs={12}>
           <Paper elevation={3}>
-            <Table>
-              <TableHead>
-                <TableCell align="center">Время</TableCell>
-                <TableCell align="center">Понедельник</TableCell>
-                <TableCell align="center">Вторник</TableCell>
-                <TableCell align="center">Среда</TableCell>
-                <TableCell align="center">Четверг</TableCell>
-                <TableCell align="center">Пятница</TableCell>
-                <TableCell align="center">Суббота</TableCell>
-                <TableCell align="center">Воскресенье</TableCell>
-              </TableHead>
-              {rootState.scheduleTime.list &&
-                rootState.scheduleTime.list.map((item) => (
-                  <TableRow>
-                    <TableCell>{`${mapDateToTime(
-                      new Date(item.startTime)
-                    )} - ${mapDateToTime(new Date(item.endTime))}`}</TableCell>
-                    <ClassCell
-                      weekDay={WeekDay.MONDAY}
-                      scheduleTimeId={item.id}
-                      classValue={
-                        rootState.scheduleClasses.list?.["1"]?.[item.id]
-                      }
-                    />
-                    <ClassCell
-                      weekDay={WeekDay.TUESDAY}
-                      scheduleTimeId={item.id}
-                      classValue={
-                        rootState.scheduleClasses.list?.["2"]?.[item.id]
-                      }
-                    />
-                    <ClassCell
-                      weekDay={WeekDay.WEDNESDAY}
-                      scheduleTimeId={item.id}
-                      classValue={
-                        rootState.scheduleClasses.list?.["3"]?.[item.id]
-                      }
-                    />
-                    <ClassCell
-                      weekDay={WeekDay.THURSDAY}
-                      scheduleTimeId={item.id}
-                      classValue={
-                        rootState.scheduleClasses.list?.["4"]?.[item.id]
-                      }
-                    />
-                    <ClassCell
-                      weekDay={WeekDay.FRIDAY}
-                      scheduleTimeId={item.id}
-                      classValue={
-                        rootState.scheduleClasses.list?.["5"]?.[item.id]
-                      }
-                    />
-                    <ClassCell
-                      weekDay={WeekDay.SATURDAY}
-                      scheduleTimeId={item.id}
-                      classValue={
-                        rootState.scheduleClasses.list?.["6"]?.[item.id]
-                      }
-                    />
-                    <ClassCell
-                      weekDay={WeekDay.SUNDAY}
-                      scheduleTimeId={item.id}
-                      classValue={
-                        rootState.scheduleClasses.list?.["0"]?.[item.id]
-                      }
-                    />
-                  </TableRow>
-                ))}
-            </Table>
+            <Collapse
+              orientation="vertical"
+              in={!rootState.scheduleClasses.isLoading}
+            >
+              <Table>
+                <TableHead>
+                  <TableCell align="center">Время</TableCell>
+                  <TableCell align="center">Понедельник</TableCell>
+                  <TableCell align="center">Вторник</TableCell>
+                  <TableCell align="center">Среда</TableCell>
+                  <TableCell align="center">Четверг</TableCell>
+                  <TableCell align="center">Пятница</TableCell>
+                  <TableCell align="center">Суббота</TableCell>
+                  <TableCell align="center">Воскресенье</TableCell>
+                </TableHead>
+
+                {rootState.scheduleTime.list &&
+                  rootState.scheduleTime.list.map((item) => (
+                    <TableRow>
+                      <TableCell>{`${mapDateToTime(
+                        new Date(item.startTime)
+                      )} - ${mapDateToTime(
+                        new Date(item.endTime)
+                      )}`}</TableCell>
+                      <ClassCell
+                        weekDay={WeekDay.MONDAY}
+                        scheduleTimeId={item.id}
+                        classValue={
+                          rootState.scheduleClasses.list?.["1"]?.[item.id]
+                        }
+                      />
+                      <ClassCell
+                        weekDay={WeekDay.TUESDAY}
+                        scheduleTimeId={item.id}
+                        classValue={
+                          rootState.scheduleClasses.list?.["2"]?.[item.id]
+                        }
+                      />
+                      <ClassCell
+                        weekDay={WeekDay.WEDNESDAY}
+                        scheduleTimeId={item.id}
+                        classValue={
+                          rootState.scheduleClasses.list?.["3"]?.[item.id]
+                        }
+                      />
+                      <ClassCell
+                        weekDay={WeekDay.THURSDAY}
+                        scheduleTimeId={item.id}
+                        classValue={
+                          rootState.scheduleClasses.list?.["4"]?.[item.id]
+                        }
+                      />
+                      <ClassCell
+                        weekDay={WeekDay.FRIDAY}
+                        scheduleTimeId={item.id}
+                        classValue={
+                          rootState.scheduleClasses.list?.["5"]?.[item.id]
+                        }
+                      />
+                      <ClassCell
+                        weekDay={WeekDay.SATURDAY}
+                        scheduleTimeId={item.id}
+                        classValue={
+                          rootState.scheduleClasses.list?.["6"]?.[item.id]
+                        }
+                      />
+                      <ClassCell
+                        weekDay={WeekDay.SUNDAY}
+                        scheduleTimeId={item.id}
+                        classValue={
+                          rootState.scheduleClasses.list?.["0"]?.[item.id]
+                        }
+                      />
+                    </TableRow>
+                  ))}
+              </Table>
+            </Collapse>
           </Paper>
         </Grid>
       </Grid>

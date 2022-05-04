@@ -8,6 +8,7 @@ import {
   TableCell,
   Stack,
   Alert,
+  Collapse,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
@@ -23,6 +24,7 @@ import i18n from "../../i18n";
 import TableList from "../../components/TableList";
 import { Column } from "../../components/TableList/typings";
 import moment from "moment";
+import LoadReportTable from "../../components/LoadReportTable";
 
 const ReportPage: React.FC = () => {
   const { id } = useParams();
@@ -92,30 +94,29 @@ const ReportPage: React.FC = () => {
             )}
           </Paper>
         </Grid>
-        {!!loadedClasses.length && (
-          <>
-            <Grid item xs={12}>
-              <Paper className={classes.paper}>
-                <Typography variant="h6">{t("report:classes")}</Typography>
-                <TableList
-                  rows={loadedClasses}
-                  columns={loadClassesColumns}
-                  rowsPerPage={rowsPerPage}
-                  setOnPage={(count) => setRowsPerPage(count)}
-                  isLoading={isLoading}
-                  count={loadedClasses.length}
-                  currentPage={currentPage}
-                  setPage={(page) => setCurrentPage(page)}
-                  onRowClick={(row) => undefined}
-                />
-                <Stack direction="row" alignItems="center" spacing={1}>
-                  <Button variant="contained">{t("report:applyLabel")}</Button>
-                  <Alert severity="info">{t("report:applyTooltip")}</Alert>
-                </Stack>
-              </Paper>
-            </Grid>
-          </>
-        )}
+        <Grid item xs={12}>
+          <Collapse orientation="vertical" in={loadedClasses.length}>
+            <Paper className={classes.paper}>
+              <Typography variant="h6">{t("report:classes")}</Typography>
+              <TableList
+                rows={loadedClasses}
+                columns={loadClassesColumns}
+                rowsPerPage={rowsPerPage}
+                setOnPage={(count) => setRowsPerPage(count)}
+                isLoading={isLoading}
+                count={loadedClasses.length}
+                currentPage={currentPage}
+                setPage={(page) => setCurrentPage(page)}
+                onRowClick={(row) => undefined}
+              />
+              <LoadReportTable />
+              <Stack direction="row" alignItems="center" spacing={1}>
+                <Button variant="contained">{t("report:applyLabel")}</Button>
+                <Alert severity="info">{t("report:applyTooltip")}</Alert>
+              </Stack>
+            </Paper>
+          </Collapse>
+        </Grid>
       </Grid>
     </Container>
   );

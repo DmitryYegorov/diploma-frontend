@@ -26,9 +26,11 @@ export const scheduleClasses = createSlice({
     fetchScheduleClassesFailed(state, action) {
       state.error = action.payload.message;
       state.isLoading = false;
+      state.list = [];
     },
     fetchScheduleClasses(state) {
       state.isLoading = true;
+      state.list = [];
     },
 
     fetchScheduleClassesOfDepartmentSuccess(state, action) {
