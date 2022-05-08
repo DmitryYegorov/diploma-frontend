@@ -9,13 +9,16 @@ import calendar from "../../public/locales/ru/calendar.json";
 import report from "../../public/locales/ru/report.json";
 
 declare module "react-i18next" {
-  interface Resources {
-    common: typeof common;
-    auth: typeof auth;
-    weekDay: typeof weekDay;
-    role: typeof role;
-    event: typeof event;
-    calendar: typeof calendar;
-    report: typeof report;
+  interface CustomTypeOptions {
+    defaultNS: "common";
+    resources: {
+      common: typeof common;
+      auth: typeof auth;
+      weekDay: typeof weekDay;
+      role: typeof role;
+      event: typeof event;
+      calendar: typeof calendar;
+      report: typeof report;
+    };
   }
 }

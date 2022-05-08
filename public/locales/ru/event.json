@@ -13,7 +13,9 @@
   "PRACTICE_CLASS":"Практическое занятие",
   "SWAP":"Замена",
   "rescheduledTo":"Перенос на",
+  "undefined": "Неопределен",
   "updateType":{
+    "undefined": "-",
     "CANCEL":"Отмена",
     "RESCHEDULED":"Перенос",
     "SWAP":"Замена"

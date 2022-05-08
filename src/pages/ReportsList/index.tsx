@@ -6,12 +6,16 @@ import {
   Stack,
   Container,
   Typography,
+  IconButton,
 } from "@mui/material";
-import { Add as AddIcon } from "@mui/icons-material";
+import {
+  Add as AddIcon,
+  OpenInNew as OpenInNewIcon,
+} from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import i18n from "../../i18n";
 import { useStyles } from "./styled";
-import { Column, Direction } from "../../components/TableList/typings";
+import { Column } from "../../components/TableList/typings";
 import TableList from "../../components/TableList";
 import ModalWindow from "../../components/ModalWindow";
 import CreateReportForm from "../../components/CreateReportForm";
@@ -31,12 +35,11 @@ const ReportsList: React.FC = () => {
 
   useEffect(() => {
     dispatch(fetchReportsAction());
+    dispatch(clearLoadedClassesAction());
   }, [dispatch]);
 
   const { t } = useTranslation(["common", "report"], { i18n });
   const [openCreateModal, setOpenCreateModal] = useState(false);
-  const [page, setPage] = useState(1);
-  const [rowsPerPage, setOnPage] = useState(5);
   const classes = useStyles();
 
   const columns: Column[] = [
@@ -70,14 +73,7 @@ const ReportsList: React.FC = () => {
           </Paper>
         </Grid>
         <Grid item xs={12}>
-          <TableList<any>
-            setOrder={() => alert("setOrder")}
-            count={reportState.list.length}
-            currentPage={page}
-            setPage={(p) => setPage(p)}
-            rowsPerPage={rowsPerPage}
-            order="title"
-            setOnPage={(count) => setOnPage(count)}
+          <TableList
             rows={reportState.list.map((report) => {
               const stateConfig =
                 ReportStateConfig[report.state as ReportState];
@@ -96,11 +92,12 @@ const ReportsList: React.FC = () => {
                 ),
               };
             })}
-            onRowClick={(id) => navigate(id)}
-            sort={Direction.ASC}
-            setSort={() => undefined}
             columns={columns}
-            isLoading={reportState.isLoading}
+            renderActions={(row) => (
+              <IconButton color="primary" onClick={() => navigate(row.id)}>
+                <OpenInNewIcon />
+              </IconButton>
+            )}
           />
         </Grid>
       </Grid>

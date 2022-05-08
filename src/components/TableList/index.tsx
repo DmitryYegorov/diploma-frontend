@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Paper,
   Table,
@@ -23,17 +23,17 @@ type Props<T> = {
   columns: Array<Column>;
   renderActions?: React.FC<T>;
   withAvatar?: boolean;
-  setPage: (page: any) => void;
-  currentPage: number;
-  count: number;
-  onRowClick: (id: any) => void;
-  rowsPerPage: number;
-  setOnPage: (count: any) => void;
+  setPage?: (page: any) => void;
+  currentPage?: number;
+  count?: number;
+  onRowClick?: (id: any) => void;
+  rowsPerPage?: number;
+  setOnPage?: (count: any) => void;
   isLoading?: boolean;
-  sort: Direction;
-  setSort: (sort: any) => void;
-  order: string;
-  setOrder: (order: any) => void;
+  sort?: Direction;
+  setSort?: (sort: any) => void;
+  order?: string;
+  setOrder?: (order: any) => void;
 };
 
 const TableList = <T extends { id?: number | string }>({
@@ -41,21 +41,22 @@ const TableList = <T extends { id?: number | string }>({
   columns,
   renderActions,
   withAvatar,
-  currentPage,
-  count,
   setPage,
   onRowClick,
-  rowsPerPage,
   setOnPage,
   isLoading,
   sort,
   setSort,
   order,
   setOrder,
+  rowsPerPage,
+  currentPage,
+  count,
 }: Props<T>): React.ReactElement => {
   const classes = useStyles();
   const { t } = useTranslation(["common"]);
   const isDesktop = useMediaQuery("(min-width: 680px");
+
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
@@ -163,19 +164,19 @@ const TableList = <T extends { id?: number | string }>({
         />
       )}
 
-      {/*<Paper className={classes.pagination}>*/}
-      {/*  <TablePagination*/}
-      {/*    classes={{ toolbar: classes.toolbar }}*/}
-      {/*    labelRowsPerPage={isDesktop ? t("common:rowsPerPage") : ""}*/}
-      {/*    rowsPerPageOptions={[5, 10, 20, 50]}*/}
-      {/*    component="div"*/}
-      {/*    count={count}*/}
-      {/*    rowsPerPage={rowsPerPage}*/}
-      {/*    page={currentPage}*/}
-      {/*    onPageChange={handleChangePage}*/}
-      {/*    onRowsPerPageChange={handleChangeRowsPerPage}*/}
-      {/*  />*/}
-      {/*</Paper>*/}
+      <Paper className={classes.pagination}>
+        <TablePagination
+          classes={{ toolbar: classes.toolbar }}
+          labelRowsPerPage={isDesktop ? t("common:rowsPerPage") : ""}
+          rowsPerPageOptions={[5, 10, 20, 50]}
+          component="div"
+          count={count}
+          rowsPerPage={rowsPerPage}
+          page={currentPage}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Paper>
     </>
   );
 };

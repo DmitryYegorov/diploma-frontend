@@ -10,6 +10,7 @@ function App() {
 
   React.useEffect(() => {
     dispatch(fetchSemesterAction());
+    dispatch(fetchUsersAction());
   }, [dispatch]);
 
   return (
