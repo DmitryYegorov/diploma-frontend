@@ -4,5 +4,6 @@ export const MENU_LINKS: Record<string, string> = {
   schedule: "load-accounting/schedule",
   subject: "subject",
   usersList: "load-accounting/users",
-  studyLoad: "load-accounting/study-load",
+  reports: "load-accounting/reports",
+  otherLoad: "load-accounting/other-load",
 };

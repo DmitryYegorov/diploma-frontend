@@ -23,13 +23,16 @@ export const subjectSlice = createSlice({
       const { payload } = action;
       state.list = payload.list;
       state.total = payload.total;
+      state.isLoading = false;
     },
     fetchSubjectsFailed(state, action) {
       state.error = action.payload.message;
+      state.isLoading = false;
     },
     fetchSubjects(state) {
       state.isLoading = true;
     },
+
     createSubjectFetch(state) {
       state.isLoading = true;
     },

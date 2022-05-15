@@ -48,6 +48,3 @@ export const getUpdatesLogs = async (
     )}&endDate=${moment(endDate).format("yyyy-MM-DD")}`
   );
 };
-
-export const loadScheduleClassesToReport = async (reportId: string) =>
-  http.get(`/schedule/report/${reportId}`);

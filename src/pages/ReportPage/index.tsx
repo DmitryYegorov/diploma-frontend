@@ -1,124 +1,117 @@
 import React, { useEffect, useState } from "react";
 import {
-  Container,
   Grid,
+  Container,
   Paper,
   Typography,
   Button,
-  TableCell,
-  Stack,
   Alert,
-  Collapse,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Accordion,
 } from "@mui/material";
+import {
+  CalendarToday as CalendarTodayIcon,
+  Circle as CircleIcon,
+  Person as PersonIcon,
+} from "@mui/icons-material";
 import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
-import {
-  clearLoadedClassesAction,
-  fetchOneReportAction,
-  loadClassesForReportAction,
-} from "../../store/reducers/Report/ActionCreators";
+import { fetchOneReportAction } from "../../store/reducers/Report/ActionCreators";
 import { useStyles } from "./styled";
 import { useTranslation } from "react-i18next";
 
 import i18n from "../../i18n";
-import TableList from "../../components/TableList";
-import { Column } from "../../components/TableList/typings";
-import moment from "moment";
+import ListClasses from "./components/ListClasses";
+import ReportMenu from "./components/ReportMenu";
 import LoadReportTable from "../../components/LoadReportTable";
+import { ReportState } from "../../typings/enum";
+import { ReportStateConfig } from "../../helpers";
+import { useAsyncFn } from "react-use";
+import {
+  getCalculatedReportDataByReportId,
+  loadScheduleClassesToReport,
+} from "../../http/report";
+import { reportSlice } from "../../store/reducers/Report/slice";
 
 const ReportPage: React.FC = () => {
   const { id } = useParams();
   const { t } = useTranslation(["report"], { i18n });
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [currentPage, setCurrentPage] = useState(0);
+
   const classes = useStyles();
 
   const dispatch = useAppDispatch();
-  const { selectedReport, loadedClasses, isLoading, load } = useAppSelector(
+  const { selectedReport, reportData, calculatedReport } = useAppSelector(
     (state) => state.report
   );
 
   useEffect(() => {
-    dispatch(clearLoadedClassesAction());
     if (id) {
       dispatch(fetchOneReportAction(id));
     }
   }, [id, dispatch]);
 
-  const loadClassesColumns: Column[] = [
-    { id: "title", label: t("report:nameLabel"), sortable: false },
-    {
-      id: "date",
-      label: t("report:classDate"),
-      sortable: false,
-      renderCell: (row, column) => (
-        <TableCell>{moment.utc(row.date).format("DD-MM-yyyy")}</TableCell>
-      ),
-    },
-    {
-      id: "type",
-      label: t("report:classType"),
-      sortable: false,
-      renderCell: (row, column) => (
-        <TableCell>{t(`event:${row.type}`, "-")}</TableCell>
-      ),
-    },
-    {
-      id: "updateType",
-      label: t("report:classUpdateNote"),
-      sortable: false,
-      renderCell: (row, column) => (
-        <TableCell>{t(`event:updateType.${row.updateType}`, "-")}</TableCell>
-      ),
-    },
-  ];
-
   return (
-    <Container>
+    <>
+      <ReportMenu />
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Paper className={classes.paper}>
-            <Typography variant="h6">
-              {selectedReport.name} ({selectedReport.createdBy},{" "}
-              {selectedReport.startDate} - {selectedReport.endDate})
-            </Typography>
-            {!loadedClasses.length && (
-              <Button
-                variant="text"
-                onClick={() =>
-                  dispatch(loadClassesForReportAction(selectedReport.id))
-                }
-              >
-                {t("report:loadClassesBtn")}
-              </Button>
-            )}
-          </Paper>
+          <Typography variant="h6">{`${t("report:reportLabel")}: ${
+            selectedReport.name
+          }`}</Typography>
         </Grid>
-        <Grid item xs={12}>
-          <Collapse orientation="vertical" in={loadedClasses.length}>
+        <Grid item xs={8}>
+          {reportData.length ? (
+            <>
+              <ListClasses loadData={reportData} reportId={selectedReport.id} />
+              <LoadReportTable load={calculatedReport} />
+            </>
+          ) : (
+            <Alert severity="info">{t("report:emptyReportText")}</Alert>
+          )}
+        </Grid>
+        {selectedReport.id && (
+          <Grid item xs={4}>
             <Paper className={classes.paper}>
-              <Typography variant="h6">{t("report:classes")}</Typography>
-              <TableList
-                rows={loadedClasses}
-                columns={loadClassesColumns}
-                rowsPerPage={rowsPerPage}
-                setOnPage={(count) => setRowsPerPage(count)}
-                isLoading={isLoading}
-                count={loadedClasses.length}
-                currentPage={currentPage}
-                setPage={(page) => setCurrentPage(page)}
-                onRowClick={(row) => undefined}
-              />
-              <LoadReportTable />
-              <Stack direction="row" alignItems="center" spacing={1}>
-                <Button variant="contained">{t("report:applyLabel")}</Button>
-                <Alert severity="info">{t("report:applyTooltip")}</Alert>
-              </Stack>
+              <List>
+                <ListItem>
+                  <ListItemIcon>
+                    <CalendarTodayIcon />
+                  </ListItemIcon>
+                  <ListItemText>{selectedReport.createdAt}</ListItemText>
+                </ListItem>
+                <ListItem>
+                  <ListItemIcon>
+                    <CircleIcon />
+                  </ListItemIcon>
+                  <ListItemText>
+                    <Typography
+                      style={{
+                        color:
+                          ReportStateConfig[selectedReport.state as ReportState]
+                            .color,
+                      }}
+                    >
+                      {t(`report:state.${selectedReport.state as ReportState}`)}
+                    </Typography>
+                  </ListItemText>
+                </ListItem>
+                <ListItem>
+                  <ListItemIcon>
+                    <PersonIcon />
+                  </ListItemIcon>
+                  <ListItemText>
+                    <Typography>{selectedReport.createdBy}</Typography>
+                  </ListItemText>
+                </ListItem>
+              </List>
             </Paper>
-          </Collapse>
-        </Grid>
+          </Grid>
+        )}
       </Grid>
-    </Container>
+    </>
   );
 };
 

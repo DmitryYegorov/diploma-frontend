@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { LoadItemType, ReportData } from "../../../typings/load";
 
 interface ReportState {
   list: Array<any>;
   selectedReport: any;
-  loadedClasses: Array<any>;
-  load: Array<any>;
+  calculatedReport: Array<LoadItemType>;
+  reportData: Array<ReportData>;
   isLoading: boolean;
   error: string;
 }
@@ -12,8 +13,8 @@ interface ReportState {
 const initialState: ReportState = {
   list: [],
   selectedReport: {},
-  loadedClasses: [],
-  load: [],
+  calculatedReport: [],
+  reportData: [],
   isLoading: false,
   error: "",
 };
@@ -27,7 +28,7 @@ export const reportSlice = createSlice({
     },
     fetchReportsByUserSuccess(state, action) {
       state.list = action.payload.list;
-      state.isLoading = true;
+      state.isLoading = false;
     },
     fetchReportsByUserFailed(state, action) {
       state.isLoading = false;
@@ -44,6 +45,8 @@ export const reportSlice = createSlice({
     fetchReportSuccess(state, action) {
       state.isLoading = false;
       state.selectedReport = action.payload;
+      state.reportData = action.payload.reportData;
+      state.calculatedReport = action.payload.calculatedData;
     },
 
     loadClasses(state) {
@@ -51,16 +54,31 @@ export const reportSlice = createSlice({
     },
     loadClassesSuccess(state, action) {
       state.isLoading = false;
-      state.loadedClasses = action.payload.list;
-      state.load = action.payload.load;
+      state.reportData = action.payload.list;
     },
     loadClassesFailed(state, action) {
       state.isLoading = false;
       state.error = action.payload.message;
     },
+
+    calculateReportData(state) {
+      state.isLoading = true;
+    },
+    calculateReportDataSuccess(state, action) {
+      state.isLoading = false;
+      state.calculatedReport = action.payload;
+    },
+    calculatedReportDataFailed(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
+    },
+
+    setCalculatedReportData(state, action) {
+      state.calculatedReport = action.payload;
+    },
+
     clearLoadedClasses(state) {
-      state.loadedClasses = [];
-      state.load = [];
+      state.reportData = [];
     },
   },
 });

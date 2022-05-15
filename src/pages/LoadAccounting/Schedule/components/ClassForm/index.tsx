@@ -222,6 +222,8 @@ const CellForm: React.FC<Props> = ({ weekDay, scheduleTime }) => {
             getOptionLabel={(option) => option.label}
             fullWidth
             onChange={(event, newValue) => {
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore
               setValue("groups", newValue);
             }}
             renderInput={(params) => (

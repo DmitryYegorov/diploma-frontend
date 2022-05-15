@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Paper,
   Table,
@@ -17,23 +17,25 @@ import { Direction } from "./typings";
 import { Column } from "./typings";
 import CardsList from "./Cards";
 import { useStyles } from "./styled";
+import { Alert, CircularProgress, Container } from "@mui/material";
 
 type Props<T> = {
   rows: Array<T>;
   columns: Array<Column>;
   renderActions?: React.FC<T>;
   withAvatar?: boolean;
-  setPage: (page: any) => void;
-  currentPage: number;
-  count: number;
-  onRowClick: (id: any) => void;
-  rowsPerPage: number;
-  setOnPage: (count: any) => void;
+  setPage?: (page: any) => void;
+  currentPage?: number;
+  count?: number;
+  onRowClick?: (id: any) => void;
+  rowsPerPage?: number;
+  setOnPage?: (count: any) => void;
   isLoading?: boolean;
-  sort: Direction;
-  setSort: (sort: any) => void;
-  order: string;
-  setOrder: (order: any) => void;
+  sort?: Direction;
+  setSort?: (sort: any) => void;
+  order?: string;
+  setOrder?: (order: any) => void;
+  notDataMessage: string;
 };
 
 const TableList = <T extends { id?: number | string }>({
@@ -41,21 +43,20 @@ const TableList = <T extends { id?: number | string }>({
   columns,
   renderActions,
   withAvatar,
-  currentPage,
-  count,
   setPage,
   onRowClick,
-  rowsPerPage,
   setOnPage,
   isLoading,
   sort,
   setSort,
   order,
   setOrder,
+  notDataMessage,
 }: Props<T>): React.ReactElement => {
   const classes = useStyles();
   const { t } = useTranslation(["common"]);
   const isDesktop = useMediaQuery("(min-width: 680px");
+
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
@@ -77,8 +78,15 @@ const TableList = <T extends { id?: number | string }>({
     <>
       {isDesktop ? (
         <Paper className={classes.container}>
+          {!rows.length ? (
+            <div style={{ width: "100%" }}>
+              <Alert severity="info" style={{ width: "100%" }}>
+                {notDataMessage || t("common:notData")}
+              </Alert>
+            </div>
+          ) : null}
           <TableContainer>
-            <Table stickyHeader>
+            <Table stickyHeader className={classes.table}>
               <TableHead>
                 <TableRow>
                   {columns.map((column: Column) => (
@@ -108,47 +116,59 @@ const TableList = <T extends { id?: number | string }>({
                   ) : null}
                 </TableRow>
               </TableHead>
-              <TableBody>
-                {rows.map((row: T) => {
-                  return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      tabIndex={-1}
-                      key={row.id}
-                      className={classes.row}
-                      onClick={() => onRowClick(row.id)}
-                    >
-                      {columns.map((column: Column) => {
-                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                        // @ts-ignore
-                        const value = row[String(column.id)];
+              {isLoading ? (
+                <Container
+                  style={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                  }}
+                >
+                  <CircularProgress />
+                </Container>
+              ) : (
+                <TableBody>
+                  {rows.map((row: T) => {
+                    return (
+                      <TableRow
+                        hover
+                        role="checkbox"
+                        tabIndex={-1}
+                        key={row.id}
+                        className={classes.row}
+                        //onClick={() => onRowClick(row.id)}
+                      >
+                        {columns.map((column: Column) => {
+                          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                          // @ts-ignore
+                          const value = row[String(column.id)];
 
-                        if (
-                          column.renderCell &&
-                          typeof column.renderCell === "function"
-                        ) {
-                          return column.renderCell(row as T, column);
-                        }
+                          if (
+                            column.renderCell &&
+                            typeof column.renderCell === "function"
+                          ) {
+                            return column.renderCell(row as T, column);
+                          }
 
-                        return (
-                          <TableCell
-                            key={`${column.id}-${row.id}`}
-                            align={column.align}
-                          >
-                            {value}
+                          return (
+                            <TableCell
+                              key={`${column.id}-${row.id}`}
+                              align={column.align}
+                            >
+                              {value}
+                            </TableCell>
+                          );
+                        })}
+                        {renderActions ? (
+                          <TableCell key="actions" align="center">
+                            {renderActions(row)}
                           </TableCell>
-                        );
-                      })}
-                      {renderActions ? (
-                        <TableCell key="actions" align="center">
-                          {renderActions(row)}
-                        </TableCell>
-                      ) : null}
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
+                        ) : null}
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              )}
             </Table>
           </TableContainer>
         </Paper>
@@ -184,6 +204,7 @@ TableList.defaultProps = {
   renderActions: null,
   withAvatar: false,
   isLoading: true,
+  notDataMessage: "",
 };
 
 export default TableList;

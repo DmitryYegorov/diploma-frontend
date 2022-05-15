@@ -1,5 +1,12 @@
 import React from "react";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import {
+  CircularProgress,
+  Box,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+} from "@mui/material";
 
 interface Option {
   value: string;
@@ -9,8 +16,12 @@ interface Option {
 type Props = {
   label: string;
   handleChange: (e: any) => void;
-  options: Array<Option>;
+  options: Array<Option> | null;
   value?: string;
+  loading?: boolean;
+  width?: number;
+  fullWidth?: boolean;
+  disabled?: boolean;
 };
 
 const SelectForm: React.FC<Props> = ({
@@ -18,21 +29,43 @@ const SelectForm: React.FC<Props> = ({
   handleChange,
   options,
   value,
+  loading,
+  width,
+  fullWidth,
+  disabled,
 }) => {
+  if (loading) {
+    return (
+      <Box>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
   return (
-    <FormControl fullWidth style={{ marginTop: 20 }}>
+    <FormControl fullWidth={fullWidth}>
       <InputLabel id="select-label">{label}</InputLabel>
-      <Select
-        {...(value ? { value } : {})}
-        onChange={handleChange}
-        label={label}
-      >
-        {options.map((option) => (
-          <MenuItem value={option.value}>{option.label}</MenuItem>
-        ))}
-      </Select>
+      {options && (
+        <Select
+          {...(value ? { defaultValue: value } : {})}
+          onChange={handleChange}
+          label={label}
+          style={{ width }}
+          disabled={disabled}
+        >
+          {options.map((option) => (
+            <MenuItem value={option.value}>{option.label}</MenuItem>
+          ))}
+        </Select>
+      )}
     </FormControl>
   );
+};
+
+SelectForm.defaultProps = {
+  loading: false,
+  fullWidth: true,
+  disabled: false,
 };
 
 export default SelectForm;
