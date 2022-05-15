@@ -20,10 +20,7 @@ import TableList from "../../components/TableList";
 import ModalWindow from "../../components/ModalWindow";
 import CreateReportForm from "../../components/CreateReportForm";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
-import {
-  clearLoadedClassesAction,
-  fetchReportsAction,
-} from "../../store/reducers/Report/ActionCreators";
+import { fetchReportsAction } from "../../store/reducers/Report/ActionCreators";
 import { ReportStateConfig } from "../../helpers";
 import { ReportState } from "../../typings/enum";
 import { useNavigate } from "react-router-dom";
@@ -35,7 +32,6 @@ const ReportsList: React.FC = () => {
 
   useEffect(() => {
     dispatch(fetchReportsAction());
-    dispatch(clearLoadedClassesAction());
   }, [dispatch]);
 
   const { t } = useTranslation(["common", "report"], { i18n });
@@ -81,7 +77,6 @@ const ReportsList: React.FC = () => {
                 ...report,
                 state: (
                   <Stack>
-                    {stateConfig.icon}
                     <Typography style={{ color: stateConfig.color }}>
                       {t(
                         `report:state.${report.state as ReportState}`,
@@ -98,6 +93,8 @@ const ReportsList: React.FC = () => {
                 <OpenInNewIcon />
               </IconButton>
             )}
+            isLoading={reportState.isLoading}
+            notDataMessage={t("report:notReportsData")}
           />
         </Grid>
       </Grid>

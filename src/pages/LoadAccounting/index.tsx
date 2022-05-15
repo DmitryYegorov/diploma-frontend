@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 
 const SchedulePage = lazy(() => import("../LoadAccounting/Schedule"));
 const CalendarPage = lazy(() => import("../LoadAccounting/Calendar"));
+const OtherLoadPage = lazy(() => import("../LoadAccounting/OtherLoad"));
 const UsersPage = lazy(() => import("../../pages/LoadAccounting/Users/List"));
 const UserDashboard = lazy(
   () => import("../../pages/LoadAccounting/Users/Dashboard")
@@ -33,11 +34,19 @@ const LoadAccountingPage = () => {
         }
       />
       <Route
-        path={"study-load/*"}
+        path={"reports/*"}
         element={
           <Routes>
             <Route index element={<ReportsPage />} />
             <Route path={":id"} element={<ReportDashboardPage />} />
+          </Routes>
+        }
+      />
+      <Route
+        path={"other-load/"}
+        element={
+          <Routes>
+            <Route index element={<OtherLoadPage />} />
           </Routes>
         }
       />

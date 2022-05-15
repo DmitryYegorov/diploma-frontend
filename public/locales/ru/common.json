@@ -11,13 +11,20 @@
   "reason": "Причина",
   "teacher": "Преподаватель",
   "studyLoading": {
-    "label": "Учебная нагрузка",
+    "label": "Отчёт о нагрузке",
     "createNew": "Создать"
   },
+  "period": {
+    "start": "Начало",
+    "end": "Конец"
+  },
+  "otherLoad": "Дополнительная нагрузка",
   "actions": "Действия",
   "rowsPerPage": "Кол-во на странице",
   "title": "Название",
   "createdAt": "Дата создания",
   "nameLabel": "Название",
-  "semesterLabel": "Семестер"
+  "semesterLabel": "Семестер",
+  "applyFilter": "Применить",
+  "notData": "Нет данных"
 }

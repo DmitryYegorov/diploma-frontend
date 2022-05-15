@@ -1,39 +1,40 @@
 import React, { useEffect, useState } from "react";
 import {
-  Container,
   Grid,
+  Container,
   Paper,
   Typography,
   Button,
-  TableCell,
-  Stack,
   Alert,
-  Collapse,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Accordion,
 } from "@mui/material";
+import {
+  CalendarToday as CalendarTodayIcon,
+  Circle as CircleIcon,
+  Person as PersonIcon,
+} from "@mui/icons-material";
 import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
-import {
-  clearLoadedClassesAction,
-  fetchOneReportAction,
-  loadClassesForReportAction,
-} from "../../store/reducers/Report/ActionCreators";
+import { fetchOneReportAction } from "../../store/reducers/Report/ActionCreators";
 import { useStyles } from "./styled";
 import { useTranslation } from "react-i18next";
 
 import i18n from "../../i18n";
-import TableList from "../../components/TableList";
-import { Column } from "../../components/TableList/typings";
-import moment from "moment";
+import ListClasses from "./components/ListClasses";
+import ReportMenu from "./components/ReportMenu";
 import LoadReportTable from "../../components/LoadReportTable";
-import { ClassType, ScheduleClassUpdateType } from "../../typings/enum";
-import { DataGrid, GridColumns } from "@mui/x-data-grid";
-
-const paginate = (list, page, size) => {
-  const res = list.slice(page * size, page * size + size);
-  // eslint-disable-next-line no-console
-  console.log({ res });
-  return res;
-};
+import { ReportState } from "../../typings/enum";
+import { ReportStateConfig } from "../../helpers";
+import { useAsyncFn } from "react-use";
+import {
+  getCalculatedReportDataByReportId,
+  loadScheduleClassesToReport,
+} from "../../http/report";
+import { reportSlice } from "../../store/reducers/Report/slice";
 
 const ReportPage: React.FC = () => {
   const { id } = useParams();
@@ -42,106 +43,75 @@ const ReportPage: React.FC = () => {
   const classes = useStyles();
 
   const dispatch = useAppDispatch();
-  const { selectedReport, loadedClasses, load } = useAppSelector(
+  const { selectedReport, reportData, calculatedReport } = useAppSelector(
     (state) => state.report
   );
 
   useEffect(() => {
-    dispatch(clearLoadedClassesAction());
     if (id) {
       dispatch(fetchOneReportAction(id));
     }
   }, [id, dispatch]);
 
-  const loadClassesColumns = [
-    {
-      id: "title",
-      label: t("report:nameLabel"),
-      width: 300,
-      sortable: false,
-    },
-    {
-      id: "date",
-      label: t("report:classDate"),
-      renderCell: (row) => <TableCell>{row.date}</TableCell>,
-      width: 150,
-      sortable: false,
-    },
-    {
-      id: "type",
-      label: t("report:classType"),
-      width: 250,
-      renderCell: (row) => {
-        const key = `event:${row.type as ClassType}`;
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        return <TableCell>{t(key, "-")}</TableCell>;
-      },
-      sortable: false,
-    },
-    {
-      id: "updateType",
-      label: t("report:classUpdateNote"),
-      width: 150,
-      renderCell: (row) => {
-        const key = `event:updateType.${
-          row.updateType as ScheduleClassUpdateType
-        }`;
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        return <TableCell>{t(key, "-")}</TableCell>;
-      },
-      sortable: false,
-    },
-  ];
-
   return (
-    <Container>
+    <>
+      <ReportMenu />
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Paper className={classes.paper}>
-            <Typography variant="h6">
-              {selectedReport.name} ({selectedReport.createdBy},{" "}
-              {selectedReport.startDate} - {selectedReport.endDate})
-            </Typography>
-            {!loadedClasses.length && (
-              <Button
-                variant="text"
-                onClick={() => {
-                  dispatch(clearLoadedClassesAction());
-                  dispatch(loadClassesForReportAction(selectedReport.id));
-                }}
-              >
-                {t("report:loadClassesBtn")}
-              </Button>
-            )}
-          </Paper>
+          <Typography variant="h6">{`${t("report:reportLabel")}: ${
+            selectedReport.name
+          }`}</Typography>
         </Grid>
-        <Grid item xs={12}>
-          <Collapse orientation="vertical" in={!!loadedClasses.length}>
+        <Grid item xs={8}>
+          {reportData.length ? (
+            <>
+              <ListClasses loadData={reportData} reportId={selectedReport.id} />
+              <LoadReportTable load={calculatedReport} />
+            </>
+          ) : (
+            <Alert severity="info">{t("report:emptyReportText")}</Alert>
+          )}
+        </Grid>
+        {selectedReport.id && (
+          <Grid item xs={4}>
             <Paper className={classes.paper}>
-              <Typography variant="h6">{t("report:classes")}</Typography>
-              <TableList
-                columns={loadClassesColumns}
-                rows={loadedClasses}
-                count={loadedClasses.length}
-              />
-
-              <LoadReportTable load={load} />
-              <Stack
-                direction="row"
-                alignItems="center"
-                spacing={1}
-                style={{ marginTop: 20 }}
-              >
-                <Button variant="contained">{t("report:applyLabel")}</Button>
-                <Alert severity="info">{t("report:applyTooltip")}</Alert>
-              </Stack>
+              <List>
+                <ListItem>
+                  <ListItemIcon>
+                    <CalendarTodayIcon />
+                  </ListItemIcon>
+                  <ListItemText>{selectedReport.createdAt}</ListItemText>
+                </ListItem>
+                <ListItem>
+                  <ListItemIcon>
+                    <CircleIcon />
+                  </ListItemIcon>
+                  <ListItemText>
+                    <Typography
+                      style={{
+                        color:
+                          ReportStateConfig[selectedReport.state as ReportState]
+                            .color,
+                      }}
+                    >
+                      {t(`report:state.${selectedReport.state as ReportState}`)}
+                    </Typography>
+                  </ListItemText>
+                </ListItem>
+                <ListItem>
+                  <ListItemIcon>
+                    <PersonIcon />
+                  </ListItemIcon>
+                  <ListItemText>
+                    <Typography>{selectedReport.createdBy}</Typography>
+                  </ListItemText>
+                </ListItem>
+              </List>
             </Paper>
-          </Collapse>
-        </Grid>
+          </Grid>
+        )}
       </Grid>
-    </Container>
+    </>
   );
 };
 

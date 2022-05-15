@@ -2,21 +2,27 @@ import React from "react";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DesktopDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { TextField } from "@mui/material";
+import ruLocale from "date-fns/locale/ru";
 
 type Props = {
   label: string;
   onChange: (newValue: Date | null) => void;
   value: Date | string | null;
+  views?: Array<"year" | "month">;
+  minDate?: Date;
+  maxDate?: Date;
 };
 
 const DatePicker: React.FC<Props> = (props) => {
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <LocalizationProvider dateAdapter={AdapterDateFns} locale={ruLocale}>
       <DesktopDatePicker
         label={props.label}
-        inputFormat="dd/MM/yyyy"
         value={props.value}
         onChange={props.onChange}
+        {...(props.views ? { views: props.views } : {})}
+        {...(props.minDate ? { minDate: props.minDate } : {})}
+        {...(props.maxDate ? { maxDate: props.maxDate } : {})}
         renderInput={(params) => <TextField {...params} />}
       />
     </LocalizationProvider>

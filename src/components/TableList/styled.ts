@@ -1,4 +1,5 @@
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import { tableBodyClasses } from "@mui/material/TableBody";
 
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -12,6 +13,11 @@ export const useStyles = makeStyles((theme: Theme) =>
     container: {
       margin: "30px auto",
       width: "100%",
+      height: 600,
+      overflowY: "scroll",
+    },
+    table: {
+      tableLayout: "fixed",
     },
     spinner: {
       position: "absolute",

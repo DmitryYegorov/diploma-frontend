@@ -49,3 +49,5 @@ export enum ReportState {
   SENT = "SENT",
   APPROVED = "APPROVED",
 }
+
+export type LoadType = EventType | ClassType;

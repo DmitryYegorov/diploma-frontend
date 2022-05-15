@@ -48,3 +48,8 @@ export const ReportStateConfig: Record<ReportState, any> = {
   [ReportState.SENT]: { color: deepOrange[700] },
   [ReportState.APPROVED]: { color: green[800] },
 };
+
+export const queryString = (params) =>
+  Object.keys(params)
+    .map((key) => key + "=" + params[key])
+    .join("&");
