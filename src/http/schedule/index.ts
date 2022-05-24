@@ -2,6 +2,7 @@ import { http } from "../index";
 import { AxiosResponse } from "axios";
 import { SwapTeacher, UpdateScheduleClass } from "../../typings/schedule";
 import moment from "moment";
+import { ClassType, Week } from "../../typings/enum";
 
 type SetScheduleClass = {
   subjectId: any;
@@ -21,9 +22,7 @@ export const getTimes = async () => http.get("/schedule/time");
 export const setClassToSchedule = async (data: SetScheduleClass) =>
   http.post("/schedule", data);
 
-export const getScheduleClassesBySemesterId = async (
-  semesterId: string
-): Promise<AxiosResponse<Record<string, string | number | undefined>>> =>
+export const getScheduleClassesBySemesterId = async (semesterId: string) =>
   http.get(`/schedule/semester/${semesterId}`);
 
 export const getScheduleDepartmentBySemester = async (semesterId: string) =>
@@ -48,3 +47,12 @@ export const getUpdatesLogs = async (
     )}&endDate=${moment(endDate).format("yyyy-MM-DD")}`
   );
 };
+
+export const deleteScheduleClass = async (id: string) =>
+  http.delete(`/schedule/${id}`);
+
+export const fetchScheduleClassById = async (id: string) =>
+  http.get(`/schedule/class/${id}`);
+
+export const updateScheduleClassData = async (id: string, body: any) =>
+  http.put(`/schedule/class/${id}`, body);

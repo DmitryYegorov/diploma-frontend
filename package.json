@@ -30,6 +30,7 @@
     "react-datasheet": "^1.4.9",
     "react-dom": "^18.0.0",
     "react-hook-form": "^7.29.0",
+    "react-hot-toast": "^2.2.0",
     "react-i18next": "^11.16.2",
     "react-month-picker": "^2.2.1",
     "react-redux": "^7.2.8",

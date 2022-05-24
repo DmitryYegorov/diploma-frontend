@@ -11,39 +11,42 @@ import {
   ListItemIcon,
   ListItemText,
   Accordion,
+  ButtonGroup,
 } from "@mui/material";
 import {
   CalendarToday as CalendarTodayIcon,
   Circle as CircleIcon,
   Person as PersonIcon,
+  School as SchoolIcon,
+  TableView as TableViewIcon,
+  Send as SendIcon,
 } from "@mui/icons-material";
 import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
-import { fetchOneReportAction } from "../../store/reducers/Report/ActionCreators";
+import {
+  calculateReportDataAction,
+  clearLoadedClassesAction,
+  fetchOneReportAction,
+  loadClassesForReportAction,
+} from "../../store/reducers/Report/ActionCreators";
 import { useStyles } from "./styled";
 import { useTranslation } from "react-i18next";
 
 import i18n from "../../i18n";
 import ListClasses from "./components/ListClasses";
-import ReportMenu from "./components/ReportMenu";
 import LoadReportTable from "../../components/LoadReportTable";
 import { ReportState } from "../../typings/enum";
 import { ReportStateConfig } from "../../helpers";
-import { useAsyncFn } from "react-use";
-import {
-  getCalculatedReportDataByReportId,
-  loadScheduleClassesToReport,
-} from "../../http/report";
-import { reportSlice } from "../../store/reducers/Report/slice";
+import { sendReport } from "../../http/report";
 
 const ReportPage: React.FC = () => {
   const { id } = useParams();
-  const { t } = useTranslation(["report"], { i18n });
+  const { t } = useTranslation(["report", "common"], { i18n });
 
   const classes = useStyles();
 
   const dispatch = useAppDispatch();
-  const { selectedReport, reportData, calculatedReport } = useAppSelector(
+  const { selectedReport, reportData, calculatedForChange } = useAppSelector(
     (state) => state.report
   );
 
@@ -55,7 +58,27 @@ const ReportPage: React.FC = () => {
 
   return (
     <>
-      <ReportMenu />
+      <ButtonGroup>
+        <Button
+          variant="text"
+          onClick={() => {
+            dispatch(clearLoadedClassesAction());
+            dispatch(loadClassesForReportAction(selectedReport.id));
+          }}
+          endIcon={<SchoolIcon />}
+        >
+          {t("report:menu.loadData")}
+        </Button>
+        <Button
+          variant="text"
+          onClick={() => {
+            dispatch(calculateReportDataAction(selectedReport.id));
+          }}
+          endIcon={<TableViewIcon />}
+        >
+          {t("report:menu.calculate")}
+        </Button>
+      </ButtonGroup>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Typography variant="h6">{`${t("report:reportLabel")}: ${
@@ -66,7 +89,7 @@ const ReportPage: React.FC = () => {
           {reportData.length ? (
             <>
               <ListClasses loadData={reportData} reportId={selectedReport.id} />
-              <LoadReportTable load={calculatedReport} />
+              <LoadReportTable />
             </>
           ) : (
             <Alert severity="info">{t("report:emptyReportText")}</Alert>
@@ -106,6 +129,16 @@ const ReportPage: React.FC = () => {
                     <Typography>{selectedReport.createdBy}</Typography>
                   </ListItemText>
                 </ListItem>
+                {selectedReport.state !== ReportState.SENT && (
+                  <ListItem>
+                    <Button
+                      startIcon={<SendIcon />}
+                      onClick={() => sendReport(selectedReport.id)}
+                    >
+                      {t("common:send")}
+                    </Button>
+                  </ListItem>
+                )}
               </List>
             </Paper>
           </Grid>

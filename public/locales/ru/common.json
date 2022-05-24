@@ -14,6 +14,7 @@
     "label": "Отчёт о нагрузке",
     "createNew": "Создать"
   },
+  "scheduleClassEditModalLabel": "Редактировать занятие",
   "period": {
     "start": "Начало",
     "end": "Конец"
@@ -26,5 +27,14 @@
   "nameLabel": "Название",
   "semesterLabel": "Семестер",
   "applyFilter": "Применить",
-  "notData": "Нет данных"
+  "notData": "Нет данных",
+  "logout": "Выйти",
+  "command": {
+    "edit": "Редактировать",
+    "cancel": "Отменить"
+  },
+  "confirmDialog": {
+    "agree": "Да, согласен",
+    "disagree": "Отмена"
+  }
 }

@@ -44,8 +44,10 @@ const Auth: React.FC = () => {
         }}
         spacing={5}
       >
-        <Logo />
         <Paper className={classes.root}>
+          <div style={{ margin: 50 }}>
+            <Logo size={"large"} />
+          </div>
           <Stack spacing={3}>
             {error && !isLoading && <Alert severity="error">{error}</Alert>}
             <FormInputText

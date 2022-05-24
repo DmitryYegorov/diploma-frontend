@@ -4,6 +4,11 @@
   "createdAt": "Дата создания",
   "nameLabel": "Название",
   "stateLabel": "Текущий статус",
+  "sentReportsLabel": "Отправленные отчёты",
+  "sentAt": "Отправлен",
+  "startDate": "Начало",
+  "endDate": "Конец",
+  "approveReport": "Принять отчёт",
   "state": {
     "DRAFT": "Черновик",
     "SENT": "Отправлен",
@@ -20,8 +25,8 @@
   "addLoadItem": "Добавить нагрузку",
   "count": "Количество",
   "withOutCount": "Не учитывать",
-  "subgroupsCount": "Подгруппы",
-  "studentsCount": "Студенты",
+  "subgroupsCount": "Кол-во учебных подгрупп",
+  "studentsCount": "Ков-во студентов",
   "classUpdateNote": "Примечание",
   "applyLabel": "Применить",
   "applyTooltip": "После применяния будет подсчитано и сохранено кол-во часов",
@@ -40,6 +45,11 @@
   "notReportsData": "Пользователем пока не было создано ни одного отчёта...",
   "calculatedReportLabel": "Списанная нагрузка",
   "actions": {
-    "deleteItemAction": "Удалить"
-  }
+    "deleteItemAction": "Удалить",
+    "saveChangesAction": "Сохранить",
+    "restoreChangesAction": "Сбросить изменения",
+    "cancelReportTitle": "Запросить изменения отчёта",
+    "cancelReportText": "Вами будут запрошено внесение изменений в отчёт. Продолжить?"
+  },
+  "reportAdminNoteLabel": "Комментарий"
 }

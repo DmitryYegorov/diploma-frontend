@@ -1,5 +1,6 @@
 import { AppDispatch } from "../../index";
 import {
+  fetchScheduleClassById,
   getScheduleClassesBySemesterId,
   getScheduleDepartmentBySemester,
 } from "../../../http/schedule";
@@ -30,5 +31,16 @@ export const fetchScheduleClassofDepartmentBySemesterIdAction =
       dispatch(
         scheduleClasses.actions.fetchScheduleClassesOfDepartmentFailed(e)
       );
+    }
+  };
+
+export const fetchOneClassByIdAction =
+  (id: string) => async (dispatch: AppDispatch) => {
+    try {
+      dispatch(scheduleClasses.actions.fetchOneClassById());
+      const res = await fetchScheduleClassById(id);
+      dispatch(scheduleClasses.actions.fetchOneClassByIdSuccess(res.data));
+    } catch (e) {
+      dispatch(scheduleClasses.actions.fetchOneClassByIdFailed(e));
     }
   };

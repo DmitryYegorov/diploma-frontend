@@ -17,7 +17,7 @@ type Props = {
   label: string;
   handleChange: (e: any) => void;
   options: Array<Option> | null;
-  value?: string;
+  value?: any;
   loading?: boolean;
   width?: number;
   fullWidth?: boolean;

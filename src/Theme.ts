@@ -9,9 +9,11 @@ declare module "@mui/material/styles" {
 
   interface Palette {
     neutral: Palette["primary"];
+    cell: Palette["primary"];
   }
   interface PaletteOptions {
     neutral: PaletteOptions["primary"];
+    cell: PaletteOptions["primary"];
   }
 
   interface PaletteColor {
@@ -40,6 +42,10 @@ const theme = createTheme({
     neutral: {
       main: "#64748B",
       contrastText: "#fff",
+    },
+    cell: {
+      main: "#bde0ff",
+      darker: "#4f667c",
     },
   },
 });

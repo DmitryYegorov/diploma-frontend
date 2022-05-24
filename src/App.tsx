@@ -6,6 +6,11 @@ import { fetchUsersAction } from "./store/reducers/Users/ActionCreators";
 import { fetchSemesterAction } from "./store/reducers/Semester/ActionCreators";
 import moment from "moment";
 import "moment/locale/ru";
+import { fetchSubjectsAction } from "./store/reducers/Subject/ActionCreators";
+import { fetchRoomsAction } from "./store/reducers/Room/ActionCreators";
+import { fetchGroupsWithFacultiesAction } from "./store/reducers/Group/ActionCreators";
+import { Toaster } from "react-hot-toast";
+import { Typography } from "@mui/material";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -16,6 +21,9 @@ function App() {
   React.useEffect(() => {
     dispatch(fetchSemesterAction());
     dispatch(fetchUsersAction());
+    dispatch(fetchSubjectsAction());
+    dispatch(fetchRoomsAction());
+    dispatch(fetchGroupsWithFacultiesAction());
   }, [dispatch]);
 
   return (
@@ -23,6 +31,13 @@ function App() {
       <BrowserRouter>
         <AppRouter />
       </BrowserRouter>
+      <Typography>
+        <Toaster
+          position="top-right"
+          reverseOrder={false}
+          toastOptions={{ duration: 5000 }}
+        />
+      </Typography>
     </>
   );
 }

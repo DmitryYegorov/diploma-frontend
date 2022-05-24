@@ -30,6 +30,8 @@ import i18n from "../../../../../i18n";
 type Props = {
   weekDay: number;
   scheduleTime: string;
+  mode?: "create" | "edit";
+  editData?: any;
 };
 
 const weekMapLabel = [
@@ -62,7 +64,12 @@ const classTypeMapLabel = [
   },
 ];
 
-const CellForm: React.FC<Props> = ({ weekDay, scheduleTime }) => {
+const CellForm: React.FC<Props> = ({
+  weekDay,
+  scheduleTime,
+  mode,
+  editData,
+}) => {
   const rootState = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
 
@@ -90,13 +97,11 @@ const CellForm: React.FC<Props> = ({ weekDay, scheduleTime }) => {
   });
 
   useEffect(() => {
-    if (!rootState.subject.isLoading && !rootState.room.isLoading) {
-      Promise.all([
-        dispatch(fetchSubjectsAction()),
-        dispatch(fetchRoomsAction()),
-        dispatch(fetchGroupsWithFacultiesAction()),
-      ]);
-    }
+    Promise.all([
+      dispatch(fetchSubjectsAction()),
+      dispatch(fetchRoomsAction()),
+      dispatch(fetchGroupsWithFacultiesAction()),
+    ]);
   }, [dispatch]);
 
   useEffect(() => {
@@ -132,6 +137,11 @@ const CellForm: React.FC<Props> = ({ weekDay, scheduleTime }) => {
       )
     );
   };
+
+  if (mode === "edit") {
+    // eslint-disable-next-line no-console
+    console.log(editData);
+  }
 
   return (
     <Container>
@@ -248,6 +258,10 @@ const CellForm: React.FC<Props> = ({ weekDay, scheduleTime }) => {
       </Grid>
     </Container>
   );
+};
+
+CellForm.defaultProps = {
+  mode: "create",
 };
 
 export default CellForm;

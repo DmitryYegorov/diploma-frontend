@@ -98,7 +98,6 @@ const DropDownMenu: React.FC<Props> = ({ itemHeight, options }) => {
         PaperProps={{
           style: {
             maxHeight: itemHeight * 4.5,
-            width: "20ch",
           },
         }}
       >

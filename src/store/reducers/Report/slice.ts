@@ -5,6 +5,8 @@ interface ReportState {
   list: Array<any>;
   selectedReport: any;
   calculatedReport: Array<LoadItemType>;
+  calculatedForChange: Array<LoadItemType>;
+  calculatedChanged: boolean;
   reportData: Array<ReportData>;
   isLoading: boolean;
   error: string;
@@ -14,6 +16,8 @@ const initialState: ReportState = {
   list: [],
   selectedReport: {},
   calculatedReport: [],
+  calculatedChanged: false,
+  calculatedForChange: [],
   reportData: [],
   isLoading: false,
   error: "",
@@ -47,6 +51,7 @@ export const reportSlice = createSlice({
       state.selectedReport = action.payload;
       state.reportData = action.payload.reportData;
       state.calculatedReport = action.payload.calculatedData;
+      state.calculatedForChange = action.payload.calculatedData;
     },
 
     loadClasses(state) {
@@ -67,6 +72,7 @@ export const reportSlice = createSlice({
     calculateReportDataSuccess(state, action) {
       state.isLoading = false;
       state.calculatedReport = action.payload;
+      state.calculatedForChange = action.payload;
     },
     calculatedReportDataFailed(state, action) {
       state.isLoading = false;
@@ -74,7 +80,13 @@ export const reportSlice = createSlice({
     },
 
     setCalculatedReportData(state, action) {
-      state.calculatedReport = action.payload;
+      state.calculatedForChange = action.payload;
+      state.calculatedChanged = true;
+    },
+
+    restoreChanges(state) {
+      state.calculatedChanged = false;
+      state.calculatedForChange = [...state.calculatedReport];
     },
 
     clearLoadedClasses(state) {

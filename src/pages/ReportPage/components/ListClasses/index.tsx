@@ -30,15 +30,10 @@ type Props = {
   reportId: string;
 };
 
-const ListClasses: React.FC<Props> = ({ loadData, reportId }) => {
+const ListClasses: React.FC<Props> = ({ loadData }) => {
   const { t } = useTranslation(["report"], { i18n });
 
-  const classes = useStyles();
-
-  const [order, setOrder] = useState("title");
   const { isLoading } = useAppSelector((state) => state.report);
-
-  const dispatch = useAppDispatch();
 
   const loadClassesColumns = [
     {
@@ -90,7 +85,7 @@ const ListClasses: React.FC<Props> = ({ loadData, reportId }) => {
   };
 
   return (
-    <Accordion defaultExpanded>
+    <Accordion>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Typography>{t("report:classes")}</Typography>
       </AccordionSummary>

@@ -11,6 +11,9 @@ const UserDashboard = lazy(
 const ReportsPage = lazy(() => import("../ReportsList"));
 const ReportDashboardPage = lazy(() => import("../ReportPage"));
 
+const SentReportsPage = lazy(() => import("../SentReports"));
+const SentReportsDashboardPage = lazy(() => import("../SentReports/Dashboard"));
+
 const LoadAccountingPage = () => {
   return (
     <Routes>
@@ -39,6 +42,18 @@ const LoadAccountingPage = () => {
           <Routes>
             <Route index element={<ReportsPage />} />
             <Route path={":id"} element={<ReportDashboardPage />} />
+            <Route
+              path={"sent/*"}
+              element={
+                <Routes>
+                  <Route path={"list"} element={<SentReportsPage />} />
+                  <Route
+                    path={"/list/:id"}
+                    element={<SentReportsDashboardPage />}
+                  />
+                </Routes>
+              }
+            />
           </Routes>
         }
       />
