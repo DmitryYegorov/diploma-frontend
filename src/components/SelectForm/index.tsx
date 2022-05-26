@@ -22,6 +22,7 @@ type Props = {
   width?: number;
   fullWidth?: boolean;
   disabled?: boolean;
+  size?: "small" | "medium";
 };
 
 const SelectForm: React.FC<Props> = ({
@@ -33,6 +34,7 @@ const SelectForm: React.FC<Props> = ({
   width,
   fullWidth,
   disabled,
+  size,
 }) => {
   if (loading) {
     return (
@@ -52,6 +54,7 @@ const SelectForm: React.FC<Props> = ({
           label={label}
           style={{ width }}
           disabled={disabled}
+          size={size}
         >
           {options.map((option) => (
             <MenuItem value={option.value}>{option.label}</MenuItem>
@@ -66,6 +69,7 @@ SelectForm.defaultProps = {
   loading: false,
   fullWidth: true,
   disabled: false,
+  size: "medium",
 };
 
 export default SelectForm;

@@ -24,14 +24,3 @@ export const loginAction =
       }
     }
   };
-
-export const registerAction =
-  (data: AuthTypes.Request.Login) => async (dispatch: AppDispatch) => {
-    try {
-      dispatch(authSlice.actions.registerFetch());
-      const res = await register(data);
-      dispatch(authSlice.actions.registerSuccess(res.data));
-    } catch (e) {
-      dispatch(authSlice.actions.registerFailed(e));
-    }
-  };

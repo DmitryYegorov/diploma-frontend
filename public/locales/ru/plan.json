@@ -1,0 +1,20 @@
+{
+  "academicYear": {
+    "start": "Начало",
+    "end": "Конец",
+    "state": "Состояние",
+    "firstSem": "1-й семестр",
+    "secondSem": "2-й семестр"
+  },
+  "semester": {
+    "nameLabel": "Имя",
+    "defaultName": {
+      "autumn": "Осень",
+      "spring": "Весная"
+    }
+  },
+  "academicState": {
+    "archived": "Неактивен",
+    "nonArchived": "Текущий"
+  }
+}

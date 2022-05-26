@@ -1,5 +1,11 @@
 import React, { useLayoutEffect } from "react";
-import { Paper, Stack, Container, Alert } from "@mui/material";
+import {
+  Paper,
+  Stack,
+  Container,
+  Alert,
+  CircularProgress,
+} from "@mui/material";
 import FormInputText from "../../components/FormInputText";
 import ButtonSubmit from "../../components/ButtonSubmit";
 import { useTranslation } from "react-i18next";
@@ -7,14 +13,13 @@ import i18n from "../../i18n";
 import { useStyles } from "./styled";
 import { useForm } from "react-hook-form";
 import * as AuthTypes from "../../typings/auth";
-import {
-  loginAction,
-  registerAction,
-} from "../../store/reducers/Auth/ActionCreators";
 import Logo from "../../components/Logo";
 import { useNavigate } from "react-router-dom";
 import { register } from "../../http/auth";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
+import { useAsyncFn } from "react-use";
+import axios, { AxiosError } from "axios";
+import toast from "react-hot-toast";
 
 const Register: React.FC = () => {
   const classes = useStyles();
@@ -26,9 +31,22 @@ const Register: React.FC = () => {
   const { error, registerSuccess, isLoading } = useAppSelector(
     (state) => state.auth
   );
-  const dispatch = useAppDispatch();
 
-  const registerSubmit = (data: any) => dispatch(registerAction(data));
+  const [registerState, registerSubmit] = useAsyncFn(async (data) => {
+    try {
+      const res = await register(data);
+      if (res.data) {
+        toast.success(
+          `${res.data.firstName} ${res.data.middleName} ${res.data.lastName}, аккаунт успешно создан! `
+        );
+      }
+    } catch (e) {
+      if (axios.isAxiosError(e)) {
+        const serverError = e as AxiosError;
+        toast.error(serverError.response.data.message);
+      }
+    }
+  });
 
   return (
     <Container>
@@ -42,12 +60,8 @@ const Register: React.FC = () => {
         spacing={5}
       >
         <Logo />
-        {!isLoading && registerSuccess && (
-          <Alert severity="success">Регистрация прошла успешно!</Alert>
-        )}
-        {!isLoading && error && !registerSuccess && (
-          <Alert severity="error">{error}</Alert>
-        )}
+
+        {registerState.loading ? <CircularProgress /> : null}
         <Paper className={classes.root}>
           <Stack spacing={3}>
             <FormInputText

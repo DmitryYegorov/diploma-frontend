@@ -5,6 +5,7 @@ import i18n from "../../i18n";
 import WhiteLogo from "../../assets/white_logo.svg";
 import BlackLogo from "../../assets/black_logo.svg";
 import BlueLogo from "../../assets/blue_logo.svg";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   color?: "white" | "blue" | "black";
@@ -20,8 +21,17 @@ const logo = {
 const Logo: React.FC<Props> = ({ color, size }) => {
   const { t } = useTranslation(["common"], { i18n });
 
+  const navigate = useNavigate();
+
   return (
-    <Stack direction={"row"} spacing={1}>
+    <Stack
+      direction={"row"}
+      spacing={1}
+      style={{
+        cursor: "pointer",
+      }}
+      onClick={() => navigate("/")}
+    >
       <img src={logo[color]} width={size === "large" ? 60 : 30} />
       <Typography variant={size === "large" ? "h3" : "h5"}>
         E-Department

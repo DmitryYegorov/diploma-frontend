@@ -14,6 +14,9 @@ const ReportDashboardPage = lazy(() => import("../ReportPage"));
 const SentReportsPage = lazy(() => import("../SentReports"));
 const SentReportsDashboardPage = lazy(() => import("../SentReports/Dashboard"));
 
+const AcademicYearPage = lazy(() => import("../AcademicYear"));
+const AcademicYearPlanLoadPage = lazy(() => import("../AcademicYear/PlanLoad"));
+
 const LoadAccountingPage = () => {
   return (
     <Routes>
@@ -24,6 +27,15 @@ const LoadAccountingPage = () => {
         element={
           <Routes>
             <Route index element={<SchedulePage />} />
+          </Routes>
+        }
+      />
+      <Route
+        path={"academic-year/*"}
+        element={
+          <Routes>
+            <Route index element={<AcademicYearPage />} />
+            <Route path={":id"} element={<AcademicYearPlanLoadPage />} />
           </Routes>
         }
       />

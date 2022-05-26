@@ -75,7 +75,9 @@ const EditClassForm: React.FC<Props> = ({ editData }) => {
 
   const [startDate, setStartDate] = React.useState(editData.startDate);
   const [endDate, setEndDate] = React.useState(editData.endDate);
-  const [groups, setGroups] = React.useState(editData.groups);
+  const [groups, setGroups] = React.useState(
+    editData.groups.map((g) => ({ id: g.id, label: g.label }))
+  );
 
   const { handleSubmit, register, setValue } = useForm({
     defaultValues: {
@@ -86,7 +88,7 @@ const EditClassForm: React.FC<Props> = ({ editData }) => {
       scheduleTimeId: editData.time.id,
       startDate: editData.startDate,
       endDate: editData.endDate,
-      groups: editData.groups,
+      groups: editData.groups.map((g) => ({ id: g.value, label: g.label })),
     },
   });
 
@@ -101,9 +103,10 @@ const EditClassForm: React.FC<Props> = ({ editData }) => {
     register("endDate");
   }, [register]);
 
-  // eslint-disable-next-line no-console
   const submitData = async (data) => {
     try {
+      // eslint-disable-next-line no-console
+      console.log(data);
       const res = await updateScheduleClassData(editData.id, data);
       toast.success("Изменение успешно применены!");
 
@@ -157,12 +160,10 @@ const EditClassForm: React.FC<Props> = ({ editData }) => {
       <Autocomplete
         multiple
         id="tags-standard"
-        options={group.list}
+        options={group.list.map((g) => ({ id: g.id, label: g.label }))}
         getOptionLabel={(option) => option.label}
         fullWidth
         onChange={(event, newValue) => {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
           setGroups(newValue);
           setValue("groups", newValue);
         }}

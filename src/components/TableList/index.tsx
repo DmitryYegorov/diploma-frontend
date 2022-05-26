@@ -136,7 +136,7 @@ const TableList = <T extends { id?: number | string }>({
                         tabIndex={-1}
                         key={row.id}
                         className={classes.row}
-                        //onClick={() => onRowClick(row.id)}
+                        // onClick={() => onRowClick(row.id)}
                       >
                         {columns.map((column: Column) => {
                           // eslint-disable-next-line @typescript-eslint/ban-ts-comment

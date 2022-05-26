@@ -2,10 +2,16 @@
   "eDepartment": "Е-Кафедра",
   "mainMenu": "Стартовая страница",
   "profileSetting": "Настройки аккаунта",
+  "registration": "Создать аккаунт",
   "scheduleControl": "Расписание",
   "calendar": "Календарь",
   "subjectControl": "Дисциплины",
   "usersList": "Пользователи",
+  "academicYear": "Учёбный год",
+  "studentInfo": "Данные о группах",
+  "faculties": "Факультеты",
+  "specialities": "Специальности",
+  "groups": "Подгруппы",
   "type": "Тип",
   "send": "Отправить",
   "reason": "Причина",
@@ -31,7 +37,8 @@
   "logout": "Выйти",
   "command": {
     "edit": "Редактировать",
-    "cancel": "Отменить"
+    "cancel": "Отменить",
+    "create": "Создать"
   },
   "confirmDialog": {
     "agree": "Да, согласен",

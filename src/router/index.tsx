@@ -16,6 +16,8 @@ const ScheduleDepartmentPage = lazy(
   () => import("../pages/ScheduleDepartment")
 );
 
+const StudentInfoPage = lazy(() => import("../pages/StudentInfo"));
+
 const AppRouter = (): JSX.Element => {
   const classes = useStyles();
   const { isAuthenticated } = useAppSelector((state) => state.auth);
@@ -63,6 +65,7 @@ const AppRouter = (): JSX.Element => {
                     element={<ScheduleDepartmentPage />}
                   />
                   <Route path={"subject"} element={<SubjectPage />} />
+                  <Route path={"student-info"} element={<StudentInfoPage />} />
                 </Routes>
               </RequireAuth>
             }
@@ -71,8 +74,8 @@ const AppRouter = (): JSX.Element => {
           <Route path="*" element={<h1>404</h1>} />
         </Route>
 
-        <Route path="auth/*" element={<AuthPage />} />
-        <Route path="register" element={<RegisterPage />} />
+        <Route path="auth/login" element={<AuthPage />} />
+        <Route path="auth/register" element={<RegisterPage />} />
       </Routes>
     </Suspense>
   );
