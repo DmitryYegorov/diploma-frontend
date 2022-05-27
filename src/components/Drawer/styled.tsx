@@ -35,7 +35,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       alignItems: "center",
       padding: theme.spacing(0, 1),
-      justifyContent: "flex-end",
+      justifyContent: "space-between",
     },
     listTitle: {
       fontSize: "inherit",

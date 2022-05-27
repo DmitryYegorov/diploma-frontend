@@ -33,6 +33,7 @@ import {
   removeLoadItemFromReport,
 } from "../../../../http/report";
 import CustomPopper from "../../../../components/CustomPopper";
+import { Column } from "../../../../components/TableList/typings";
 
 type Props = {
   loadData: Array<any>;
@@ -49,7 +50,7 @@ const ListClasses: React.FC<Props> = ({
 
   const { isLoading } = useAppSelector((state) => state.report);
 
-  const loadClassesColumns = [
+  const loadClassesColumns: Column[] = [
     {
       id: "subjectName",
       label: t("report:nameLabel"),

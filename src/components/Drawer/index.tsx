@@ -18,6 +18,7 @@ import { useAppSelector } from "../../hooks/redux";
 
 import i18n from "../../i18n";
 import { UserRole } from "../../typings/enum";
+import Logo from "../Logo";
 
 type DrawerProps = {
   open: boolean;
@@ -70,6 +71,7 @@ const DrawerComponent: React.FC<DrawerProps> = ({
   return (
     <Drawer anchor="left" variant="temporary" onClose={toggle} open={open}>
       <div className={classes.drawerHeader}>
+        <Logo />
         <IconButton onClick={close}>
           <ChevronLeftIcon />
         </IconButton>
