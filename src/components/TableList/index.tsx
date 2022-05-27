@@ -169,7 +169,7 @@ const TableList = <T extends { id?: number | string }>({
                           );
                         })}
                         {renderActions ? (
-                          <TableCell key="actions" align="center">
+                          <TableCell key="actions" align="right">
                             {renderActions(row)}
                           </TableCell>
                         ) : null}

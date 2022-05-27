@@ -1,20 +1,24 @@
 import React, { useState } from "react";
 import {
   Accordion,
+  AccordionActions,
   AccordionDetails,
   AccordionSummary,
   Alert,
   Button,
+  Chip,
   Collapse,
   IconButton,
   Paper,
   Stack,
   TableCell,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import {
   Delete as DeleteIcon,
   ExpandMore as ExpandMoreIcon,
+  SettingsBackupRestore as SettingsBackupRestoreIcon,
 } from "@mui/icons-material";
 import TableList from "../../../../components/TableList";
 import { ClassType } from "../../../../typings/enum";
@@ -24,7 +28,11 @@ import { useStyles } from "./styled";
 import { useAppSelector, useAppDispatch } from "../../../../hooks/redux";
 import moment from "moment";
 import DropDownMenu from "../../../../components/DropDownMenu";
-import { removeLoadItemFromReport } from "../../../../http/report";
+import {
+  reloadDataToReport,
+  removeLoadItemFromReport,
+} from "../../../../http/report";
+import CustomPopper from "../../../../components/CustomPopper";
 
 type Props = {
   loadData: Array<any>;
@@ -32,7 +40,11 @@ type Props = {
   fetchLoadData?: () => Promise<void | any>;
 };
 
-const ListClasses: React.FC<Props> = ({ loadData, fetchLoadData }) => {
+const ListClasses: React.FC<Props> = ({
+  loadData,
+  fetchLoadData,
+  reportId,
+}) => {
   const { t } = useTranslation(["report"], { i18n });
 
   const { isLoading } = useAppSelector((state) => state.report);
@@ -69,6 +81,31 @@ const ListClasses: React.FC<Props> = ({ loadData, fetchLoadData }) => {
       },
       sortable: false,
     },
+    {
+      id: "groups",
+      label: "Подгруппы",
+      sortable: false,
+      renderCell: (row) => {
+        if (row.groups?.length) {
+          return (
+            <TableCell>
+              <CustomPopper>
+                <Stack direction="row" spacing={0.5} flexWrap="wrap">
+                  {row?.groups?.map((group, index) => (
+                    <div style={{ margin: 2 }} key={index}>
+                      <Tooltip title={group.speciality}>
+                        <Chip label={group.label} />
+                      </Tooltip>
+                    </div>
+                  ))}
+                </Stack>
+              </CustomPopper>
+            </TableCell>
+          );
+        }
+        return <TableCell>{null}</TableCell>;
+      },
+    },
   ];
 
   const renderActions = (row) => {
@@ -94,6 +131,20 @@ const ListClasses: React.FC<Props> = ({ loadData, fetchLoadData }) => {
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Typography>{t("report:classes")}</Typography>
       </AccordionSummary>
+      <AccordionActions>
+        <Stack direction="row">
+          <Button
+            variant="text"
+            startIcon={<SettingsBackupRestoreIcon />}
+            onClick={() => {
+              reloadDataToReport(reportId);
+              fetchLoadData();
+            }}
+          >
+            Обновить данные
+          </Button>
+        </Stack>
+      </AccordionActions>
       <AccordionDetails>
         <TableList
           columns={loadClassesColumns}

@@ -11,6 +11,7 @@ import {
 import {
   Add as AddIcon,
   OpenInNew as OpenInNewIcon,
+  Delete as DeleteIcon,
 } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import i18n from "../../i18n";
@@ -24,6 +25,7 @@ import { fetchReportsAction } from "../../store/reducers/Report/ActionCreators";
 import { ReportStateConfig } from "../../helpers";
 import { ReportState } from "../../typings/enum";
 import { useNavigate } from "react-router-dom";
+import { deleteReportById } from "../../http/report";
 
 const ReportsList: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -44,7 +46,11 @@ const ReportsList: React.FC = () => {
       label: t("report:nameLabel"),
       sortable: false,
     },
-    { id: "state", label: t("report:stateLabel"), sortable: false },
+    {
+      id: "state",
+      label: t("report:stateLabel"),
+      sortable: false,
+    },
     {
       id: "createdAt",
       label: t("report:createdAt"),
@@ -89,9 +95,20 @@ const ReportsList: React.FC = () => {
             })}
             columns={columns}
             renderActions={(row) => (
-              <IconButton color="primary" onClick={() => navigate(row.id)}>
-                <OpenInNewIcon />
-              </IconButton>
+              <Stack direction={"row"} spacing={0.5}>
+                <IconButton color="primary" onClick={() => navigate(row.id)}>
+                  <OpenInNewIcon />
+                </IconButton>
+                <IconButton
+                  color="error"
+                  onClick={() => {
+                    deleteReportById(row.id);
+                    dispatch(fetchReportsAction());
+                  }}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </Stack>
             )}
             isLoading={reportState.isLoading}
             notDataMessage={t("report:notReportsData")}

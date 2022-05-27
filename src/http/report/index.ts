@@ -54,3 +54,9 @@ export const updateOtherLoadItem = async (id: string, data) =>
 
 export const deleteOtherLoadItemById = async (id: string) =>
   http.delete(`/other-load/${id}`);
+
+export const deleteReportById = async (id: string) =>
+  http.delete(`/report/${id}`);
+
+export const reloadDataToReport = async (reportId: string) =>
+  http.get(`/report/${reportId}/new-load`);
