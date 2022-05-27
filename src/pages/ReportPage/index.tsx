@@ -37,7 +37,6 @@ import {
   sendReport,
 } from "../../http/report";
 import { useAsyncFn } from "react-use";
-import { LoadingButton } from "@mui/lab";
 
 const ReportPage: React.FC = () => {
   const { id } = useParams();

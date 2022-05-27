@@ -81,6 +81,7 @@ const ListClasses: React.FC<Props> = ({
       },
       sortable: false,
     },
+    { id: "duration", label: "Кол-во часов", align: "center" },
     {
       id: "groups",
       label: "Подгруппы",
