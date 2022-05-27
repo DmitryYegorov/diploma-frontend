@@ -10,206 +10,195 @@ import {
   Stack,
   TextField,
   Container,
+  Autocomplete,
 } from "@mui/material";
 import SelectLoadType from "../SelectLoadType";
 import SelectForm from "../../../../../components/SelectForm";
 import { useAsyncFn } from "react-use";
-import { fetchFacultiesList } from "../../../../../http/group";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import i18n from "../../../../../i18n";
 import moment from "moment";
 import DatePicker from "../../../../../components/DatePicker";
-import { saveOtherLoadDataToReport } from "../../../../../http/report";
+import {
+  saveOtherLoadData,
+  updateOtherLoadItem,
+} from "../../../../../http/report";
 import { useAppDispatch, useAppSelector } from "../../../../../hooks/redux";
-import { fetchSubjectsAction } from "../../../../../store/reducers/Subject/ActionCreators";
-import { EventType } from "../../../../../typings/enum";
+import toast from "react-hot-toast";
+import axios, { AxiosError } from "axios";
 
 type Props = {
   mode: "edit" | "create";
   loadData?: any;
   onDataSending: () => Promise<void | any>;
+  semesterId: string;
 };
 
-const LoadDataForm: React.FC<Props> = ({ mode, loadData, onDataSending }) => {
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-    getValues,
-    watch,
-  } = useForm();
+const LoadDataForm: React.FC<Props> = ({
+  mode,
+  loadData,
+  onDataSending,
+  semesterId,
+}) => {
+  const editingMode = mode === "edit" && loadData;
+
+  const defaultValues = editingMode
+    ? {
+        type: loadData.type,
+        studentsCount: loadData.studentsCount,
+        groups: loadData.subGroupsLabels.map((g) => g.id),
+        duration: loadData.duration,
+        date: loadData.date,
+        subjectId: loadData.subjectId,
+      }
+    : {};
+
+  const { register, handleSubmit, setValue, control } = useForm({
+    defaultValues,
+  });
+  const watch = useWatch({ control });
 
   const { t } = useTranslation(["common", "report"], { i18n });
-  const dispatch = useAppDispatch();
   const subjectState = useAppSelector((state) => state.subject);
+  const groups = useAppSelector((state) => state.group);
+  const semester = useAppSelector((state) => state.semester);
 
-  const [faculties, fetchFaculties] = useAsyncFn(async () => {
-    const { data } = await fetchFacultiesList();
-
-    return data;
-  });
-
-  let countFieldName = "none";
-
-  if (mode === "edit" && loadData) {
-    countFieldName = !!loadData.studentsCount
-      ? "studentsCount"
-      : !!loadData.groupsCount
-      ? "groupsCount"
-      : "none";
-  }
-
-  const [count, setCount] = useState(countFieldName);
   const [date, setDate] = React.useState<Date | null>(new Date());
 
   useEffect(() => {
-    fetchFaculties();
-  }, [fetchFaculties]);
-
-  useEffect(() => {
-    dispatch(fetchSubjectsAction());
-  }, [dispatch]);
-
-  useEffect(() => {
     register("type", { required: true });
-    register("facultyId", { required: true });
     register("studentsCount");
-    register("groupsCount");
+    register("groups");
     register("duration", { required: true });
     register("date", { required: true, value: date });
     register("subjectId");
   }, [register]);
 
-  const sendDataToServer = async (data) => {
-    alert(mode);
-    if (mode === "edit") {
-      alert("Not edit api function, wait:)");
-    }
-    if (mode === "create") {
-      await saveOtherLoadDataToReport(data);
+  const createLoadItem = async (data) => {
+    try {
+      const res = await saveOtherLoadData({
+        ...data,
+        semesterId,
+        groups: data.groups?.length ? data.groups.map((g) => g.id) : null,
+      });
+      if (res.data) {
+        toast.success("Данные сохранены!");
+      }
       await onDataSending();
+    } catch (e) {
+      if (axios.isAxiosError(e)) {
+        const { response } = e as AxiosError;
+        toast.error(response.data.message);
+      }
+    }
+  };
+
+  const [newSemesterId, setNewSemesterId] = useState(loadData?.semesterId);
+
+  const updateLoadItem = async (data) => {
+    try {
+      const req = {
+        ...data,
+        semesterId: newSemesterId,
+        groups: data.groups?.length ? data.groups.map((g) => g.id) : null,
+      };
+
+      const res = await updateOtherLoadItem(loadData.id, req);
+      if (res.data) {
+        toast.success("Данные сохранены!");
+      }
+      await onDataSending();
+    } catch (e) {
+      if (axios.isAxiosError(e)) {
+        const { response } = e as AxiosError;
+        toast.error(response.data.message);
+      }
+    }
+  };
+
+  const sendDataToServer = async (data) => {
+    if (mode === "create") {
+      await createLoadItem(data);
+    } else if (editingMode) {
+      await updateLoadItem(data);
     }
   };
 
   return (
-    <Container style={{ margin: "0 auto" }}>
-      <Grid container spacing={1}>
-        <Grid item xs={12}>
-          <SelectLoadType
-            handleChange={(e) => setValue("type", e.target.value)}
-            {...(mode === "edit" && loadData ? { value: loadData.type } : {})}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <SelectForm
-            label={t("report:subjectName")}
-            handleChange={(e) => setValue("subjectId", e.target.value)}
-            options={subjectState.list.map((s) => ({
-              label: s.name,
-              value: s.id,
-            }))}
-            loading={subjectState.isLoading}
-            disabled={
-              ![
-                EventType.EXAM,
-                EventType.COURSE_WORK,
-                EventType.CREDIT,
-              ].includes(watch().type as EventType)
+    <Stack spacing={1} style={{ width: 350 }}>
+      {editingMode && (
+        <SelectForm
+          label={"Семестр"}
+          handleChange={(e) => setNewSemesterId(e.target.value)}
+          options={semester.list.map((s) => ({
+            label: s.name,
+            value: s.id,
+          }))}
+          value={semesterId}
+        />
+      )}
+      <SelectLoadType
+        handleChange={(e) => setValue("type", e.target.value)}
+        {...(editingMode ? { value: watch.type } : {})}
+      />
+      <SelectForm
+        label={t("report:subjectName")}
+        handleChange={(e) => setValue("subjectId", e.target.value)}
+        options={subjectState.list.map((s) => ({
+          label: s.name,
+          value: s.id,
+        }))}
+        {...(editingMode ? { value: watch.subjectId } : {})}
+        loading={subjectState.isLoading}
+      />
+      <TextField
+        label={t("report:studentCount")}
+        type="number"
+        fullWidth
+        onChange={(e) => setValue("studentsCount", +e.target.value)}
+        {...(editingMode ? { value: watch.studentsCount } : {})}
+      />
+      <Autocomplete
+        multiple
+        id="tags-standard"
+        options={groups.list}
+        getOptionLabel={(option: any) => option.label}
+        fullWidth
+        onChange={(event, newValue) => setValue("groups", newValue)}
+        {...(editingMode
+          ? {
+              defaultValue: groups.list.filter((item) =>
+                watch.groups.includes(item.id)
+              ),
             }
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <SelectForm
-            label={t("report:faculty")}
-            handleChange={(e) => setValue("facultyId", e.target.value)}
-            options={
-              faculties.value &&
-              faculties.value.map((f) => ({ label: f.name, value: f.id }))
-            }
-            loading={faculties.loading}
-            {...(mode === "edit" && loadData
-              ? { value: loadData.facultyId }
-              : {})}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <FormControl>
-            <FormLabel id="demo-radio-buttons-group-label">
-              {t("report:count")}
-            </FormLabel>
-            <RadioGroup
-              aria-labelledby="demo-radio-buttons-group-label"
-              defaultValue="female"
-              name="radio-buttons-group"
-              value={count}
-              onChange={(e) => setCount(e.target.value)}
-            >
-              <Stack direction="row">
-                <FormControlLabel
-                  value="studentsCount"
-                  control={<Radio size="small" />}
-                  label={t("report:studentsCount")}
-                />
-                <FormControlLabel
-                  value="groupsCount"
-                  control={<Radio size="small" />}
-                  label={t("report:subgroupsCount")}
-                />
-                <FormControlLabel
-                  value="none"
-                  control={<Radio size="small" />}
-                  label={t("report:withOutCount")}
-                />
-              </Stack>
-            </RadioGroup>
-            {count !== "none" && (
-              <TextField
-                label={t("report:count")}
-                type="number"
-                fullWidth
-                onChange={(e) => {
-                  if (count !== "none") {
-                    setValue(count, parseInt(e.target.value));
-                  }
-                }}
-                {...(mode === "edit" && loadData && count !== "none"
-                  ? { value: loadData[count] }
-                  : {})}
-              />
-            )}
-          </FormControl>
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            label={t("report:duration")}
-            type="number"
-            fullWidth
-            onChange={(e) => setValue("duration", parseFloat(e.target.value))}
-            {...(mode === "edit" && loadData
-              ? { value: loadData.duration }
-              : {})}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <DatePicker
-            label={t("report:dateMark")}
-            views={["year", "month"]}
-            minDate={moment().add(-1, "years").toDate()}
-            maxDate={moment().add(1, "years").toDate()}
-            onChange={(month) => {
-              setDate(month);
-              setValue("date", month);
-            }}
-            value={mode === "edit" ? loadData.date : date}
-          />
-        </Grid>
-        <Button variant="contained" onClick={handleSubmit(sendDataToServer)}>
-          {t("common:send")}
-        </Button>
-      </Grid>
-    </Container>
+          : {})}
+        renderInput={(params) => (
+          <TextField {...params} label="Группы" fullWidth />
+        )}
+      />
+      <TextField
+        label={t("report:duration")}
+        type="number"
+        fullWidth
+        onChange={(e) => setValue("duration", parseFloat(e.target.value))}
+        {...(editingMode ? { value: watch.duration } : {})}
+      />
+      <DatePicker
+        label={t("report:dateMark")}
+        views={["year", "month"]}
+        minDate={moment().add(-1, "years").toDate()}
+        maxDate={moment().add(1, "years").toDate()}
+        onChange={(month) => {
+          setDate(month);
+          setValue("date", month);
+        }}
+        value={mode === "edit" ? loadData.date : date}
+      />
+      <Button variant="contained" onClick={handleSubmit(sendDataToServer)}>
+        {t("common:send")}
+      </Button>
+    </Stack>
   );
 };
 

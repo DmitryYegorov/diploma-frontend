@@ -3,7 +3,10 @@ import AppRouter from "./router";
 import { BrowserRouter } from "react-router-dom";
 import { useAppDispatch } from "./hooks/redux";
 import { fetchUsersAction } from "./store/reducers/Users/ActionCreators";
-import { fetchSemesterAction } from "./store/reducers/Semester/ActionCreators";
+import {
+  fetchSemesterAction,
+  fetchSemestersAction,
+} from "./store/reducers/Semester/ActionCreators";
 import moment from "moment";
 import "moment/locale/ru";
 import { fetchSubjectsAction } from "./store/reducers/Subject/ActionCreators";
@@ -20,6 +23,7 @@ function App() {
 
   React.useEffect(() => {
     dispatch(fetchSemesterAction());
+    dispatch(fetchSemestersAction());
     dispatch(fetchUsersAction());
     dispatch(fetchSubjectsAction());
     dispatch(fetchRoomsAction());

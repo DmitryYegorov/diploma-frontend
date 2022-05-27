@@ -6,7 +6,7 @@ import {
   calculateReportDataByReportId,
 } from "../../../http/report";
 import { reportSlice } from "./slice";
-import { loadScheduleClassesToReport } from "../../../http/report";
+import { loadDataToReport } from "../../../http/report";
 
 export const fetchReportsAction = () => async (dispatch: AppDispatch) => {
   try {
@@ -33,7 +33,7 @@ export const loadClassesForReportAction =
   (reportId: string) => async (dispatch: AppDispatch) => {
     try {
       dispatch(reportSlice.actions.loadClasses());
-      const res = await loadScheduleClassesToReport(reportId);
+      const res = await loadDataToReport(reportId);
       dispatch(reportSlice.actions.loadClassesSuccess(res.data));
     } catch (e) {
       dispatch(reportSlice.actions.loadClassesFailed(e));

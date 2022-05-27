@@ -24,13 +24,15 @@ import { useStyles } from "./styled";
 import { useAppSelector, useAppDispatch } from "../../../../hooks/redux";
 import moment from "moment";
 import DropDownMenu from "../../../../components/DropDownMenu";
+import { removeLoadItemFromReport } from "../../../../http/report";
 
 type Props = {
   loadData: Array<any>;
   reportId: string;
+  fetchLoadData?: () => Promise<void | any>;
 };
 
-const ListClasses: React.FC<Props> = ({ loadData }) => {
+const ListClasses: React.FC<Props> = ({ loadData, fetchLoadData }) => {
   const { t } = useTranslation(["report"], { i18n });
 
   const { isLoading } = useAppSelector((state) => state.report);
@@ -76,7 +78,10 @@ const ListClasses: React.FC<Props> = ({ loadData }) => {
           {
             key: `delete-${row.id}`,
             icon: () => <DeleteIcon color={"error"} />,
-            handleClick: () => alert(`delete-${row.id}`),
+            handleClick: async () => {
+              await removeLoadItemFromReport(row.id);
+              await fetchLoadData();
+            },
             text: t("report:actions.deleteItemAction"),
           },
         ]}
@@ -100,6 +105,10 @@ const ListClasses: React.FC<Props> = ({ loadData }) => {
       </AccordionDetails>
     </Accordion>
   );
+};
+
+ListClasses.defaultProps = {
+  fetchLoadData: () => undefined,
 };
 
 export default ListClasses;

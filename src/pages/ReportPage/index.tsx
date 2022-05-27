@@ -12,6 +12,7 @@ import {
   ListItemText,
   Accordion,
   ButtonGroup,
+  CircularProgress,
 } from "@mui/material";
 import {
   CalendarToday as CalendarTodayIcon,
@@ -22,13 +23,6 @@ import {
   Send as SendIcon,
 } from "@mui/icons-material";
 import { useParams } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../hooks/redux";
-import {
-  calculateReportDataAction,
-  clearLoadedClassesAction,
-  fetchOneReportAction,
-  loadClassesForReportAction,
-} from "../../store/reducers/Report/ActionCreators";
 import { useStyles } from "./styled";
 import { useTranslation } from "react-i18next";
 
@@ -37,7 +31,13 @@ import ListClasses from "./components/ListClasses";
 import LoadReportTable from "../../components/LoadReportTable";
 import { ReportState } from "../../typings/enum";
 import { ReportStateConfig } from "../../helpers";
-import { sendReport } from "../../http/report";
+import {
+  fetchReportById,
+  loadDataToReport,
+  sendReport,
+} from "../../http/report";
+import { useAsyncFn } from "react-use";
+import { LoadingButton } from "@mui/lab";
 
 const ReportPage: React.FC = () => {
   const { id } = useParams();
@@ -45,107 +45,98 @@ const ReportPage: React.FC = () => {
 
   const classes = useStyles();
 
-  const dispatch = useAppDispatch();
-  const { selectedReport, reportData, calculatedForChange } = useAppSelector(
-    (state) => state.report
-  );
+  const [report, fetchReport] = useAsyncFn(async (reportId) => {
+    const res = await fetchReportById(reportId);
+
+    return res.data;
+  });
+  const [load, fetchLoad] = useAsyncFn(async (reportId) => {
+    const res = await loadDataToReport(reportId);
+
+    return res.data;
+  });
 
   useEffect(() => {
     if (id) {
-      dispatch(fetchOneReportAction(id));
+      Promise.all([fetchReport(id), fetchLoad(id)]);
     }
-  }, [id, dispatch]);
+  }, [id, fetchReport]);
 
-  return (
-    <>
-      <ButtonGroup>
-        <Button
-          variant="text"
-          onClick={() => {
-            dispatch(clearLoadedClassesAction());
-            dispatch(loadClassesForReportAction(selectedReport.id));
-          }}
-          endIcon={<SchoolIcon />}
-        >
-          {t("report:menu.loadData")}
-        </Button>
-        <Button
-          variant="text"
-          onClick={() => {
-            dispatch(calculateReportDataAction(selectedReport.id));
-          }}
-          endIcon={<TableViewIcon />}
-        >
-          {t("report:menu.calculate")}
-        </Button>
-      </ButtonGroup>
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <Typography variant="h6">{`${t("report:reportLabel")}: ${
-            selectedReport.name
-          }`}</Typography>
-        </Grid>
-        <Grid item xs={8}>
-          {reportData.length ? (
-            <>
-              <ListClasses loadData={reportData} reportId={selectedReport.id} />
-              <LoadReportTable />
-            </>
-          ) : (
-            <Alert severity="info">{t("report:emptyReportText")}</Alert>
+  if (report.loading)
+    return (
+      <div style={{ position: "absolute", top: "50%", left: "50%" }}>
+        <CircularProgress />
+      </div>
+    );
+
+  if (report.value)
+    return (
+      <>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Typography variant="h6">{`${t("report:reportLabel")}: ${
+              report.value.name
+            }`}</Typography>
+          </Grid>
+          <Grid item xs={8}>
+            <ListClasses
+              loadData={load.value?.length ? load.value : []}
+              reportId={report.value.id}
+              fetchLoadData={() => fetchLoad(report.value.id)}
+            />
+            <LoadReportTable />
+          </Grid>
+          {report.value.id && (
+            <Grid item xs={4}>
+              <Paper className={classes.paper}>
+                <List>
+                  <ListItem>
+                    <ListItemIcon>
+                      <CalendarTodayIcon />
+                    </ListItemIcon>
+                    <ListItemText>{report.value.createdAt}</ListItemText>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemIcon>
+                      <CircleIcon />
+                    </ListItemIcon>
+                    <ListItemText>
+                      <Typography
+                        style={{
+                          color:
+                            ReportStateConfig[report.value.state as ReportState]
+                              .color,
+                        }}
+                      >
+                        {t(`report:state.${report.value.state as ReportState}`)}
+                      </Typography>
+                    </ListItemText>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemIcon>
+                      <PersonIcon />
+                    </ListItemIcon>
+                    <ListItemText>
+                      <Typography>{report.value.createdBy}</Typography>
+                    </ListItemText>
+                  </ListItem>
+                  {report.value.state !== ReportState.SENT && (
+                    <ListItem>
+                      <Button
+                        startIcon={<SendIcon />}
+                        onClick={() => sendReport(report.value.id)}
+                      >
+                        {t("common:send")}
+                      </Button>
+                    </ListItem>
+                  )}
+                </List>
+              </Paper>
+            </Grid>
           )}
         </Grid>
-        {selectedReport.id && (
-          <Grid item xs={4}>
-            <Paper className={classes.paper}>
-              <List>
-                <ListItem>
-                  <ListItemIcon>
-                    <CalendarTodayIcon />
-                  </ListItemIcon>
-                  <ListItemText>{selectedReport.createdAt}</ListItemText>
-                </ListItem>
-                <ListItem>
-                  <ListItemIcon>
-                    <CircleIcon />
-                  </ListItemIcon>
-                  <ListItemText>
-                    <Typography
-                      style={{
-                        color:
-                          ReportStateConfig[selectedReport.state as ReportState]
-                            .color,
-                      }}
-                    >
-                      {t(`report:state.${selectedReport.state as ReportState}`)}
-                    </Typography>
-                  </ListItemText>
-                </ListItem>
-                <ListItem>
-                  <ListItemIcon>
-                    <PersonIcon />
-                  </ListItemIcon>
-                  <ListItemText>
-                    <Typography>{selectedReport.createdBy}</Typography>
-                  </ListItemText>
-                </ListItem>
-                {selectedReport.state !== ReportState.SENT && (
-                  <ListItem>
-                    <Button
-                      startIcon={<SendIcon />}
-                      onClick={() => sendReport(selectedReport.id)}
-                    >
-                      {t("common:send")}
-                    </Button>
-                  </ListItem>
-                )}
-              </List>
-            </Paper>
-          </Grid>
-        )}
-      </Grid>
-    </>
-  );
+      </>
+    );
 };
 
 export default ReportPage;

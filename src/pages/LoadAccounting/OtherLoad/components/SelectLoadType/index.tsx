@@ -16,6 +16,7 @@ const SelectLoadType: React.FC<Props> = ({ width, handleChange, value }) => {
   const { t } = useTranslation(["event", "report"], { i18n });
 
   const otherLoadOptions = [
+    { label: "Все", value: null },
     { label: t("event:EXAM"), value: EventType.EXAM },
     { label: t("event:CONSULTATION"), value: EventType.CONSULTATION },
     { label: t("event:COURSE_WORK"), value: EventType.COURSE_WORK },
