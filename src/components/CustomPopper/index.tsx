@@ -6,6 +6,7 @@ import {
   Fade,
   Paper,
   IconButton,
+  ClickAwayListener,
 } from "@mui/material";
 import { MoreHoriz as MoreHorizIcon } from "@mui/icons-material";
 
@@ -28,19 +29,32 @@ const CustomPopper: React.FC<Props> = ({ children }) => {
       setPlacement(newPlacement);
     };
 
+  const handleClickAway = () => {
+    setAnchorEl(null);
+    setOpen(false);
+    setPlacement(null);
+  };
+
   return (
-    <Box>
-      <IconButton onClick={handleClick("bottom")}>
-        <MoreHorizIcon />
-      </IconButton>
-      <Popper open={open} anchorEl={anchorEl} placement={placement} transition>
-        {({ TransitionProps }) => (
-          <Fade {...TransitionProps} timeout={350}>
-            <Paper style={{ padding: 5 }}>{children}</Paper>
-          </Fade>
-        )}
-      </Popper>
-    </Box>
+    <ClickAwayListener onClickAway={() => handleClickAway()}>
+      <Box>
+        <IconButton onClick={handleClick("bottom")}>
+          <MoreHorizIcon />
+        </IconButton>
+        <Popper
+          open={open}
+          anchorEl={anchorEl}
+          placement={placement}
+          transition
+        >
+          {({ TransitionProps }) => (
+            <Fade {...TransitionProps} timeout={350}>
+              <Paper style={{ padding: 5 }}>{children}</Paper>
+            </Fade>
+          )}
+        </Popper>
+      </Box>
+    </ClickAwayListener>
   );
 };
 export default CustomPopper;
