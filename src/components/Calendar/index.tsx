@@ -1,11 +1,6 @@
 import * as React from "react";
 import Paper from "@mui/material/Paper";
-import {
-  ChangeSet,
-  EditingState,
-  IntegratedEditing,
-  ViewState,
-} from "@devexpress/dx-react-scheduler";
+import { ViewState } from "@devexpress/dx-react-scheduler";
 import {
   Scheduler,
   MonthView,

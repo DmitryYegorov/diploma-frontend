@@ -2,16 +2,18 @@ import { createSlice } from "@reduxjs/toolkit";
 
 interface ScheduleState {
   error: string;
-  list: Array<any>;
+  list: any;
   scheduleOfDepartment: any;
   isLoading: boolean;
+  classItem: any;
 }
 
 const initialState: ScheduleState = {
   scheduleOfDepartment: [],
-  list: [],
+  list: null,
   error: "",
   isLoading: false,
+  classItem: {},
 };
 
 export const scheduleClasses = createSlice({
@@ -26,9 +28,11 @@ export const scheduleClasses = createSlice({
     fetchScheduleClassesFailed(state, action) {
       state.error = action.payload.message;
       state.isLoading = false;
+      state.list = [];
     },
     fetchScheduleClasses(state) {
       state.isLoading = true;
+      state.list = [];
     },
 
     fetchScheduleClassesOfDepartmentSuccess(state, action) {
@@ -42,6 +46,18 @@ export const scheduleClasses = createSlice({
     },
     fetchScheduleClassesOfDepartment(state) {
       state.isLoading = true;
+    },
+
+    fetchOneClassById(state) {
+      state.isLoading = true;
+    },
+    fetchOneClassByIdSuccess(state, action) {
+      state.isLoading = false;
+      state.classItem = action.payload;
+    },
+    fetchOneClassByIdFailed(state, action) {
+      state.isLoading = false;
+      state.error = action.payload.message;
     },
   },
   extraReducers: {},

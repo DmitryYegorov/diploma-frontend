@@ -43,3 +43,11 @@ export enum ScheduleClassUpdateType {
   CANCEL = "CANCEL",
   RESCHEDULED = "RESCHEDULED",
 }
+
+export enum ReportState {
+  DRAFT = "DRAFT",
+  SENT = "SENT",
+  APPROVED = "APPROVED",
+}
+
+export type LoadType = EventType | ClassType;

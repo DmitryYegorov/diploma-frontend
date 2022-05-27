@@ -1,11 +1,17 @@
 import React, { useState } from "react";
 import { Divider, Stack, TableCell, Typography } from "@mui/material";
+import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
+
 import ModalWindow from "../../../../../components/ModalWindow";
 import { useStyles } from "./styled";
-import { useForm } from "react-hook-form";
 import ClassForm from "../ClassForm";
 import { WeekDay, Week } from "../../../../../typings/enum";
 import ConfirmationDialog from "../../../../../components/ConfirmationDialog";
+import ContextMenu from "../../../../../components/ContextMenu";
+import { useTranslation } from "react-i18next";
+import i18n from "../../../../../i18n";
+import { deleteScheduleClass } from "../../../../../http/schedule";
+import EditClassForm from "../EditClassForm";
 
 type Props = {
   weekDay: WeekDay;
@@ -19,58 +25,63 @@ const ClassCell: React.FC<Props> = ({
   classValue,
 }) => {
   const classes = useStyles();
+  const { t } = useTranslation(["common"], { i18n });
 
-  const { control } = useForm();
   const [openModal, setOpenModal] = useState(false);
 
-  const ClassWeekly = () => {
-    const weeklyClass = classValue?.[Week.WEEKLY]?.[0];
+  const ClassCellItem = ({ classData, week }) => {
+    const weeklyClass = classData?.[week]?.[0];
+    const [editModal, setEditModal] = useState(false);
+    const contextOptions = [
+      {
+        text: t("common:command.edit"),
+        handleClick: (data) => {
+          setEditModal(true);
+        },
+        icon: () => <EditIcon />,
+      },
+      {
+        text: t("common:command.cancel"),
+        handleClick: (data) => {
+          deleteScheduleClass(data.id);
+          window.location.reload();
+        },
+        icon: () => <DeleteIcon color="error" />,
+      },
+    ];
 
     return (
-      <Typography variant="body1">
-        {(weeklyClass?.subject &&
-          `${weeklyClass?.subject?.shortName} (${weeklyClass.room})`) ||
-          "-"}
+      <>
+        <Typography variant="body1">
+          {weeklyClass?.subject && (
+            <ContextMenu options={contextOptions} itemData={weeklyClass}>
+              {`${weeklyClass?.subject?.shortName} (${weeklyClass.room})`}
+            </ContextMenu>
+          )}
+        </Typography>
         <Stack>
           {weeklyClass &&
-            weeklyClass.groups.map((g: string) => (
-              <Typography variant="body2">{g}</Typography>
+            weeklyClass.groups.map((g: { id: string; label: string }) => (
+              <Typography variant="body2">{g.label}</Typography>
             ))}
         </Stack>
-      </Typography>
+        <ModalWindow
+          open={editModal}
+          setOpen={() => setEditModal(!editModal)}
+          label={t("common:scheduleClassEditModalLabel")}
+        >
+          <EditClassForm editData={weeklyClass} />
+        </ModalWindow>
+      </>
     );
   };
 
-  const ClassNonWeekly = () => {
-    const firstWeek = classValue?.[Week.FIRST]?.[0];
-    const secondWeek = classValue?.[Week.SECOND]?.[0];
-
+  const ClassNonWeekly = ({ classData }) => {
     return (
-      <Stack spacing={2}>
-        <Typography variant="body2">
-          {(firstWeek?.subject &&
-            `| ${firstWeek?.subject?.shortName} (${firstWeek.room})`) || (
-            <div style={{ display: "none" }} />
-          )}
-
-          <Stack>
-            {firstWeek?.groups?.length &&
-              firstWeek.groups.map((g: string) => (
-                <Typography variant="body2">{g}</Typography>
-              ))}
-          </Stack>
-        </Typography>
-        <Typography variant="body2" style={{ borderTop: "1px solid #ececec" }}>
-          {secondWeek?.subject &&
-            `|| ${secondWeek?.subject?.shortName} (${secondWeek.room})`}
-
-          <Stack>
-            {secondWeek?.groups?.length &&
-              secondWeek.groups.map((g: string) => (
-                <Typography variant="body2">{g}</Typography>
-              ))}
-          </Stack>
-        </Typography>
+      <Stack spacing={0.5}>
+        <ClassCellItem classData={classData} week={Week.FIRST} />
+        <Divider />
+        <ClassCellItem classData={classData} week={Week.SECOND} />
       </Stack>
     );
   };
@@ -79,11 +90,15 @@ const ClassCell: React.FC<Props> = ({
     <>
       <TableCell
         className={classes.root}
-        onClick={() => setOpenModal(!openModal)}
+        onDoubleClick={() => setOpenModal(!openModal)}
         align="center"
         style={{ width: 150, border: "1px solid #ececec" }}
       >
-        {!classValue?.[Week.WEEKLY] ? <ClassNonWeekly /> : <ClassWeekly />}
+        {!classValue?.[Week.WEEKLY] ? (
+          <ClassNonWeekly classData={classValue} />
+        ) : (
+          <ClassCellItem classData={classValue} week={Week.WEEKLY} />
+        )}
       </TableCell>
 
       <ModalWindow
@@ -91,19 +106,7 @@ const ClassCell: React.FC<Props> = ({
         setOpen={() => setOpenModal(!open)}
         label={"Установка занятия"}
       >
-        <>
-          {classValue?.[Week.WEEKLY] ||
-          classValue?.[Week.SECOND] ||
-          classValue?.[Week.FIRST] ? (
-            <ConfirmationDialog
-              title={"Внимание"}
-              content={
-                "При установке занятия в занятую ячейку данные из нее будут стерты и записаны новые!"
-              }
-            />
-          ) : null}
-          <ClassForm weekDay={weekDay} scheduleTime={scheduleTimeId} />
-        </>
+        <ClassForm weekDay={weekDay} scheduleTime={scheduleTimeId} />
       </ModalWindow>
     </>
   );

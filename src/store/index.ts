@@ -8,6 +8,7 @@ import groupReducer from "./reducers/Group/slice";
 import scheduleClassesReducer from "./reducers/ScheduleClass/slice";
 import usersReducer from "./reducers/Users/slice";
 import eventReducer from "./reducers/Event/slice";
+import reportReducer from "./reducers/Report/slice";
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   scheduleClasses: scheduleClassesReducer,
   user: usersReducer,
   event: eventReducer,
+  report: reportReducer,
 });
 
 export const setupStore = () =>

@@ -2,12 +2,46 @@
   "eDepartment": "Е-Кафедра",
   "mainMenu": "Стартовая страница",
   "profileSetting": "Настройки аккаунта",
-  "scheduleControl": "Управление расписанием",
+  "registration": "Создать аккаунт",
+  "scheduleControl": "Расписание",
   "calendar": "Календарь",
-  "subjectControl": "Управление список дисциплин",
-  "usersList": "Список пользователей",
+  "subjectControl": "Дисциплины",
+  "usersList": "Пользователи",
+  "academicYear": "Учёбный год",
+  "studentInfo": "Данные о группах",
+  "faculties": "Факультеты",
+  "specialities": "Специальности",
+  "groups": "Подгруппы",
   "type": "Тип",
   "send": "Отправить",
   "reason": "Причина",
-  "teacher": "Преподаватель"
+  "teacher": "Преподаватель",
+  "studyLoading": {
+    "label": "Отчёт о нагрузке",
+    "createNew": "Создать"
+  },
+  "scheduleClassEditModalLabel": "Редактировать занятие",
+  "period": {
+    "start": "Начало",
+    "end": "Конец"
+  },
+  "otherLoad": "Дополнительная нагрузка",
+  "actions": "Действия",
+  "rowsPerPage": "Кол-во на странице",
+  "title": "Название",
+  "createdAt": "Дата создания",
+  "nameLabel": "Название",
+  "semesterLabel": "Семестер",
+  "applyFilter": "Применить",
+  "notData": "Нет данных",
+  "logout": "Выйти",
+  "command": {
+    "edit": "Редактировать",
+    "cancel": "Отменить",
+    "create": "Создать"
+  },
+  "confirmDialog": {
+    "agree": "Да, согласен",
+    "disagree": "Отмена"
+  }
 }

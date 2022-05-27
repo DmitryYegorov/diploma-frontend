@@ -1,0 +1,55 @@
+{
+  "reportLabel": "Отчёт",
+  "createdBy": "Создатель",
+  "createdAt": "Дата создания",
+  "nameLabel": "Название",
+  "stateLabel": "Текущий статус",
+  "sentReportsLabel": "Отправленные отчёты",
+  "sentAt": "Отправлен",
+  "startDate": "Начало",
+  "endDate": "Конец",
+  "approveReport": "Принять отчёт",
+  "state": {
+    "DRAFT": "Черновик",
+    "SENT": "Отправлен",
+    "APPROVED": "Принят"
+  },
+  "classes": "Проведенные занятия за отчётный период",
+  "otherLoadLabel": "Дополнительная нагрузка",
+  "classDate": "Дата занятия",
+  "classType": "Вид занятия",
+  "otherLoadType": "Вид нагрузки",
+  "dateMark": "Временная метка",
+  "duration": "Кол-во часов",
+  "faculty": "Факультет",
+  "addLoadItem": "Добавить нагрузку",
+  "count": "Количество",
+  "withOutCount": "Не учитывать",
+  "subgroupsCount": "Кол-во учебных подгрупп",
+  "studentsCount": "Ков-во студентов",
+  "classUpdateNote": "Примечание",
+  "applyLabel": "Применить",
+  "applyTooltip": "После применяния будет подсчитано и сохранено кол-во часов",
+  "subjectName": "Дисциплина",
+  "loadReportLabel": "Списанная нагрузка",
+  "emptyReportText": "Отчёт пока не содержит никаких данных, воспользуйтесь командами меню для их загрузки :)",
+  "menu": {
+    "loadData": "Загрузить данные о нагрузке",
+    "calculate": "Подсчитать нагрузку",
+    "edit": {
+      "label": "Редактирование",
+      "studyLoad": "Учебная нагрузка",
+      "otherLoad": "Дополнительная нагрузка"
+    }
+  },
+  "notReportsData": "Пользователем пока не было создано ни одного отчёта...",
+  "calculatedReportLabel": "Списанная нагрузка",
+  "actions": {
+    "deleteItemAction": "Удалить",
+    "saveChangesAction": "Сохранить",
+    "restoreChangesAction": "Сбросить изменения",
+    "cancelReportTitle": "Запросить изменения отчёта",
+    "cancelReportText": "Вами будут запрошено внесение изменений в отчёт. Продолжить?"
+  },
+  "reportAdminNoteLabel": "Комментарий"
+}

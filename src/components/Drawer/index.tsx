@@ -42,10 +42,14 @@ const DrawerComponent: React.FC<DrawerProps> = ({
     { key: "calendar", label: t("common:calendar"), tooltip: "calendar" },
     { key: "main", label: t("common:mainMenu"), tooltip: "main" },
     { key: "schedule", label: t("common:scheduleControl"), tooltip: "" },
+    { key: "otherLoad", label: t("common:otherLoad"), tooltip: "" },
+    { key: "reports", label: t("common:studyLoading.label"), tooltip: "" },
   ];
 
   if ([UserRole.ADMIN, UserRole.MANAGER].includes(user.role as UserRole)) {
     menu.push(
+      { key: "academicYear", label: t("common:academicYear"), tooltip: "" },
+      { key: "studentInfo", label: t("common:studentInfo"), tooltip: "" },
       { key: "usersList", label: t("common:usersList"), tooltip: "" },
       { key: "subject", label: t("common:subjectControl"), tooltip: "" }
     );

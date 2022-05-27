@@ -1,5 +1,12 @@
 import React, { useLayoutEffect } from "react";
-import { Paper, Stack, Container, Alert } from "@mui/material";
+import {
+  Paper,
+  Stack,
+  Container,
+  Alert,
+  Link,
+  Typography,
+} from "@mui/material";
 import FormInputText from "../../components/FormInputText";
 import ButtonSubmit from "../../components/ButtonSubmit";
 import { useTranslation } from "react-i18next";
@@ -44,8 +51,10 @@ const Auth: React.FC = () => {
         }}
         spacing={5}
       >
-        <Logo />
         <Paper className={classes.root}>
+          <div style={{ margin: 50 }}>
+            <Logo size={"large"} />
+          </div>
           <Stack spacing={3}>
             {error && !isLoading && <Alert severity="error">{error}</Alert>}
             <FormInputText
@@ -59,6 +68,11 @@ const Auth: React.FC = () => {
               type={"password"}
               control={control}
             />
+            <Link href={"/auth/register"}>
+              <Typography variant="body1">
+                {t("common:registration")}
+              </Typography>
+            </Link>
             <ButtonSubmit
               label={t("auth:loginBtnLabel")}
               onClick={handleSubmit(onSubmitLoginData)}

@@ -77,9 +77,6 @@ const AppointmentFormLayout: React.FC<AppointmentForm.BasicLayoutProps> = (
   const userStore = useAppSelector((state) => state.user);
   const { t } = useTranslation(["calendar", "common"], { i18n });
 
-  // eslint-disable-next-line no-console
-  console.log(props.appointmentData);
-
   const { register, setValue, handleSubmit } = useForm({
     defaultValues: {
       reason: "",
@@ -92,9 +89,7 @@ const AppointmentFormLayout: React.FC<AppointmentForm.BasicLayoutProps> = (
   React.useEffect(() => {
     register("reason", { required: true });
     register("teacherId", { required: true });
-    if (!userStore.total) {
-      dispatch(fetchUsersAction());
-    }
+    dispatch(fetchUsersAction());
   }, [dispatch]);
 
   const swapTeacherRequest = async (data: SwapTeacher) => swapTeacher(data);

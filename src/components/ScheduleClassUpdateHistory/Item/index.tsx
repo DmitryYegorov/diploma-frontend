@@ -55,14 +55,14 @@ const Item: React.FC<Props> = (props) => {
         </Stack>
       </AccordionSummary>
       <AccordionDetails>
-        <Stack direction="row" spacing={0.5}>
+        <Stack direction="column" spacing={0.5}>
           <Typography variant="body1" style={{ fontWeight: "bold" }}>
             {t("common:reason")}:
           </Typography>
           <Typography variant="body1">{props.reason}</Typography>
         </Stack>
 
-        <Stack direction="row" spacing={0.5}>
+        <Stack direction="column" spacing={0.5}>
           <Typography variant="body1" style={{ fontWeight: "bold" }}>
             {t("common:teacher")}:
           </Typography>
@@ -77,7 +77,7 @@ const Item: React.FC<Props> = (props) => {
           </Stack>
         )}
         {props.type === ScheduleClassUpdateType.RESCHEDULED && (
-          <Stack direction="row" spacing={0.5}>
+          <Stack direction="column" spacing={0.5}>
             <Typography variant="body1" style={{ fontWeight: "bold" }}>
               {t("event:rescheduledTo")}:
             </Typography>

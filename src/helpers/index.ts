@@ -1,6 +1,18 @@
 import moment from "moment";
-import { ClassType, EventType, ScheduleClassUpdateType } from "../typings/enum";
-import { deepOrange, cyan, blue, lightBlue } from "@mui/material/colors";
+import {
+  ClassType,
+  EventType,
+  ReportState,
+  ScheduleClassUpdateType,
+} from "../typings/enum";
+import {
+  deepOrange,
+  cyan,
+  blue,
+  lightBlue,
+  blueGrey,
+  green,
+} from "@mui/material/colors";
 
 export const mapDateToTime = (date: Date): string => {
   return moment(date).format("HH:mm");
@@ -17,6 +29,7 @@ export const eventTypes = [
   { value: EventType.PRACTICE, label: "Практика" },
   { value: EventType.STATE_EXAMINATION_BOARD, label: "ГЭК" },
 ];
+
 export const classTypes = [
   { value: ClassType.LAB, label: "Лаб. работа" },
   { value: ClassType.LECTION, label: "Лекция" },
@@ -29,3 +42,14 @@ export const AppointmentMarkColors: Record<string, string> = {
   [ClassType.PRACTICE_CLASS]: cyan[800],
   [ScheduleClassUpdateType.SWAP]: deepOrange[500],
 };
+
+export const ReportStateConfig: Record<ReportState, any> = {
+  [ReportState.DRAFT]: { color: blueGrey[600] },
+  [ReportState.SENT]: { color: deepOrange[700] },
+  [ReportState.APPROVED]: { color: green[800] },
+};
+
+export const loadTypeMap = Object.fromEntries([
+  ...eventTypes.map((e) => [e.value, e.label]),
+  ...classTypes.map((c) => [c.value, c.label]),
+]);

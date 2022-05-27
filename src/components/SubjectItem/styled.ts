@@ -1,14 +1,4 @@
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import { createTheme } from "@mui/material";
-
-const customTheme = createTheme({
-  palette: {
-    primary: {
-      main: "#1976d2",
-      contrastText: "white",
-    },
-  },
-});
 
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -22,8 +12,8 @@ export const useStyles = makeStyles((theme: Theme) =>
       transition: "all 0.2s",
 
       "&:hover": {
-        backgroundColor: customTheme.palette.primary.main,
-        color: customTheme.palette.primary.contrastText,
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.primary.contrastText,
         cursor: "pointer",
       },
     },

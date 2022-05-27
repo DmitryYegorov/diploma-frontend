@@ -40,21 +40,6 @@ export const authSlice = createSlice({
       state.isLoading = true;
       state.data.user = null;
     },
-
-    registerSuccess(state, action) {
-      state.isAuthenticated = false;
-      state.registerSuccess = true;
-      state.error = "";
-      state.isLoading = false;
-    },
-    registerFailed(state, action) {
-      state.error = action.payload.message;
-      state.isLoading = false;
-    },
-    registerFetch(state) {
-      state.isLoading = true;
-      state.error = "";
-    },
   },
   extraReducers: {},
 });

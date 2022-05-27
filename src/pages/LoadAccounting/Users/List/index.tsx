@@ -21,11 +21,7 @@ import { getUsersList } from "../../../../http/user";
 import { User } from "../../../../models/User";
 
 const UsersList: React.FC = () => {
-  const [users, setUsers] = useState<User[]>([]);
-
-  React.useEffect(() => {
-    getUsersList().then((res) => setUsers(res.data.list));
-  });
+  const { list } = useAppSelector((state) => state.user);
 
   const navigate = useNavigate();
 
@@ -48,31 +44,34 @@ const UsersList: React.FC = () => {
             </TableCell>
           </TableHead>
           <TableBody>
-            {users.map((u) => (
-              <TableRow>
-                <TableCell>
-                  <Typography variant="body2">{`${u.firstName} ${u.middleName} ${u.lastName}`}</Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="body2">{u.email}</Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="body2">
-                    <CheckCircleIcon color={u.isActive ? "success" : "error"} />
-                  </Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="body2">
-                    <IconButton
-                      color="primary"
-                      onClick={() => navigate(`${u.id}`)}
-                    >
-                      <ManageAccountsIcon />
-                    </IconButton>
-                  </Typography>
-                </TableCell>
-              </TableRow>
-            ))}
+            {!!list.length &&
+              list.map((u) => (
+                <TableRow>
+                  <TableCell>
+                    <Typography variant="body2">{`${u.firstName} ${u.middleName} ${u.lastName}`}</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="body2">{u.email}</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="body2">
+                      <CheckCircleIcon
+                        color={u.isActive ? "success" : "error"}
+                      />
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="body2">
+                      <IconButton
+                        color="primary"
+                        onClick={() => navigate(u.id)}
+                      >
+                        <ManageAccountsIcon />
+                      </IconButton>
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </Paper>

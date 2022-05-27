@@ -2,7 +2,6 @@ import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 import Drawer from "../Drawer";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -10,6 +9,7 @@ import UserAuthPanel from "../UserAuthPanel";
 import i18n from "../../i18n";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
+import Logo from "../Logo";
 
 const Header: React.FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -37,9 +37,9 @@ const Header: React.FC = () => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            {t("common:eDepartment")}
-          </Typography>
+          <Box sx={{ flexGrow: 1 }}>
+            <Logo color={"white"} />
+          </Box>
           <UserAuthPanel />
         </Toolbar>
 

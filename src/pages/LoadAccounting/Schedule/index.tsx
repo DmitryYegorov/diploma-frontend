@@ -4,13 +4,16 @@ import {
   Container,
   Paper,
   Stack,
+  Grid,
   Table,
   TableCell,
   TableHead,
   TableRow,
   Typography,
+  Collapse,
+  CircularProgress,
+  Box,
 } from "@mui/material";
-import { Add as AddIcon, Create as CreateIcon } from "@mui/icons-material";
 import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
 import { fetchScheduleTimesAction } from "../../../store/reducers/ScheduleTime/ActionCreators";
 import ClassCell from "./components/ClassCell";
@@ -18,39 +21,67 @@ import { useStyles } from "./styled";
 import { useNavigate } from "react-router-dom";
 import { mapDateToTime } from "../../../helpers";
 import { WeekDay } from "../../../typings/enum";
-import { getScheduleClassesForAuthenticatedTeacher } from "../../../http/schedule";
-import { useAsync } from "react-use";
-import { fetchScheduleClassForAuthTeacherAction } from "../../../store/reducers/ScheduleClass/ActionCreators";
+import { fetchScheduleClassesOfTeacherBySemesterId } from "../../../store/reducers/ScheduleClass/ActionCreators";
+import SelectForm from "../../../components/SelectForm";
+import { useTranslation } from "react-i18next";
+
+import i18n from "../../../i18n";
+import {
+  fetchSemesterAction,
+  fetchSemestersAction,
+} from "../../../store/reducers/Semester/ActionCreators";
 
 const Schedule: React.FC = () => {
+  const { t } = useTranslation(["common"], { i18n });
   const dispatch = useAppDispatch();
   const rootState = useAppSelector((state) => state);
   const classes = useStyles();
-  const navigation = useNavigate();
+
+  const [loading, setLoading] = useState(true);
+
+  const semesterOptions = rootState.semester.list.map((s) => ({
+    label: s.name,
+    value: s.id,
+  }));
 
   useLayoutEffect(() => {
-    if (
-      !rootState.scheduleTime.isLoading &&
-      !rootState.scheduleClasses.isLoading
-    ) {
-      dispatch(fetchScheduleTimesAction());
-      dispatch(fetchScheduleClassForAuthTeacherAction());
+    dispatch(fetchSemestersAction());
+    dispatch(fetchScheduleTimesAction());
+    if (rootState.semester.selectedSemester.id) {
+      dispatch(
+        fetchScheduleClassesOfTeacherBySemesterId(
+          rootState.semester.selectedSemester.id
+        )
+      );
     }
-  }, [dispatch]);
+    setTimeout(() => setLoading(!loading), 3000);
+  }, [dispatch, rootState.semester.selectedSemester.id]);
 
   return (
-    <Container>
-      <Stack spacing={3}>
+    <Grid container spacing={3}>
+      <Grid item xs={12}>
         <Paper elevation={3} className={classes.root}>
           <Typography variant="h6">
             Моё расписание на текущий семестр
           </Typography>
+          <SelectForm
+            label={t("common:semesterLabel")}
+            handleChange={(e) => {
+              dispatch(fetchSemesterAction(e.target.value as string));
+            }}
+            value={rootState.semester.selectedSemester.id}
+            options={semesterOptions}
+          />
         </Paper>
+      </Grid>
 
+      <Grid item xs={12}>
         <Paper elevation={3}>
-          <Table>
+          <Table size="small" stickyHeader>
             <TableHead>
-              <TableCell align="center">Время</TableCell>
+              <TableCell align="center" style={{ width: 70 }}>
+                Время
+              </TableCell>
               <TableCell align="center">Понедельник</TableCell>
               <TableCell align="center">Вторник</TableCell>
               <TableCell align="center">Среда</TableCell>
@@ -59,9 +90,10 @@ const Schedule: React.FC = () => {
               <TableCell align="center">Суббота</TableCell>
               <TableCell align="center">Воскресенье</TableCell>
             </TableHead>
+
             {rootState.scheduleTime.list &&
               rootState.scheduleTime.list.map((item) => (
-                <TableRow>
+                <TableRow style={{ height: 200 }}>
                   <TableCell>{`${mapDateToTime(
                     new Date(item.startTime)
                   )} - ${mapDateToTime(new Date(item.endTime))}`}</TableCell>
@@ -118,8 +150,8 @@ const Schedule: React.FC = () => {
               ))}
           </Table>
         </Paper>
-      </Stack>
-    </Container>
+      </Grid>
+    </Grid>
   );
 };
 
