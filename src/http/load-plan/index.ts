@@ -13,3 +13,6 @@ export const getLoadPlanListByOptions = async (options) =>
 
 export const deleteLoadPlanItemById = async (id: string) =>
   http.delete(`/load-plan/${id}`);
+
+export const editLoadPlanItem = async (id: string, data) =>
+  http.put(`/load-plan/${id}`, data);
