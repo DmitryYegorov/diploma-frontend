@@ -53,3 +53,10 @@ export const loadTypeMap = Object.fromEntries([
   ...eventTypes.map((e) => [e.value, e.label]),
   ...classTypes.map((c) => [c.value, c.label]),
 ]);
+
+export const reportTypeMap = {
+  MONTH: "Месяц",
+  SEMESTER: "Семестр",
+  YEAR: "Учебный год",
+  TOTAL: "Итоговый",
+};

@@ -12,17 +12,11 @@ export const saveLoadDataToReport = async (data: {
   reportId: string;
 }) => http.post("/study-load/save", data);
 
-export const saveOtherLoadDataToReport = async (data: any) =>
-  http.post("/other-load", data);
-
-export const fetchOtherLoadDataByUser = async (options) =>
-  http.get(`/other-load/my`);
-
 export const fetchOtherLoadToReport = async (reportId: string) =>
   http.get(`/report/other-load/${reportId}`);
 
-export const loadScheduleClassesToReport = async (reportId: string) =>
-  http.get(`report/${reportId}/study`);
+export const loadDataToReport = async (reportId: string) =>
+  http.get(`report/${reportId}/load`);
 
 export const calculateReportDataByReportId = async (reportId: string) =>
   http.post(`report/${reportId}/calculate`);
@@ -45,3 +39,18 @@ export const approveReport = async (reportId: string) =>
 
 export const cancelReport = async (reportId: string, adminNote: string) =>
   http.put(`report/${reportId}/cancel`, { adminNote });
+
+export const removeLoadItemFromReport = async (id: string) =>
+  http.delete(`report/load/${id}`);
+
+export const saveOtherLoadData = async (data: any) =>
+  http.post("/other-load", data);
+
+export const fetchOtherLoadDataByUser = async (options) =>
+  http.get(`/other-load/my`, { params: options });
+
+export const updateOtherLoadItem = async (id: string, data) =>
+  http.put(`/other-load/${id}`, data);
+
+export const deleteOtherLoadItemById = async (id: string) =>
+  http.delete(`/other-load/${id}`);
