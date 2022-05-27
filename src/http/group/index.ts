@@ -25,3 +25,6 @@ export const fetchGroupsByOptions = async (options: GroupOptions) =>
   http.get("/group", { params: options });
 
 export const addGroups = async (data: CreateGroup) => http.post("/group", data);
+
+export const getSpecialitiesWithCourse = (semesterId: string) =>
+  http.get(`/group/semester/${semesterId}`);

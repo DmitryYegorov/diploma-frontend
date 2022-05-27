@@ -49,7 +49,7 @@ export const ReportStateConfig: Record<ReportState, any> = {
   [ReportState.APPROVED]: { color: green[800] },
 };
 
-export const queryString = (params) =>
-  Object.keys(params)
-    .map((key) => key + "=" + params[key])
-    .join("&");
+export const loadTypeMap = Object.fromEntries([
+  ...eventTypes.map((e) => [e.value, e.label]),
+  ...classTypes.map((c) => [c.value, c.label]),
+]);

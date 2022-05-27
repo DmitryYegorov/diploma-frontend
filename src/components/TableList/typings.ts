@@ -3,7 +3,7 @@ export type Column = {
   label: string;
   minWidth?: number;
   align?: "center" | "inherit" | "justify" | "left" | "right";
-  sortable: boolean;
+  sortable?: boolean;
   renderCell?: (row: any, column: Column) => JSX.Element | null;
 };
 

@@ -36,6 +36,7 @@ type Props<T> = {
   order?: string;
   setOrder?: (order: any) => void;
   notDataMessage: string;
+  autoHeight?: boolean;
 };
 
 const TableList = <T extends { id?: number | string }>({
@@ -52,6 +53,7 @@ const TableList = <T extends { id?: number | string }>({
   order,
   setOrder,
   notDataMessage,
+  autoHeight,
 }: Props<T>): React.ReactElement => {
   const classes = useStyles();
   const { t } = useTranslation(["common"]);
@@ -77,7 +79,14 @@ const TableList = <T extends { id?: number | string }>({
   return (
     <>
       {isDesktop ? (
-        <Paper className={classes.container}>
+        <Paper
+          style={{
+            margin: "30px auto",
+            width: "100%",
+            overflowY: "scroll",
+            ...(autoHeight ? {} : { height: 600, overflowY: "scroll" }),
+          }}
+        >
           {!rows.length ? (
             <div style={{ width: "100%" }}>
               <Alert severity="info" style={{ width: "100%" }}>
@@ -86,7 +95,7 @@ const TableList = <T extends { id?: number | string }>({
             </div>
           ) : null}
           <TableContainer>
-            <Table stickyHeader className={classes.table}>
+            <Table stickyHeader>
               <TableHead>
                 <TableRow>
                   {columns.map((column: Column) => (
@@ -205,6 +214,7 @@ TableList.defaultProps = {
   withAvatar: false,
   isLoading: true,
   notDataMessage: "",
+  autoHeight: false,
 };
 
 export default TableList;
