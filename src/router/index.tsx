@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from "react";
-import { Routes, Route, Outlet } from "react-router-dom";
+import { Routes, Route, Outlet, Navigate } from "react-router-dom";
 import { useStyles } from "./styled";
 import { Box, CircularProgress, Container } from "@mui/material";
 
@@ -15,13 +15,12 @@ const SubjectPage = lazy(() => import("../pages/Subject"));
 const ScheduleDepartmentPage = lazy(
   () => import("../pages/ScheduleDepartment")
 );
-
 const StudentInfoPage = lazy(() => import("../pages/StudentInfo"));
+const ActivateEmailPage = lazy(() => import("../pages/ActivateEmailPage"));
+const DocumentsPage = lazy(() => import("../pages/Documents"));
 
 const AppRouter = (): JSX.Element => {
   const classes = useStyles();
-  const { isAuthenticated } = useAppSelector((state) => state.auth);
-  const access = localStorage.getItem("access");
   const userData = JSON.parse(localStorage.getItem("userData") || "null");
 
   return (
@@ -55,7 +54,10 @@ const AppRouter = (): JSX.Element => {
             element={
               <RequireAuth isAuthenticated={!!userData}>
                 <Routes>
-                  <Route path={"main"} element={<MainPage />} />
+                  <Route
+                    path={""}
+                    element={<Navigate to={"load-accounting"} />}
+                  />
                   <Route
                     path={"load-accounting/*"}
                     element={<LoadAccountingPage />}
@@ -64,6 +66,14 @@ const AppRouter = (): JSX.Element => {
                     path={"schedule/:semesterId"}
                     element={<ScheduleDepartmentPage />}
                   />
+                  <Route
+                    path={"document/*"}
+                    element={
+                      <Routes>
+                        <Route index element={<DocumentsPage />} />
+                      </Routes>
+                    }
+                  />
                   <Route path={"subject"} element={<SubjectPage />} />
                   <Route path={"student-info"} element={<StudentInfoPage />} />
                 </Routes>
@@ -71,7 +81,11 @@ const AppRouter = (): JSX.Element => {
             }
           />
 
-          <Route path="*" element={<h1>404</h1>} />
+          <Route
+            path={"activate-email/:activationCode"}
+            element={<ActivateEmailPage />}
+          />
+          <Route path="/not-found" element={<h1>404</h1>} />
         </Route>
 
         <Route path="auth/login" element={<AuthPage />} />

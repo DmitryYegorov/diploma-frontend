@@ -9,8 +9,12 @@ import {
   ListItem,
   ListItemText,
   Tooltip,
-} from "@material-ui/core";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+  ListItemIcon,
+} from "@mui/material";
+import {
+  ChevronLeft as ChevronLeftIcon,
+  CalendarMonth as CalendarMonthIcon,
+} from "@mui/icons-material";
 
 import { MENU_LINKS } from "./config";
 import { useStyles } from "./styled";
@@ -33,18 +37,23 @@ const DrawerComponent: React.FC<DrawerProps> = ({
 }: DrawerProps) => {
   const classes = useStyles();
   const navigate = useNavigate();
-
   const { t } = useTranslation(["common"], { i18n });
   const {
     data: { user },
   } = useAppSelector((state) => state.auth);
 
   const menu = [
-    { key: "calendar", label: t("common:calendar"), tooltip: "calendar" },
+    {
+      key: "calendar",
+      label: t("common:calendar"),
+      tooltip: "calendar",
+      icon: <CalendarMonthIcon />,
+    },
     { key: "main", label: t("common:mainMenu"), tooltip: "main" },
     { key: "schedule", label: t("common:scheduleControl"), tooltip: "" },
     { key: "otherLoad", label: t("common:otherLoad"), tooltip: "" },
     { key: "reports", label: t("common:studyLoading.label"), tooltip: "" },
+    { key: "documents", label: t("common:documents"), tooltip: "" },
   ];
 
   if ([UserRole.ADMIN, UserRole.MANAGER].includes(user.role as UserRole)) {
@@ -55,6 +64,8 @@ const DrawerComponent: React.FC<DrawerProps> = ({
       { key: "subject", label: t("common:subjectControl"), tooltip: "" }
     );
   }
+
+  React.useEffect(() => {}, []);
 
   const handleNavigation = (key: string) => {
     const path = MENU_LINKS[key];
@@ -78,7 +89,7 @@ const DrawerComponent: React.FC<DrawerProps> = ({
       </div>
       <Divider />
       <List className={classes.list}>
-        {menu.map(({ key, label, tooltip }) => {
+        {menu.map(({ key, label, tooltip, icon }) => {
           return (
             <ListItem
               alignItems="flex-start"

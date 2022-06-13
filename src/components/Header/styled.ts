@@ -8,6 +8,11 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     toolbar: {
       padding: theme.spacing(0),
+      [theme.breakpoints.down("xs")]: {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+      },
     },
   })
 );

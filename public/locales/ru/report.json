@@ -1,6 +1,5 @@
 {
   "reportLabel": "Отчёт",
-  "reportType": "Тип",
   "createdBy": "Создатель",
   "createdAt": "Дата создания",
   "nameLabel": "Название",
@@ -15,8 +14,18 @@
     "SENT": "Отправлен",
     "APPROVED": "Принят"
   },
+  "reportType": {
+    "label": "Тип",
+    "MONTH": "Месяц",
+    "SEMESTER": "Семестр",
+    "YEAR": "Учебный год",
+    "TOTAL": "Тотальный"
+  },
+  "totalReport": {
+    "label": "Итоговые отчёты"
+  },
   "classes": "Проведенные занятия за отчётный период",
-  "otherLoadLabel": "Дополнительная нагрузка",
+  "otherLoadLabel": "Управление внеаудиторной нагрузкой",
   "classDate": "Дата занятия",
   "classType": "Вид занятия",
   "otherLoadType": "Вид нагрузки",

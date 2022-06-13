@@ -1,32 +1,21 @@
 import React from "react";
-import TableList from "../../../../../components/TableList";
-import { Column } from "../../../../../components/TableList/typings";
+import { Column } from "../TableList/typings";
 import { useTranslation } from "react-i18next";
-import i18n from "../../../../../i18n";
-import { useAsyncFn } from "react-use";
-import {
-  deleteLoadPlanItemById,
-  getLoadPlanByOptions,
-} from "../../../../../http/load-plan";
-import { Typography, Box } from "@mui/material";
+import i18n from "../../i18n";
+import { Typography, Box, Paper, CircularProgress } from "@mui/material";
 
 type Props = {
-  teacherId: string;
-  semesterId: string;
+  teacherName?: string;
+  data: Array<any>;
+  loading: boolean;
 };
 
-const PlanedLoadTable: React.FC<Props> = ({ teacherId, semesterId }) => {
+const MonthLoadMappedTable: React.FC<Props> = ({
+  data,
+  loading,
+  teacherName,
+}) => {
   const { t } = useTranslation(["event"], { i18n });
-
-  const [state, fetchLoadPlaned] = useAsyncFn(async (options) => {
-    const res = await getLoadPlanByOptions(options);
-
-    return res.data;
-  });
-
-  React.useEffect(() => {
-    fetchLoadPlaned({ teacherId, semesterId });
-  }, [fetchLoadPlaned]);
 
   const columns: Column[] = [
     { id: "subjectName", label: "Дисциплина", sortable: false },
@@ -57,20 +46,47 @@ const PlanedLoadTable: React.FC<Props> = ({ teacherId, semesterId }) => {
     { id: "total", label: "ВСЕГО", sortable: false },
   ];
 
+  if (loading)
+    return (
+      <div
+        style={{
+          position: "relative",
+          top: "50%",
+          left: "50%",
+        }}
+      >
+        <CircularProgress />
+      </div>
+    );
+
   return (
     <Box
       style={{
         overflowX: "scroll",
+        padding: 10,
+        marginTop: 10,
       }}
+      component={Paper}
     >
-      <table style={{ borderCollapse: "collapse" }}>
+      <table style={{ borderCollapse: "collapse", margin: 10 }}>
         <thead>
+          {teacherName ? (
+            <th
+              style={{
+                padding: "10px",
+                minWidth: 60,
+                border: "1px solid #757575",
+              }}
+            >
+              <Typography>Преподаватель</Typography>
+            </th>
+          ) : null}
           {columns.map((c) => (
             <th
               style={{
                 padding: "10px",
                 minWidth: 60,
-                border: "1px solid #ececec",
+                border: "1px solid #757575",
               }}
             >
               <Typography>{c.label}</Typography>
@@ -78,11 +94,21 @@ const PlanedLoadTable: React.FC<Props> = ({ teacherId, semesterId }) => {
           ))}
         </thead>
         <tbody>
-          {!state.loading && state.value
-            ? state.value.map((lp) => (
+          {teacherName ? (
+            <tr>
+              <td
+                rowSpan={columns.length}
+                style={{ border: "1px solid #757575", padding: "5px" }}
+              >
+                <Typography>{teacherName}</Typography>
+              </td>
+            </tr>
+          ) : null}
+          {!loading && data?.length
+            ? data.map((lp) => (
                 <tr>
                   {columns.map((c) => (
-                    <td style={{ border: "1px solid #ececec", padding: "5px" }}>
+                    <td style={{ border: "1px solid #757575", padding: "5px" }}>
                       <Typography variant="body2">{lp[c.id]}</Typography>
                     </td>
                   ))}
@@ -95,4 +121,4 @@ const PlanedLoadTable: React.FC<Props> = ({ teacherId, semesterId }) => {
   );
 };
 
-export default PlanedLoadTable;
+export default MonthLoadMappedTable;

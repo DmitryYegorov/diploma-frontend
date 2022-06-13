@@ -33,8 +33,8 @@ const Logo: React.FC<Props> = ({ color, size }) => {
       onClick={() => navigate("/")}
     >
       <img src={logo[color]} width={size === "large" ? 60 : 30} />
-      <Typography variant={size === "large" ? "h3" : "h5"}>
-        E-Department
+      <Typography variant={size === "large" ? "h2" : "h5"}>
+        {t("common:eDepartment")}
       </Typography>
     </Stack>
   );

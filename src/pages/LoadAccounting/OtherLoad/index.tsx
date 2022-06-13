@@ -20,7 +20,6 @@ import {
 } from "@mui/icons-material";
 import { useStyles } from "./styled";
 import { useTranslation } from "react-i18next";
-
 import i18n from "../../../i18n";
 import moment from "moment";
 import { EventType } from "../../../typings/enum";
@@ -141,16 +140,20 @@ const OtherLoad: React.FC = () => {
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Paper className={classes.padding}>
-              <Typography variant="h5">{t("report:otherLoadLabel")}</Typography>
-              <SelectForm
-                label={"Семестр"}
-                handleChange={(e) => setSemesterId(e.target.value)}
-                options={semester.list.map((s) => ({
-                  label: s.name,
-                  value: s.id,
-                }))}
-                value={semesterId}
-              />
+              <Stack spacing={1}>
+                <Typography variant="h5">
+                  {t("report:otherLoadLabel")}
+                </Typography>
+                <SelectForm
+                  label={"Семестр"}
+                  handleChange={(e) => setSemesterId(e.target.value)}
+                  options={semester.list.map((s) => ({
+                    label: s.name,
+                    value: s.id,
+                  }))}
+                  value={semesterId}
+                />
+              </Stack>
             </Paper>
           </Grid>
           <Grid item xs={12}>
@@ -160,24 +163,26 @@ const OtherLoad: React.FC = () => {
             />
           </Grid>
           <Grid item xs={12}>
-            <Button
-              variant="outlined"
-              startIcon={<AddIcon />}
-              onClick={() => setLoadFormCreate(!loadFormCreate)}
+            <ModalWindow
+              open={loadFormCreate}
+              setOpen={() => setLoadFormCreate(!loadFormCreate)}
+              label={"Добавить нагрузку"}
             >
-              {t("report:addLoadItem")}
-            </Button>
-          </Grid>
-          <Grid item xs={12}>
-            <Collapse orientation="vertical" in={loadFormCreate}>
               <LoadDataForm
                 mode="create"
                 onDataSending={() => fetchOtherLoadData({ semesterId })}
                 semesterId={semesterId}
               />
-            </Collapse>
+            </ModalWindow>
           </Grid>
           <Grid item xs={12}>
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              onClick={() => setLoadFormCreate(!loadFormCreate)}
+            >
+              {t("report:addLoadItem")}
+            </Button>
             <TableList<any>
               columns={columns}
               rows={

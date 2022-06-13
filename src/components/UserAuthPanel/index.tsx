@@ -1,8 +1,9 @@
 import React from "react";
-import { Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography, useMediaQuery } from "@mui/material";
 import {
   Logout as LogoutIcon,
   Summarize as SummarizeIcon,
+  AssignmentTurnedIn as AssignmentTurnedInIcon,
 } from "@mui/icons-material";
 import { useAppSelector } from "../../hooks/redux";
 import { useStyles } from "./styled";
@@ -17,7 +18,6 @@ const UserAuthPanel: React.FC = () => {
   const {
     data: { user },
   } = useAppSelector((state) => state.auth);
-  const classes = useStyles();
 
   const { t } = useTranslation(["common", "report"], { i18n });
 
@@ -26,7 +26,15 @@ const UserAuthPanel: React.FC = () => {
 
   const hasPermission = [UserRole.ADMIN, UserRole.MANAGER].includes(user.role);
 
+  const isDesktop = useMediaQuery("(min-width: 680px)");
+
   const adminItems = [
+    {
+      key: "total-report",
+      text: t("report:totalReport.label"),
+      icon: () => <AssignmentTurnedInIcon />,
+      handleClick: () => navigate("/load-accounting/total-report"),
+    },
     {
       key: "report-sent",
       text: t("report:sentReportsLabel"),
@@ -44,8 +52,14 @@ const UserAuthPanel: React.FC = () => {
   };
 
   return (
-    <Stack direction="row" alignItems="center" spacing={0.5}>
-      <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+      }}
+    >
+      <Typography variant={isDesktop ? "h6" : "body2"} component="div">
         {userName}
       </Typography>
       <DropDownMenu
@@ -59,7 +73,7 @@ const UserAuthPanel: React.FC = () => {
           },
         ]}
       />
-    </Stack>
+    </div>
   );
 };
 

@@ -21,8 +21,8 @@ export const loadDataToReport = async (reportId: string) =>
 export const calculateReportDataByReportId = async (reportId: string) =>
   http.post(`report/${reportId}/calculate`);
 
-export const getCalculatedReportDataByReportId = async (reportId: string) =>
-  http.get(`report/${reportId}/calculate`);
+export const getMappedMonthReport = async (reportId: string) =>
+  http.get(`report/month/${reportId}/mapped`);
 
 export const saveChangesCalculatedReport = async (
   reportId: string,
@@ -32,7 +32,8 @@ export const saveChangesCalculatedReport = async (
 export const sendReport = async (reportId: string) =>
   http.put(`report/${reportId}/send`);
 
-export const fetchSentReports = async () => http.get("report/sent");
+export const fetchSentReports = async (options = {}) =>
+  http.get("report/sent", { params: options });
 
 export const approveReport = async (reportId: string) =>
   http.put(`report/${reportId}/approve`);
@@ -60,3 +61,12 @@ export const deleteReportById = async (id: string) =>
 
 export const reloadDataToReport = async (reportId: string) =>
   http.get(`/report/${reportId}/new-load`);
+
+export const createTotalReport = async (data) =>
+  http.post("/report/total", data);
+
+export const fetchAllTotalReportList = async () =>
+  http.get("/report/total/list");
+
+export const fetchTotalReportById = async (id) =>
+  http.get(`/report/total/${id}`);

@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Grid, TextField } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import { useTranslation } from "react-i18next";
 import i18n from "../../i18n";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DesktopDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import Button from "@mui/material/Button";
-import { useForm, useWatch } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { createReport } from "../../http/report";
-import SelectForm from "../SelectForm";
-import { reportTypeMap } from "../../helpers";
+import { useAsyncFn } from "react-use";
+import toast from "react-hot-toast";
 
 type Props = {
   invokeFetch?: () => Promise<void | any>;
@@ -17,7 +17,6 @@ type Props = {
 const CreateReportForm: React.FC<Props> = ({ invokeFetch }) => {
   const { t } = useTranslation(["common", "calendar", "report"], { i18n });
   const { handleSubmit, register, setValue, control } = useForm();
-  const watch = useWatch({ control });
 
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -26,33 +25,29 @@ const CreateReportForm: React.FC<Props> = ({ invokeFetch }) => {
     register("name", { required: true });
     register("startDate", { required: true });
     register("endDate", { required: true });
-    register("type", { required: true });
-  });
+  }, [register]);
 
-  const sendData = async (data: any) => {
-    await createReport(data);
+  const [state, submitData] = useAsyncFn(async (data) => {
+    const res = await createReport(data);
     await invokeFetch();
-  };
+
+    if (res.data) {
+      toast.success(`Отчёт ${res.data.name} создан успешно!`);
+    }
+
+    return res.data;
+  });
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={8}>
+      <Grid item xs={12}>
         <TextField
           label={t("common:nameLabel")}
           fullWidth
           onChange={(e) => setValue("name", e.target.value as string)}
         />
       </Grid>
-      <Grid item xs={4}>
-        <SelectForm
-          label={t("report:reportType")}
-          handleChange={(e) => setValue("type", e.target.value)}
-          options={Object.keys(reportTypeMap).map((key) => ({
-            label: reportTypeMap[key],
-            value: key,
-          }))}
-        />
-      </Grid>
+
       <Grid item xs={6}>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <DesktopDatePicker
@@ -82,9 +77,13 @@ const CreateReportForm: React.FC<Props> = ({ invokeFetch }) => {
         </LocalizationProvider>
       </Grid>
       <Grid item xs={4}>
-        <Button variant="outlined" onClick={handleSubmit(sendData)}>
+        <LoadingButton
+          variant="outlined"
+          onClick={handleSubmit(submitData)}
+          loading={state.loading}
+        >
           {t("common:send")}
-        </Button>
+        </LoadingButton>
       </Grid>
     </Grid>
   );

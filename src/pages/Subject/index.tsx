@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, Grid } from "@mui/material";
+import { Container, Grid, useMediaQuery } from "@mui/material";
 import SubjectItem from "../../components/SubjectItem";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { fetchSubjectsAction } from "../../store/reducers/Subject/ActionCreators";
@@ -20,10 +20,17 @@ const Subject: React.FC = () => {
     }
   }, [dispatch, isLoading, total]);
 
+  const isDesktop = useMediaQuery("(min-width: 680px)");
+
   return (
     <Container>
       <Grid container>
-        <Grid item xs={8}>
+        {!isDesktop ? (
+          <Grid item xs={12}>
+            <Form subject={selectedSubject} />
+          </Grid>
+        ) : null}
+        <Grid item xs={isDesktop ? 8 : 12}>
           <Container className={classes.root}>
             {list.map((subject: any) => (
               <SubjectItem
@@ -39,9 +46,11 @@ const Subject: React.FC = () => {
             ))}
           </Container>
         </Grid>
-        <Grid item xs={4}>
-          <Form subject={selectedSubject} />
-        </Grid>
+        {isDesktop ? (
+          <Grid item xs={4}>
+            <Form subject={selectedSubject} />
+          </Grid>
+        ) : null}
       </Grid>
     </Container>
   );

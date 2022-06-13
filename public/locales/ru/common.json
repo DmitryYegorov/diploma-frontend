@@ -9,6 +9,7 @@
   "usersList": "Пользователи",
   "academicYear": "Учёбный год",
   "studentInfo": "Данные о группах",
+  "documents": "Вспомогательные документы",
   "faculties": "Факультеты",
   "specialities": "Специальности",
   "groups": "Подгруппы",
@@ -25,7 +26,7 @@
     "start": "Начало",
     "end": "Конец"
   },
-  "otherLoad": "Дополнительная нагрузка",
+  "otherLoad": "Внеаудиторная нагрузка",
   "actions": "Действия",
   "rowsPerPage": "Кол-во на странице",
   "title": "Название",
@@ -43,5 +44,15 @@
   "confirmDialog": {
     "agree": "Да, согласен",
     "disagree": "Отмена"
+  },
+  "uploadBtnLabel": "Загрузить",
+  "fileNameLabel": "Наименование",
+  "filesList": {
+    "type": "Тип",
+    "name": "Название",
+    "size": "Размер",
+    "author": "Загружен",
+    "date": "Дата загрузки",
+    "description": "Описание"
   }
 }

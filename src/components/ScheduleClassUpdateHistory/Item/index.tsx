@@ -69,12 +69,12 @@ const Item: React.FC<Props> = (props) => {
           <Typography variant="body1">{props.teacher}</Typography>
         </Stack>
         {props.type === ScheduleClassUpdateType.SWAP && (
-          <Stack direction="row" spacing={0.5}>
+          <>
             <Typography variant="body1" style={{ fontWeight: "bold" }}>
               {t("event:SWAP")}:
             </Typography>
             <Typography variant="body1">{props.newTeacher}</Typography>
-          </Stack>
+          </>
         )}
         {props.type === ScheduleClassUpdateType.RESCHEDULED && (
           <Stack direction="column" spacing={0.5}>

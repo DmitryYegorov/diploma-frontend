@@ -8,23 +8,28 @@ type Props = {
   type?: "text" | "password";
   control: any;
   value?: string;
+  errorMessage?: string;
 };
 
 const FormInputText: React.FC<Props> = (props) => {
   return (
     <Controller
       control={props.control}
-      render={({ field: { onChange, value } }) => (
-        <TextField
-          variant={"outlined"}
-          label={props.label}
-          size={"small"}
-          onChange={onChange}
-          value={props.value}
-          type={props.type}
-          focused={!!props.value}
-          fullWidth
-        />
+      render={({ field: { onChange }, formState: { errors } }) => (
+        <>
+          <TextField
+            error={errors[props.name]}
+            helperText={props.errorMessage || ""}
+            variant={"outlined"}
+            label={props.label}
+            size={"small"}
+            onChange={onChange}
+            value={props.value}
+            type={props.type}
+            focused={!!props.value}
+            fullWidth
+          />
+        </>
       )}
       name={props.name}
     />

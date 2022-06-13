@@ -33,7 +33,6 @@ const WeekDaysMap: Record<any, any> = {
 const ScheduleDepartment: React.FC = () => {
   const { semesterId } = useParams();
 
-  const classes = useStyles();
   const reportToPrint = useRef<any>();
   const handlePrint = useReactToPrint({
     content: () => reportToPrint.current,
@@ -63,50 +62,44 @@ const ScheduleDepartment: React.FC = () => {
       <div ref={reportToPrint}>
         <Paper>
           <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell style={{ width: 50 }}>Дни недели</TableCell>
-                <TableCell style={{ width: 100 }}>Часы</TableCell>
-                {teacherNameList &&
-                  teacherNameList.map((name: string) => (
-                    <TableCell>{name}</TableCell>
-                  ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {(Object.keys(WeekDaysMap) as Array<unknown>).map((weekDay) => (
-                <>
+            <TableRow>
+              <TableCell style={{ width: 50 }}>Дни недели</TableCell>
+              <TableCell style={{ width: 100 }}>Часы</TableCell>
+              {teacherNameList &&
+                teacherNameList.map((name: string) => (
+                  <TableCell>{name}</TableCell>
+                ))}
+            </TableRow>
+            {(Object.keys(WeekDaysMap) as Array<unknown>).map((weekDay) => (
+              <>
+                <TableRow>
+                  <TableCell rowSpan={scheduleTime.total + 1}>
+                    <Typography
+                      variant="body1"
+                      style={{ transform: "rotate(-90deg)" }}
+                    >
+                      {WeekDaysMap[weekDay as WeekDay]}
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+                {scheduleTime.list.map((time) => (
                   <TableRow>
-                    <TableCell rowSpan={scheduleTime.total + 1}>
-                      <Typography
-                        variant="body1"
-                        style={{ transform: "rotate(-90deg)" }}
-                      >
-                        {WeekDaysMap[weekDay as WeekDay]}
-                      </Typography>
-                    </TableCell>
+                    <TableCell>{`${mapDateToTime(
+                      new Date(time.startTime)
+                    )} - ${mapDateToTime(new Date(time.endTime))}`}</TableCell>
+                    {teacherNameList.map((name) => (
+                      <ClassCell
+                        classValue={
+                          scheduleClasses.scheduleOfDepartment[name]?.[
+                            weekDay as WeekDay
+                          ]?.[time.id]
+                        }
+                      />
+                    ))}
                   </TableRow>
-                  {scheduleTime.list.map((time) => (
-                    <TableRow>
-                      <TableCell>{`${mapDateToTime(
-                        new Date(time.startTime)
-                      )} - ${mapDateToTime(
-                        new Date(time.endTime)
-                      )}`}</TableCell>
-                      {teacherNameList.map((name) => (
-                        <ClassCell
-                          classValue={
-                            scheduleClasses.scheduleOfDepartment[name]?.[
-                              weekDay as WeekDay
-                            ]?.[time.id]
-                          }
-                        />
-                      ))}
-                    </TableRow>
-                  ))}
-                </>
-              ))}
-            </TableBody>
+                ))}
+              </>
+            ))}
           </Table>
         </Paper>
       </div>

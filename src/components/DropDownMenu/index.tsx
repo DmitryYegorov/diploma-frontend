@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { MoreVert as MoreVertIcon } from "@mui/icons-material";
 import { alpha, styled } from "@mui/material/styles";
+import Button from "@mui/material/Button";
 
 type OptionItem = {
   key: number | string;
@@ -20,6 +21,7 @@ type OptionItem = {
 type Props = {
   itemHeight?: number;
   options: Array<OptionItem>;
+  label?: string | null;
 };
 
 const StyledMenu = styled((props: MenuProps) => (
@@ -65,7 +67,7 @@ const StyledMenu = styled((props: MenuProps) => (
   },
 }));
 
-const DropDownMenu: React.FC<Props> = ({ itemHeight, options }) => {
+const DropDownMenu: React.FC<Props> = ({ itemHeight, label, options }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -77,16 +79,22 @@ const DropDownMenu: React.FC<Props> = ({ itemHeight, options }) => {
 
   return (
     <div>
-      <IconButton
-        aria-label="more"
-        id="long-button"
-        aria-controls={open ? "long-menu" : undefined}
-        aria-expanded={open ? "true" : undefined}
-        aria-haspopup="true"
-        onClick={handleClick}
-      >
-        <MoreVertIcon />
-      </IconButton>
+      {!label ? (
+        <IconButton
+          aria-label="more"
+          id="long-button"
+          aria-controls={open ? "long-menu" : undefined}
+          aria-expanded={open ? "true" : undefined}
+          aria-haspopup="true"
+          onClick={handleClick}
+        >
+          <MoreVertIcon />
+        </IconButton>
+      ) : (
+        <Button variant={"text"} onClick={handleClick}>
+          {label}
+        </Button>
+      )}
       <StyledMenu
         id="demo-customized-menu"
         MenuListProps={{
@@ -120,6 +128,7 @@ const DropDownMenu: React.FC<Props> = ({ itemHeight, options }) => {
 
 DropDownMenu.defaultProps = {
   itemHeight: 48,
+  label: null,
 };
 
 export default DropDownMenu;

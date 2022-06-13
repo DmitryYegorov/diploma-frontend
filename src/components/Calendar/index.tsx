@@ -21,6 +21,7 @@ import AppointmentTooltipLayout from "../AppointmentTooltip";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { fetchAllClassesAction } from "../../store/reducers/Event/ActionCreators";
 import { getPeriod } from "../../store/reducers/Event/slice";
+import { useMediaQuery } from "@mui/material";
 
 const TimeTableCell: React.FC<MonthView.TimeTableCellProps> = (props) => (
   <MonthView.TimeTableCell {...props} onDoubleClick={() => undefined} />
@@ -29,6 +30,8 @@ const TimeTableCell: React.FC<MonthView.TimeTableCellProps> = (props) => (
 const Calendar: React.FC = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const { list } = useAppSelector((state) => state.event);
+
+  const isDesktop = useMediaQuery("(min-width: 680px)");
 
   const dispatch = useAppDispatch();
   React.useEffect(() => {
@@ -45,9 +48,10 @@ const Calendar: React.FC = () => {
             setCurrentDate(date);
           }}
         />
+        {!isDesktop ? <DayView startDayHour={8} endDayHour={21} /> : null}
         <MonthView timeTableCellComponent={TimeTableCell} />
         <WeekView startDayHour={8} endDayHour={21} />
-        <DayView startDayHour={8} endDayHour={21} />
+        {isDesktop ? <DayView startDayHour={8} endDayHour={21} /> : null}
 
         <AllDayPanel />
         <Toolbar />

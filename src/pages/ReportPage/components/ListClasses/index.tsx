@@ -54,7 +54,6 @@ const ListClasses: React.FC<Props> = ({
     {
       id: "subjectName",
       label: t("report:nameLabel"),
-      width: 300,
       sortable: true,
     },
     {
@@ -67,13 +66,11 @@ const ListClasses: React.FC<Props> = ({
             : moment(row.date).format("MMMM-yyyy").toUpperCase()}
         </TableCell>
       ),
-      width: 150,
       sortable: true,
     },
     {
       id: "type",
       label: t("report:classType"),
-      width: 250,
       renderCell: (row) => {
         const key = `event:${row.type as ClassType}`;
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment

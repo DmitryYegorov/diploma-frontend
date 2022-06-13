@@ -49,9 +49,6 @@ export const reportSlice = createSlice({
     fetchReportSuccess(state, action) {
       state.isLoading = false;
       state.selectedReport = action.payload;
-      state.reportData = action.payload.reportData;
-      state.calculatedReport = action.payload.calculatedData;
-      state.calculatedForChange = action.payload.calculatedData;
     },
 
     loadClasses(state) {

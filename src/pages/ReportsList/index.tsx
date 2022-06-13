@@ -118,8 +118,14 @@ const ReportsList: React.FC = () => {
       <ModalWindow
         open={openCreateModal}
         setOpen={() => setOpenCreateModal(!openCreateModal)}
+        label={"Создать новый отчёт"}
       >
-        <CreateReportForm invokeFetch={() => dispatch(fetchReportsAction())} />
+        <CreateReportForm
+          invokeFetch={async () => {
+            dispatch(fetchReportsAction());
+            setOpenCreateModal(!openCreateModal);
+          }}
+        />
       </ModalWindow>
     </Container>
   );

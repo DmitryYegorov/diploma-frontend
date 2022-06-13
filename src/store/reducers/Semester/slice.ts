@@ -8,6 +8,7 @@ interface SemesterState {
     endDate: Date;
   };
   list: Array<any>;
+  academicYears: Array<any>;
   isLoading: boolean;
 }
 
@@ -18,6 +19,7 @@ const initialState: SemesterState = {
     endDate: new Date(),
   },
   list: [],
+  academicYears: [],
   error: "",
   isLoading: false,
 };
@@ -48,6 +50,18 @@ export const semesterSlice = createSlice({
       state.list = action.payload.list;
     },
     fetchListFailed(state, action) {
+      state.isLoading = false;
+      state.error = action.payload.message;
+    },
+
+    fetchAcademicYears(state) {
+      state.isLoading = true;
+    },
+    fetchAcademicYearsSuccess(state, action) {
+      state.isLoading = false;
+      state.academicYears = action.payload;
+    },
+    fetchAcademicYearsFailed(state, action) {
       state.isLoading = false;
       state.error = action.payload.message;
     },

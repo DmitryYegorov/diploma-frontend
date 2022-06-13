@@ -6,6 +6,7 @@ import {
   Typography,
   Box,
   Grid,
+  useMediaQuery,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useAsyncFn } from "react-use";
@@ -31,6 +32,8 @@ const PlanLoad: React.FC = () => {
 
     return res.data;
   });
+
+  const isDesktop = useMediaQuery("(min-width: 680px)");
 
   React.useEffect(() => {
     fetchTeachers();

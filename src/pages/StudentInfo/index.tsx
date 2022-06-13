@@ -11,6 +11,7 @@ import {
   Box,
   TextField,
   Button,
+  useMediaQuery,
 } from "@mui/material";
 import {
   FilterAlt as FilterAltIcon,
@@ -99,12 +100,13 @@ const StudentInfo: React.FC = () => {
     { id: "specialityName", label: "Специальность", sortable: false },
   ];
 
+  const isDesktop = useMediaQuery("(min-width: 680px)");
   return (
     <Container>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Paper className={classes.paper}>
-            <Stack spacing={0.5}>
+            <Stack spacing={1}>
               <Typography variant="h5">{t("common:studentInfo")}</Typography>
               <SelectForm
                 label={"Семестр"}
@@ -152,7 +154,7 @@ const StudentInfo: React.FC = () => {
               <AccordionDetails>
                 <Stack spacing={1}>
                   <Stack
-                    direction="row"
+                    direction={isDesktop ? "row" : "column"}
                     justifyItems="space-around"
                     spacing={1}
                   >
@@ -213,7 +215,9 @@ const StudentInfo: React.FC = () => {
                       variant="outlined"
                       size="small"
                       onClick={handleSubmit(fetchGroups)}
-                    />
+                    >
+                      {isDesktop ? null : "Фильтр"}
+                    </Button>
                   </Stack>
                   <Button
                     startIcon={<AddIcon />}

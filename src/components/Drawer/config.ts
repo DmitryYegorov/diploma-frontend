@@ -8,4 +8,5 @@ export const MENU_LINKS: Record<string, string> = {
   otherLoad: "load-accounting/other-load",
   academicYear: "load-accounting/academic-year",
   studentInfo: "student-info",
+  documents: "document",
 };

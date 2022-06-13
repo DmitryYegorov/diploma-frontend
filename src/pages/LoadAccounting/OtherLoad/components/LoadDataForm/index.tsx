@@ -1,20 +1,7 @@
 import React, { useEffect, useState } from "react";
-import {
-  Button,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  Grid,
-  Radio,
-  RadioGroup,
-  Stack,
-  TextField,
-  Container,
-  Autocomplete,
-} from "@mui/material";
+import { Button, Stack, TextField, Autocomplete } from "@mui/material";
 import SelectLoadType from "../SelectLoadType";
 import SelectForm from "../../../../../components/SelectForm";
-import { useAsyncFn } from "react-use";
 import { useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import i18n from "../../../../../i18n";
@@ -24,7 +11,7 @@ import {
   saveOtherLoadData,
   updateOtherLoadItem,
 } from "../../../../../http/report";
-import { useAppDispatch, useAppSelector } from "../../../../../hooks/redux";
+import { useAppSelector } from "../../../../../hooks/redux";
 import toast from "react-hot-toast";
 import axios, { AxiosError } from "axios";
 
@@ -42,6 +29,9 @@ const LoadDataForm: React.FC<Props> = ({
   semesterId,
 }) => {
   const editingMode = mode === "edit" && loadData;
+
+  // eslint-disable-next-line no-console
+  console.log(loadData);
 
   const defaultValues = editingMode
     ? {

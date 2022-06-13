@@ -17,6 +17,9 @@ const SentReportsDashboardPage = lazy(() => import("../SentReports/Dashboard"));
 const AcademicYearPage = lazy(() => import("../AcademicYear"));
 const AcademicYearPlanLoadPage = lazy(() => import("../AcademicYear/PlanLoad"));
 
+const TotalReportPage = lazy(() => import("../TotalReport"));
+const TotalReportItemPage = lazy(() => import("../TotalReport/Dashboard"));
+
 const LoadAccountingPage = () => {
   return (
     <Routes>
@@ -66,6 +69,15 @@ const LoadAccountingPage = () => {
                 </Routes>
               }
             />
+          </Routes>
+        }
+      />
+      <Route
+        path={"total-report/*"}
+        element={
+          <Routes>
+            <Route index element={<TotalReportPage />} />
+            <Route path={":id"} element={<TotalReportItemPage />} />
           </Routes>
         }
       />

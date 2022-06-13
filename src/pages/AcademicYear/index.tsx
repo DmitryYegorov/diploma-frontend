@@ -23,6 +23,7 @@ import { Column } from "../../components/TableList/typings";
 import moment from "moment";
 import ModalWindow from "../../components/ModalWindow";
 import CreateForm from "./components/CreateForm";
+import AdaptiveContainer from "../../components/AdaptiveContainer";
 import { useNavigate } from "react-router-dom";
 
 const AcademicYear: React.FC = () => {

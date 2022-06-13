@@ -4,6 +4,7 @@ import {
   EventType,
   ReportState,
   ScheduleClassUpdateType,
+  UserRole,
 } from "../typings/enum";
 import {
   deepOrange,
@@ -59,4 +60,16 @@ export const reportTypeMap = {
   SEMESTER: "Семестр",
   YEAR: "Учебный год",
   TOTAL: "Итоговый",
+};
+
+export const totalReportMap = {
+  MONTH: "Месяц",
+  SEMESTER: "Семестр",
+  ACADEMIC_YEAR: "Учебный год",
+};
+
+export const userRoleMap = {
+  [UserRole.USER]: "role:USER",
+  [UserRole.ADMIN]: "role:ADMIN",
+  [UserRole.MANAGER]: "role:MANAGER",
 };

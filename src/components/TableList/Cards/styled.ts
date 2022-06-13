@@ -17,11 +17,11 @@ export const useStyles = makeStyles((theme: Theme) =>
     item: {
       marginTop: theme.spacing(3),
       fontSize: "14px",
-      [theme.breakpoints.down(480)]: {
+      [theme.breakpoints.down(680)]: {
         width: "100%",
       },
-      [theme.breakpoints.up(480)]: {
-        width: "45%",
+      [theme.breakpoints.up(680)]: {
+        width: "30%",
       },
       height: "100%",
     },
@@ -54,7 +54,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       height: "100px",
     },
     field: {
-      [theme.breakpoints.up(475)]: { whiteSpace: "nowrap" },
+      [theme.breakpoints.up(430)]: { whiteSpace: "nowrap" },
       padding: "0 2px",
       maxWidth: "100%",
       overflow: "hidden",

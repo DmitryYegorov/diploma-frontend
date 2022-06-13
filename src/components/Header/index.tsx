@@ -10,10 +10,16 @@ import i18n from "../../i18n";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import Logo from "../Logo";
+import { useMediaQuery } from "@mui/material";
+import { useStyles } from "./styled";
 
 const Header: React.FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { t } = useTranslation(["common"], { i18n });
+
+  const classes = useStyles();
+
+  const isDesktop = useMediaQuery("(min-width: 680px)");
 
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
@@ -26,7 +32,7 @@ const Header: React.FC = () => {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="sticky">
-        <Toolbar>
+        <Toolbar className={classes.toolbar}>
           <IconButton
             size="large"
             edge="start"
@@ -37,9 +43,11 @@ const Header: React.FC = () => {
           >
             <MenuIcon />
           </IconButton>
-          <Box sx={{ flexGrow: 1 }}>
-            <Logo color={"white"} />
-          </Box>
+          {isDesktop && (
+            <Box sx={{ flexGrow: 1 }}>
+              <Logo color={"white"} />
+            </Box>
+          )}
           <UserAuthPanel />
         </Toolbar>
 

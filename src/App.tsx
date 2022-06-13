@@ -4,6 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import { useAppDispatch } from "./hooks/redux";
 import { fetchUsersAction } from "./store/reducers/Users/ActionCreators";
 import {
+  fetchAcademicYearsAction,
   fetchSemesterAction,
   fetchSemestersAction,
 } from "./store/reducers/Semester/ActionCreators";
@@ -28,6 +29,7 @@ function App() {
     dispatch(fetchSubjectsAction());
     dispatch(fetchRoomsAction());
     dispatch(fetchGroupsWithFacultiesAction());
+    dispatch(fetchAcademicYearsAction());
   }, [dispatch]);
 
   return (

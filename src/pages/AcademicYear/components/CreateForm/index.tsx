@@ -6,6 +6,8 @@ import {
   TextField,
   Stack,
   Typography,
+  useMediaQuery,
+  Collapse,
 } from "@mui/material";
 import DatePicker from "../../../../components/DatePicker";
 import { useTranslation } from "react-i18next";
@@ -42,6 +44,8 @@ const CreateForm: React.FC = () => {
     endDate: new Date(),
   });
 
+  const isDesktop = useMediaQuery("(min-width: 680px)");
+
   const sendData = async () => {
     try {
       const res = await createAcademicYear({
@@ -58,72 +62,70 @@ const CreateForm: React.FC = () => {
   };
 
   return (
-    <Container>
-      <Grid container spacing={1}>
-        <Grid item xs={6}>
+    <Grid container spacing={1}>
+      <Grid item xs={isDesktop ? 6 : 12}>
+        <DatePicker
+          label={t("plan:academicYear.start")}
+          onChange={(date) =>
+            setAcademicYear({ ...academicYear, startDate: date })
+          }
+          value={academicYear.startDate}
+        />
+      </Grid>
+      <Grid item xs={isDesktop ? 6 : 12}>
+        <DatePicker
+          label={t("plan:academicYear.end")}
+          onChange={(date) =>
+            setAcademicYear({ ...academicYear, endDate: date })
+          }
+          value={academicYear.endDate}
+        />
+      </Grid>
+      <Grid item xs={isDesktop ? 6 : 12}>
+        <Stack spacing={1}>
+          <Typography>{t("plan:academicYear.firstSem")}</Typography>
+          <TextField label={t("plan:semester.nameLabel")} />
           <DatePicker
             label={t("plan:academicYear.start")}
-            onChange={(date) =>
-              setAcademicYear({ ...academicYear, startDate: date })
-            }
-            value={academicYear.startDate}
+            onChange={(date) => setFirstSem({ ...firstSem, startDate: date })}
+            value={firstSem.startDate}
           />
-        </Grid>
-        <Grid item xs={6}>
           <DatePicker
             label={t("plan:academicYear.end")}
-            onChange={(date) =>
-              setAcademicYear({ ...academicYear, endDate: date })
-            }
-            value={academicYear.endDate}
+            onChange={(date) => setFirstSem({ ...firstSem, endDate: date })}
+            value={firstSem.endDate}
           />
-        </Grid>
-        <Grid item xs={6}>
-          <Stack spacing={1}>
-            <Typography>{t("plan:academicYear.firstSem")}</Typography>
-            <TextField label={t("plan:semester.nameLabel")} />
-            <DatePicker
-              label={t("plan:academicYear.start")}
-              onChange={(date) => setFirstSem({ ...firstSem, startDate: date })}
-              value={firstSem.startDate}
-            />
-            <DatePicker
-              label={t("plan:academicYear.end")}
-              onChange={(date) => setFirstSem({ ...firstSem, endDate: date })}
-              value={firstSem.endDate}
-            />
-          </Stack>
-        </Grid>
-        <Grid item xs={6}>
-          <Stack spacing={1}>
-            <Typography>{t("plan:academicYear.secondSem")}</Typography>
-            <TextField label={t("plan:semester.nameLabel")} />
-
-            <DatePicker
-              label={t("plan:academicYear.start")}
-              onChange={(date) =>
-                setSecondSem({ ...secondSem, startDate: date })
-              }
-              value={secondSem.startDate}
-            />
-            <DatePicker
-              label={t("plan:academicYear.end")}
-              onChange={(date) => setSecondSem({ ...secondSem, endDate: date })}
-              value={secondSem.endDate}
-            />
-          </Stack>
-        </Grid>
-        <Grid item xs={12}>
-          <Button
-            onClick={() => {
-              sendData();
-            }}
-          >
-            OK
-          </Button>
-        </Grid>
+        </Stack>
       </Grid>
-    </Container>
+      <Grid item xs={isDesktop ? 6 : 12}>
+        <Stack spacing={1}>
+          <Typography>{t("plan:academicYear.secondSem")}</Typography>
+          <TextField label={t("plan:semester.nameLabel")} />
+
+          <DatePicker
+            label={t("plan:academicYear.start")}
+            onChange={(date) => setSecondSem({ ...secondSem, startDate: date })}
+            value={secondSem.startDate}
+          />
+          <DatePicker
+            label={t("plan:academicYear.end")}
+            onChange={(date) => setSecondSem({ ...secondSem, endDate: date })}
+            value={secondSem.endDate}
+          />
+        </Stack>
+      </Grid>
+      <Grid item xs={12}>
+        <Button
+          onClick={() => {
+            sendData();
+          }}
+          variant={"contained"}
+          fullWidth
+        >
+          Создать
+        </Button>
+      </Grid>
+    </Grid>
   );
 };
 

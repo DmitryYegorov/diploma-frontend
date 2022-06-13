@@ -13,6 +13,7 @@ import {
   Collapse,
   CircularProgress,
   Box,
+  Link,
 } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../../hooks/redux";
 import { fetchScheduleTimesAction } from "../../../store/reducers/ScheduleTime/ActionCreators";
@@ -61,22 +62,32 @@ const Schedule: React.FC = () => {
     <Grid container spacing={3}>
       <Grid item xs={12}>
         <Paper elevation={3} className={classes.root}>
-          <Typography variant="h6">
-            Моё расписание на текущий семестр
-          </Typography>
-          <SelectForm
-            label={t("common:semesterLabel")}
-            handleChange={(e) => {
-              dispatch(fetchSemesterAction(e.target.value as string));
-            }}
-            value={rootState.semester.selectedSemester.id}
-            options={semesterOptions}
-          />
+          <Stack spacing={1}>
+            <Typography variant="h6">
+              Моё расписание на текущий семестр
+            </Typography>
+            <Typography>
+              <Link
+                href={`/schedule/${rootState.semester.selectedSemester.id}`}
+              >
+                Расписание кафедры
+              </Link>
+            </Typography>
+
+            <SelectForm
+              label={t("common:semesterLabel")}
+              handleChange={(e) => {
+                dispatch(fetchSemesterAction(e.target.value as string));
+              }}
+              value={rootState.semester.selectedSemester.id}
+              options={semesterOptions}
+            />
+          </Stack>
         </Paper>
       </Grid>
 
       <Grid item xs={12}>
-        <Paper elevation={3}>
+        <Paper elevation={3} style={{ overflowX: "scroll" }}>
           <Table size="small" stickyHeader>
             <TableHead>
               <TableCell align="center" style={{ width: 70 }}>

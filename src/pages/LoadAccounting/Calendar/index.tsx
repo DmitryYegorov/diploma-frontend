@@ -1,5 +1,12 @@
 import React, { useEffect } from "react";
-import { Container, Grid, Paper, Stack, Typography } from "@mui/material";
+import {
+  Container,
+  Grid,
+  Paper,
+  Stack,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import Calendar from "../../../components/Calendar";
 import ScheduleClassUpdateHistory from "../../../components/ScheduleClassUpdateHistory";
 import { Circle } from "@mui/icons-material";
@@ -19,16 +26,18 @@ const CalendarPage: React.FC = () => {
   const { selectedDate } = useAppSelector((state) => state.event);
   const { t } = useTranslation(["event"], { i18n });
 
+  const isDesktop = useMediaQuery("(min-width: 680px)");
+
   useEffect(() => {
     dispatch(getPeriod(selectedDate));
   }, [dispatch]);
 
   return (
     <Container>
-      <Grid container spacing={3}>
+      <Grid container spacing={isDesktop ? 3 : 1}>
         <Grid item xs={12}>
           <Paper className={classes.padding}>
-            <Stack direction="row" spacing={3}>
+            <Stack direction={isDesktop ? "row" : "column"} spacing={3}>
               <Stack spacing={0.5} direction="row">
                 <Circle
                   style={{ color: AppointmentMarkColors[ClassType.LAB] }}
@@ -56,10 +65,10 @@ const CalendarPage: React.FC = () => {
             </Stack>
           </Paper>
         </Grid>
-        <Grid item xs={8}>
+        <Grid item xs={isDesktop ? 8 : 12}>
           <Calendar />
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={isDesktop ? 4 : 12}>
           <ScheduleClassUpdateHistory selectedDate={selectedDate} />
         </Grid>
       </Grid>

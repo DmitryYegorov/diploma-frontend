@@ -9,6 +9,7 @@ import { fetchGroupsWithFacultiesAction } from "../../../../../store/reducers/Gr
 import {
   addLoadPlanItem,
   deleteLoadPlanItemById,
+  getLoadPlanByOptions,
   getLoadPlanListByOptions,
 } from "../../../../../http/load-plan";
 import toast from "react-hot-toast";
@@ -38,7 +39,7 @@ import { Delete as DeleteIcon, Edit as EditIcon } from "@mui/icons-material";
 import SelectForm from "../../../../../components/SelectForm";
 import { LoadingButton } from "@mui/lab";
 import TableList from "../../../../../components/TableList";
-import PlanedLoadTable from "../PlanedLoadTable";
+import MonthLoadMappedTable from "../../../../../components/MonthLoadMappedTable";
 import ModalWindow from "../../../../../components/ModalWindow";
 import EditLoadItemForm from "../EditLoadItemForm";
 import axios, { AxiosError } from "axios";
@@ -59,9 +60,6 @@ const TeacherLoadItem: React.FC<TeacherLoadItemProps> = ({
   semesters,
 }) => {
   const { t } = useTranslation(["common", "plan", "event"], { i18n });
-
-  // eslint-disable-next-line no-console
-  console.log(JSON.stringify(semesters));
 
   const { register, handleSubmit, setValue, control } = useForm({
     defaultValues: {
@@ -131,6 +129,12 @@ const TeacherLoadItem: React.FC<TeacherLoadItemProps> = ({
     [semesterId]
   );
 
+  const [state, fetchLoadPlaned] = useAsyncFn(async (options) => {
+    const res = await getLoadPlanByOptions(options);
+
+    return res.data;
+  });
+
   const [deleteState, deleteLoadPlanItemSubmit] = useAsyncFn(async (id) => {
     const res = await deleteLoadPlanItemById(id);
     await fetchLoadPlanList({ teacherId, semesterId });
@@ -143,6 +147,7 @@ const TeacherLoadItem: React.FC<TeacherLoadItemProps> = ({
       semesterId,
       teacherId,
     });
+    fetchLoadPlaned({ teacherId, semesterId });
     setDisplayMode("edit");
   }, [semesterId, fetchLoadPlanList]);
 
@@ -332,7 +337,11 @@ const TeacherLoadItem: React.FC<TeacherLoadItemProps> = ({
                 </Grid>
               </>
             ) : (
-              <PlanedLoadTable teacherId={teacherId} semesterId={semesterId} />
+              <MonthLoadMappedTable
+                loading={state.loading}
+                data={state.value || []}
+                teacherName={`${firstName} ${middleName[0]}. ${lastName[0]}`}
+              />
             )}
           </Grid>
         ) : null}

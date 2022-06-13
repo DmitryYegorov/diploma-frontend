@@ -36,7 +36,7 @@ const SelectLoadType: React.FC<Props> = ({ width, handleChange, value }) => {
       handleChange={handleChange}
       value={value}
       options={otherLoadOptions}
-      label={t("report:otherLoadLabel")}
+      label={t("report:otherLoadType")}
       width={width}
     />
   );

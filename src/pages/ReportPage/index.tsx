@@ -13,6 +13,7 @@ import {
   Accordion,
   ButtonGroup,
   CircularProgress,
+  useMediaQuery,
 } from "@mui/material";
 import {
   CalendarToday as CalendarTodayIcon,
@@ -29,10 +30,12 @@ import { useTranslation } from "react-i18next";
 import i18n from "../../i18n";
 import ListClasses from "./components/ListClasses";
 import LoadReportTable from "../../components/LoadReportTable";
+import MonthLoadMappedTable from "../../components/MonthLoadMappedTable";
 import { ReportState } from "../../typings/enum";
 import { ReportStateConfig } from "../../helpers";
 import {
   fetchReportById,
+  getMappedMonthReport,
   loadDataToReport,
   sendReport,
 } from "../../http/report";
@@ -41,6 +44,8 @@ import { useAsyncFn } from "react-use";
 const ReportPage: React.FC = () => {
   const { id } = useParams();
   const { t } = useTranslation(["report", "common"], { i18n });
+
+  const isDesktop = useMediaQuery("(min-width: 680px)");
 
   const classes = useStyles();
 
@@ -54,12 +59,17 @@ const ReportPage: React.FC = () => {
 
     return res.data;
   });
+  const [mapped, fetchMapped] = useAsyncFn(async (reportId) => {
+    const res = await getMappedMonthReport(reportId);
+
+    return res.data;
+  });
 
   useEffect(() => {
     if (id) {
-      Promise.all([fetchReport(id), fetchLoad(id)]);
+      Promise.all([fetchReport(id), fetchLoad(id), fetchMapped(id)]);
     }
-  }, [id, fetchReport]);
+  }, [id, fetchReport, fetchLoad, fetchMapped]);
 
   if (report.loading)
     return (
@@ -77,16 +87,19 @@ const ReportPage: React.FC = () => {
               report.value.name
             }`}</Typography>
           </Grid>
-          <Grid item xs={8}>
+          <Grid item xs={isDesktop ? 8 : 12}>
             <ListClasses
               loadData={load.value?.length ? load.value : []}
               reportId={report.value.id}
               fetchLoadData={() => fetchLoad(report.value.id)}
             />
-            <LoadReportTable />
+            <MonthLoadMappedTable
+              data={mapped.value}
+              loading={mapped.loading}
+            />
           </Grid>
           {report.value.id && (
-            <Grid item xs={4}>
+            <Grid item xs={isDesktop ? 4 : 12}>
               <Paper className={classes.paper}>
                 <List>
                   <ListItem>

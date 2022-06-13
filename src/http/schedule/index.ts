@@ -26,7 +26,7 @@ export const getScheduleClassesBySemesterId = async (semesterId: string) =>
   http.get(`/schedule/semester/${semesterId}`);
 
 export const getScheduleDepartmentBySemester = async (semesterId: string) =>
-  http.get(`/schedule/department/${semesterId}`);
+  http.get(`/schedule/department/semester/${semesterId}`);
 
 export const getScheduleClassesToCalendar = async () =>
   http.get(`/schedule/calendar/my`);

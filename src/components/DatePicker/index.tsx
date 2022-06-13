@@ -15,17 +15,19 @@ type Props = {
 
 const DatePicker: React.FC<Props> = (props) => {
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns} locale={ruLocale}>
-      <DesktopDatePicker
-        label={props.label}
-        value={props.value}
-        onChange={props.onChange}
-        {...(props.views ? { views: props.views } : {})}
-        {...(props.minDate ? { minDate: props.minDate } : {})}
-        {...(props.maxDate ? { maxDate: props.maxDate } : {})}
-        renderInput={(params) => <TextField {...params} />}
-      />
-    </LocalizationProvider>
+    <div style={{ minWidth: 150 }}>
+      <LocalizationProvider dateAdapter={AdapterDateFns} locale={ruLocale}>
+        <DesktopDatePicker
+          label={props.label}
+          value={props.value}
+          onChange={props.onChange}
+          {...(props.views ? { views: props.views } : {})}
+          {...(props.minDate ? { minDate: props.minDate } : {})}
+          {...(props.maxDate ? { maxDate: props.maxDate } : {})}
+          renderInput={(params) => <TextField {...params} fullWidth />}
+        />
+      </LocalizationProvider>
+    </div>
   );
 };
 
