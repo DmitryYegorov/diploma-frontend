@@ -93,10 +93,10 @@ const Dashboard: React.FC = () => {
             ]}
           />
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={6}>
           <MonthLoadMappedTable data={mapped.value} loading={mapped.loading} />
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={6}>
           <ListClasses loadData={reportData} reportId={selectedReport.id} />
         </Grid>
       </Grid>

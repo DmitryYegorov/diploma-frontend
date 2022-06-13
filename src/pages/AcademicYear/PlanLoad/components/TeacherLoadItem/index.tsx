@@ -43,6 +43,7 @@ import MonthLoadMappedTable from "../../../../../components/MonthLoadMappedTable
 import ModalWindow from "../../../../../components/ModalWindow";
 import EditLoadItemForm from "../EditLoadItemForm";
 import axios, { AxiosError } from "axios";
+import { fetchSpecialitiesList } from "../../../../../http/group";
 
 type TeacherLoadItemProps = {
   firstName: string;
@@ -67,10 +68,16 @@ const TeacherLoadItem: React.FC<TeacherLoadItemProps> = ({
       subjectId: null,
       type: null,
       duration: 0,
-      groups: [],
+      subgroupsCount: 0,
+      specialityId: "",
+      course: 0,
     },
   });
-  const { semesterId } = useWatch({ control });
+  const watch = useWatch({ control });
+  const { semesterId } = watch;
+
+  // eslint-disable-next-line no-console
+  console.log(watch);
 
   const [displayMode, setDisplayMode] = React.useState<"read" | "edit">("read");
 
@@ -78,26 +85,32 @@ const TeacherLoadItem: React.FC<TeacherLoadItemProps> = ({
     const res = await getSubjectsList();
     return res.data;
   });
-  const dispatch = useAppDispatch();
-  const groups = useAppSelector((state) => state.group);
+  const [specialities, fetchSpecialities] = useAsyncFn(async () => {
+    const res = await fetchSpecialitiesList();
+
+    return res.data;
+  });
 
   React.useEffect(() => {
     fetchSubjects();
-    dispatch(fetchGroupsWithFacultiesAction());
+    fetchSpecialities();
   }, [fetchSubjects, displayMode]);
 
   React.useEffect(() => {
     register("subjectId");
     register("type", { required: true });
     register("duration", { required: true });
-    register("groups", { required: true });
+    register("subgroupsCount", { required: true });
+    register("specialityId", { required: true });
     register("semesterId", { required: true });
+    register("course", { required: true });
   }, [register]);
 
-  const [loadPlanList, fetchLoadPlanList] = useAsyncFn(async (options) => {
-    const res = await getLoadPlanListByOptions(options);
+  const [loadPlanState, fetchLoadPlan] = useAsyncFn(async (options) => {
+    const list = await getLoadPlanListByOptions(options);
+    const mapped = await getLoadPlanByOptions(options);
 
-    return res.data;
+    return { list: list.data, mapped: mapped.data };
   }, []);
 
   const [addLoadPlanItemState, addLoadPlanItemSubmit] = useAsyncFn(
@@ -107,16 +120,16 @@ const TeacherLoadItem: React.FC<TeacherLoadItemProps> = ({
           type: data.type,
           subjectId: data.subjectId,
           duration: +data.duration,
+          course: +data.course,
+          subgroupsCount: +data.subgroupsCount,
+          specialityId: data.specialityId,
         };
         const res = await addLoadPlanItem({
-          loadPlan: {
-            ...loadPlan,
-            semesterId,
-            teacherId,
-          },
-          groups: data.groups.map((g) => g.id),
+          ...loadPlan,
+          semesterId,
+          teacherId,
         });
-        await fetchLoadPlanList({ teacherId, semesterId });
+        await fetchLoadPlan({ teacherId, semesterId });
         toast.success("Ok");
         return res.data;
       } catch (e) {
@@ -129,27 +142,12 @@ const TeacherLoadItem: React.FC<TeacherLoadItemProps> = ({
     [semesterId]
   );
 
-  const [state, fetchLoadPlaned] = useAsyncFn(async (options) => {
-    const res = await getLoadPlanByOptions(options);
-
-    return res.data;
-  });
-
   const [deleteState, deleteLoadPlanItemSubmit] = useAsyncFn(async (id) => {
     const res = await deleteLoadPlanItemById(id);
-    await fetchLoadPlanList({ teacherId, semesterId });
+    await fetchLoadPlan({ teacherId, semesterId });
 
     return res.data;
   });
-
-  React.useEffect(() => {
-    fetchLoadPlanList({
-      semesterId,
-      teacherId,
-    });
-    fetchLoadPlaned({ teacherId, semesterId });
-    setDisplayMode("edit");
-  }, [semesterId, fetchLoadPlanList]);
 
   const columns: Column[] = [
     { id: "subjectName", label: "Дисциплина" },
@@ -164,19 +162,13 @@ const TeacherLoadItem: React.FC<TeacherLoadItemProps> = ({
     },
     { id: "duration", label: "Кол-во часов" },
     {
-      id: "subGroupsLabels",
+      id: "subgroupsCount",
       label: "Подгруппы",
-      renderCell: (row) => (
-        <TableCell>
-          {row.subGroupsLabels.map((sg) => (
-            <div style={{ padding: 3 }}>
-              <Tooltip title={sg.specialityName}>
-                <Chip label={sg.label} />
-              </Tooltip>
-            </div>
-          ))}
-        </TableCell>
-      ),
+    },
+    { id: "facultyName", label: "Факультет" },
+    {
+      id: "specialityName",
+      label: "Специальность",
     },
   ];
 
@@ -196,10 +188,12 @@ const TeacherLoadItem: React.FC<TeacherLoadItemProps> = ({
           }`}
         >
           <EditLoadItemForm
-            groups={groups}
+            specialities={specialities?.value ? specialities.value : []}
             subjects={subjects}
             editData={row}
-            invoke={() => fetchLoadPlanList({ semesterId, teacherId })}
+            invoke={async () => {
+              fetchLoadPlan({ semesterId, teacherId });
+            }}
           />
         </ModalWindow>
         <IconButton
@@ -214,18 +208,21 @@ const TeacherLoadItem: React.FC<TeacherLoadItemProps> = ({
   };
 
   return (
-    <Accordion>
+    <Accordion
+      onChange={() => {
+        fetchLoadPlan({ semesterId, teacherId });
+        setDisplayMode("edit");
+      }}
+    >
       <AccordionSummary>
         <Typography variant="h6">{`${firstName} ${middleName[0]}. ${lastName[0]}`}</Typography>
       </AccordionSummary>
       <AccordionActions>
         <SelectForm
           label={"Семестр"}
-          handleChange={(e) => {
+          handleChange={async (e) => {
+            await fetchLoadPlan({ semesterId: e.target.value, teacherId });
             setValue("semesterId", e.target.value);
-            // eslint-disable-next-line no-console
-            console.log(semesterId);
-            setDisplayMode("read");
           }}
           options={semesters.map((s) => ({
             label: s.name,
@@ -243,9 +240,10 @@ const TeacherLoadItem: React.FC<TeacherLoadItemProps> = ({
                 <RadioGroup
                   aria-labelledby="demo-radio-buttons-group-label"
                   value={displayMode}
-                  onChange={(e) =>
-                    setDisplayMode(e.target.value as "read" | "edit")
-                  }
+                  onChange={async (e) => {
+                    setDisplayMode(e.target.value as "read" | "edit");
+                    await fetchLoadPlan({ semesterId, teacherId });
+                  }}
                   style={{ display: "flex", flexDirection: "row" }}
                 >
                   <FormControlLabel
@@ -292,30 +290,52 @@ const TeacherLoadItem: React.FC<TeacherLoadItemProps> = ({
                         value: type,
                       }))}
                     />
-                    <TextField
-                      label={"Часы"}
-                      inputProps={{ min: 0 }}
-                      type={"number"}
-                      style={{ minWidth: 100 }}
-                      onChange={(e) => setValue("duration", +e.target.value)}
-                    />
                     <Autocomplete
-                      multiple
                       id="tags-standard"
-                      options={groups.list}
+                      options={
+                        specialities?.value
+                          ? specialities.value.map((sp) => ({
+                              value: sp.id,
+                              label: sp.name,
+                            }))
+                          : []
+                      }
                       getOptionLabel={(option: any) => option.label}
                       fullWidth
                       onChange={(event, newValue) =>
-                        setValue("groups", newValue)
+                        setValue("specialityId", newValue.value)
                       }
                       renderInput={(params) => (
                         <TextField
                           {...params}
-                          label="Группы"
-                          placeholder="Favorites"
+                          label="Специальность"
                           fullWidth
                         />
                       )}
+                    />
+                    <TextField
+                      label={"Курс"}
+                      fullWidth
+                      inputProps={{ min: 1 }}
+                      type="number"
+                      onChange={(e) => setValue("course", +e.target.value)}
+                      style={{ minWidth: 70 }}
+                    />
+                    <TextField
+                      label={"Кол-во подгрупп"}
+                      inputProps={{ min: 1 }}
+                      type="number"
+                      onChange={(e) =>
+                        setValue("subgroupsCount", +e.target.value)
+                      }
+                      style={{ minWidth: 100 }}
+                    />
+                    <TextField
+                      label={"Часы"}
+                      inputProps={{ min: 0 }}
+                      type={"number"}
+                      style={{ minWidth: 70 }}
+                      onChange={(e) => setValue("duration", +e.target.value)}
                     />
                     <LoadingButton
                       variant="contained"
@@ -329,8 +349,8 @@ const TeacherLoadItem: React.FC<TeacherLoadItemProps> = ({
                 </Grid>
                 <Grid item xs={12}>
                   <TableList
-                    rows={loadPlanList.value ? loadPlanList.value : []}
-                    isLoading={loadPlanList.loading}
+                    rows={loadPlanState.value ? loadPlanState.value.list : []}
+                    isLoading={loadPlanState.loading}
                     columns={columns}
                     renderActions={(row) => <Actions {...row} />}
                   />
@@ -338,8 +358,8 @@ const TeacherLoadItem: React.FC<TeacherLoadItemProps> = ({
               </>
             ) : (
               <MonthLoadMappedTable
-                loading={state.loading}
-                data={state.value || []}
+                loading={loadPlanState.loading}
+                data={loadPlanState.value?.mapped || []}
                 teacherName={`${firstName} ${middleName[0]}. ${lastName[0]}`}
               />
             )}

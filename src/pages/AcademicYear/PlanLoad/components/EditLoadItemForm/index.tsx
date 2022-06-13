@@ -10,24 +10,26 @@ import toast from "react-hot-toast";
 import axios, { AxiosError } from "axios";
 
 type Props = {
-  groups: any;
   subjects: any;
   editData: any;
   invoke: () => Promise<void>;
+  specialities: Array<any>;
 };
 
 const EditLoadItemForm: React.FC<Props> = ({
   subjects,
-  groups,
   editData,
   invoke,
+  specialities,
 }) => {
   const { setValue, register, handleSubmit, control } = useForm({
     defaultValues: {
       subjectId: editData.subjectId,
       type: editData.type,
       duration: editData.duration,
-      groups: editData.subGroupsLabels.map((g) => g.id),
+      specialityId: editData.specialityId,
+      subgroupsCount: editData.subgroupsCount,
+      course: editData.course,
     },
   });
 
@@ -37,7 +39,9 @@ const EditLoadItemForm: React.FC<Props> = ({
     register("subjectId");
     register("type", { required: true });
     register("duration", { required: true });
-    register("groups", { required: true });
+    register("subgroupsCount", { required: true });
+    register("course", { required: true });
+    register("specialityId", { required: true });
   }, [register]);
 
   const [state, submitEdit] = useAsyncFn(async (data) => {
@@ -62,11 +66,8 @@ const EditLoadItemForm: React.FC<Props> = ({
     }
   });
 
-  // eslint-disable-next-line no-console
-  console.log(watch);
-
   return (
-    <Stack spacing={1}>
+    <Stack spacing={1.5}>
       <SelectForm
         label={"Дисциплина"}
         options={
@@ -90,36 +91,40 @@ const EditLoadItemForm: React.FC<Props> = ({
         }))}
         value={watch.type}
       />
+      <SelectForm
+        label={"Специальность"}
+        handleChange={(e) => setValue("type", e.target.value)}
+        options={specialities.map((sp) => ({
+          label: sp.name,
+          value: sp.id,
+        }))}
+        value={watch.specialityId}
+      />
+      <TextField
+        label={"Курс"}
+        inputProps={{ min: 0 }}
+        type={"number"}
+        style={{ minWidth: 100 }}
+        onChange={(e) => setValue("course", +e.target.value)}
+        value={watch.course}
+      />
+      <TextField
+        label={"Кол-во подгрупп"}
+        inputProps={{ min: 0 }}
+        type={"number"}
+        style={{ minWidth: 100 }}
+        onChange={(e) => setValue("subgroupsCount", +e.target.value)}
+        value={watch.subgroupsCount}
+      />
       <TextField
         label={"Часы"}
         inputProps={{ min: 0 }}
         type={"number"}
         style={{ minWidth: 100 }}
-        onChange={(e) => setValue("duration", e.target.value)}
+        onChange={(e) => setValue("duration", +e.target.value)}
         value={watch.duration}
       />
-      <Autocomplete
-        multiple
-        id="tags-standard"
-        options={groups.list}
-        getOptionLabel={(option: any) => option.label}
-        style={{ maxWidth: 300 }}
-        onChange={(event, newValue) =>
-          setValue(
-            "groups",
-            newValue.map((nv) => nv.id)
-          )
-        }
-        value={groups.list.filter((item) => watch.groups.includes(item.id))}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label="Группы"
-            placeholder="Favorites"
-            fullWidth
-          />
-        )}
-      />
+
       <LoadingButton
         variant="contained"
         style={{ minWidth: 100 }}

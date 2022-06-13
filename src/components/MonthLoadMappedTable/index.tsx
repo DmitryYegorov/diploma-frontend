@@ -20,8 +20,8 @@ const MonthLoadMappedTable: React.FC<Props> = ({
   const columns: Column[] = [
     { id: "subjectName", label: "Дисциплина", sortable: false },
     { id: "facultyName", label: "Ф-т", sortable: false },
-    { id: "subGroupsCount", label: "Кол-во подгрупп", sortable: false },
-    { id: "specialityName", label: "Курс", sortable: false },
+    { id: "subgroupsCount", label: "Кол-во подгрупп", sortable: false },
+    { id: "courseAndSpecialityLabel", label: "Курс", sortable: false },
 
     { id: "LECTION", label: "Лекции", sortable: false },
     { id: "PRACTICE_CLASS", label: "Пр. занятия", sortable: false },
