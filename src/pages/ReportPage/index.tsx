@@ -14,6 +14,7 @@ import {
   ButtonGroup,
   CircularProgress,
   useMediaQuery,
+  Stack,
 } from "@mui/material";
 import {
   CalendarToday as CalendarTodayIcon,
@@ -35,11 +36,13 @@ import { ReportState } from "../../typings/enum";
 import { ReportStateConfig } from "../../helpers";
 import {
   fetchReportById,
+  fetchReportNotes,
   getMappedMonthReport,
   loadDataToReport,
   sendReport,
 } from "../../http/report";
 import { useAsyncFn } from "react-use";
+import Comment from "../../components/Comment";
 
 const ReportPage: React.FC = () => {
   const { id } = useParams();
@@ -64,10 +67,20 @@ const ReportPage: React.FC = () => {
 
     return res.data;
   });
+  const [notes, fetchNotes] = useAsyncFn(async (reportId) => {
+    const res = await fetchReportNotes(reportId);
+
+    return res.data;
+  });
 
   useEffect(() => {
     if (id) {
-      Promise.all([fetchReport(id), fetchLoad(id), fetchMapped(id)]);
+      Promise.all([
+        fetchReport(id),
+        fetchLoad(id),
+        fetchMapped(id),
+        fetchNotes(id),
+      ]);
     }
   }, [id, fetchReport, fetchLoad, fetchMapped]);
 
@@ -80,7 +93,7 @@ const ReportPage: React.FC = () => {
 
   if (report.value)
     return (
-      <>
+      <Container>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Typography variant="h6">{`${t("report:reportLabel")}: ${
@@ -99,55 +112,76 @@ const ReportPage: React.FC = () => {
             />
           </Grid>
           {report.value.id && (
-            <Grid item xs={isDesktop ? 4 : 12}>
-              <Paper className={classes.paper}>
-                <List>
-                  <ListItem>
-                    <ListItemIcon>
-                      <CalendarTodayIcon />
-                    </ListItemIcon>
-                    <ListItemText>{report.value.createdAt}</ListItemText>
-                  </ListItem>
-                  <ListItem>
-                    <ListItemIcon>
-                      <CircleIcon />
-                    </ListItemIcon>
-                    <ListItemText>
-                      <Typography
-                        style={{
-                          color:
-                            ReportStateConfig[report.value.state as ReportState]
-                              .color,
-                        }}
-                      >
-                        {t(`report:state.${report.value.state as ReportState}`)}
-                      </Typography>
-                    </ListItemText>
-                  </ListItem>
-                  <ListItem>
-                    <ListItemIcon>
-                      <PersonIcon />
-                    </ListItemIcon>
-                    <ListItemText>
-                      <Typography>{report.value.createdBy}</Typography>
-                    </ListItemText>
-                  </ListItem>
-                  {report.value.state !== ReportState.SENT && (
+            <>
+              <Grid item xs={isDesktop ? 4 : 12}>
+                <Paper className={classes.paper}>
+                  <List>
                     <ListItem>
-                      <Button
-                        startIcon={<SendIcon />}
-                        onClick={() => sendReport(report.value.id)}
-                      >
-                        {t("common:send")}
-                      </Button>
+                      <ListItemIcon>
+                        <CalendarTodayIcon />
+                      </ListItemIcon>
+                      <ListItemText>{report.value.createdAt}</ListItemText>
                     </ListItem>
-                  )}
-                </List>
-              </Paper>
-            </Grid>
+                    <ListItem>
+                      <ListItemIcon>
+                        <CircleIcon />
+                      </ListItemIcon>
+                      <ListItemText>
+                        <Typography
+                          style={{
+                            color:
+                              ReportStateConfig[
+                                report.value.state as ReportState
+                              ].color,
+                          }}
+                        >
+                          {t(
+                            `report:state.${report.value.state as ReportState}`
+                          )}
+                        </Typography>
+                      </ListItemText>
+                    </ListItem>
+                    <ListItem>
+                      <ListItemIcon>
+                        <PersonIcon />
+                      </ListItemIcon>
+                      <ListItemText>
+                        <Typography>{report.value.createdBy}</Typography>
+                      </ListItemText>
+                    </ListItem>
+                    {report.value.state !== ReportState.SENT && (
+                      <ListItem>
+                        <Button
+                          startIcon={<SendIcon />}
+                          onClick={() => sendReport(report.value.id)}
+                        >
+                          {t("common:send")}
+                        </Button>
+                      </ListItem>
+                    )}
+                  </List>
+                </Paper>
+              </Grid>
+              <Grid item xs={12}>
+                <Stack spacing={2}>
+                  {notes.loading ? (
+                    <CircularProgress />
+                  ) : !notes.loading && notes.value?.length ? (
+                    notes.value.map((note) => (
+                      <Comment
+                        id={note.id}
+                        authorName={note.authorName}
+                        createdAt={note.createdAt}
+                        commentText={note.note}
+                      />
+                    ))
+                  ) : null}
+                </Stack>
+              </Grid>
+            </>
           )}
         </Grid>
-      </>
+      </Container>
     );
 };
 

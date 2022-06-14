@@ -87,6 +87,7 @@ const DropDownMenu: React.FC<Props> = ({ itemHeight, label, options }) => {
           aria-expanded={open ? "true" : undefined}
           aria-haspopup="true"
           onClick={handleClick}
+          style={{ color: "#ffffff" }}
         >
           <MoreVertIcon />
         </IconButton>

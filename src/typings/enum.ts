@@ -48,6 +48,7 @@ export enum ReportState {
   DRAFT = "DRAFT",
   SENT = "SENT",
   APPROVED = "APPROVED",
+  REQUEST_CHANGES = "REQUEST_CHANGES",
 }
 
 export type LoadType = EventType | ClassType;

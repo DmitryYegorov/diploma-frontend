@@ -16,6 +16,7 @@ import { createAcademicYear } from "../../../../http/semester";
 import { useNavigate } from "react-router-dom";
 import axios, { AxiosError } from "axios";
 import toast from "react-hot-toast";
+import moment from "moment";
 
 type Period = {
   startDate: Date;
@@ -66,18 +67,20 @@ const CreateForm: React.FC = () => {
       <Grid item xs={isDesktop ? 6 : 12}>
         <DatePicker
           label={t("plan:academicYear.start")}
-          onChange={(date) =>
-            setAcademicYear({ ...academicYear, startDate: date })
-          }
+          onChange={(date) => {
+            setAcademicYear({ ...academicYear, startDate: date });
+            setFirstSem({ ...firstSem, startDate: date });
+          }}
           value={academicYear.startDate}
         />
       </Grid>
       <Grid item xs={isDesktop ? 6 : 12}>
         <DatePicker
           label={t("plan:academicYear.end")}
-          onChange={(date) =>
-            setAcademicYear({ ...academicYear, endDate: date })
-          }
+          onChange={(date) => {
+            setAcademicYear({ ...academicYear, endDate: date });
+            setSecondSem({ ...secondSem, endDate: date });
+          }}
           value={academicYear.endDate}
         />
       </Grid>
@@ -92,7 +95,13 @@ const CreateForm: React.FC = () => {
           />
           <DatePicker
             label={t("plan:academicYear.end")}
-            onChange={(date) => setFirstSem({ ...firstSem, endDate: date })}
+            onChange={(date) => {
+              setFirstSem({ ...firstSem, endDate: date });
+              setSecondSem({
+                ...secondSem,
+                startDate: moment.utc(date).add(1, "day").toDate(),
+              });
+            }}
             value={firstSem.endDate}
           />
         </Stack>

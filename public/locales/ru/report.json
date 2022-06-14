@@ -9,9 +9,11 @@
   "startDate": "Начало",
   "endDate": "Конец",
   "approveReport": "Принять отчёт",
+  "cancelReport": "Запросить изменения",
   "state": {
     "DRAFT": "Черновик",
     "SENT": "Отправлен",
+    "REQUEST_CHANGES": "Отклонён",
     "APPROVED": "Принят"
   },
   "reportType": {
@@ -62,5 +64,6 @@
     "cancelReportTitle": "Запросить изменения отчёта",
     "cancelReportText": "Вами будут запрошено внесение изменений в отчёт. Продолжить?"
   },
-  "reportAdminNoteLabel": "Комментарий"
+  "reportAdminNoteLabel": "Комментарий",
+  "period": "Период"
 }

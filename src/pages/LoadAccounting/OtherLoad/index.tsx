@@ -50,9 +50,7 @@ const OtherLoad: React.FC = () => {
     return data;
   });
 
-  useEffect(() => {
-    fetchOtherLoadData({ semesterId });
-  }, [fetchOtherLoadData, semesterId]);
+  const { list } = useAppSelector((state) => state.subject);
 
   const [loadFormCreate, setLoadFormCreate] = useState(false);
 
@@ -153,16 +151,22 @@ const OtherLoad: React.FC = () => {
                   }))}
                   value={semesterId}
                 />
+                <FilterForm
+                  fetchWithOptions={(options) => fetchOtherLoadData(options)}
+                  subjectList={list}
+                  semesterId={semesterId}
+                />
               </Stack>
             </Paper>
           </Grid>
           <Grid item xs={12}>
-            <FilterForm
-              fetchWithOptions={(options) => fetchOtherLoadData(options)}
-              semesterId={semesterId}
-            />
-          </Grid>
-          <Grid item xs={12}>
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              onClick={() => setLoadFormCreate(!loadFormCreate)}
+            >
+              {t("report:addLoadItem")}
+            </Button>
             <ModalWindow
               open={loadFormCreate}
               setOpen={() => setLoadFormCreate(!loadFormCreate)}
@@ -176,13 +180,6 @@ const OtherLoad: React.FC = () => {
             </ModalWindow>
           </Grid>
           <Grid item xs={12}>
-            <Button
-              variant="contained"
-              startIcon={<AddIcon />}
-              onClick={() => setLoadFormCreate(!loadFormCreate)}
-            >
-              {t("report:addLoadItem")}
-            </Button>
             <TableList<any>
               columns={columns}
               rows={

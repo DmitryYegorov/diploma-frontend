@@ -83,7 +83,10 @@ const ReportsList: React.FC = () => {
                 ...report,
                 state: (
                   <Stack>
-                    <Typography style={{ color: stateConfig.color }}>
+                    <Typography
+                      style={{ color: stateConfig.color }}
+                      fontWeight={"bold"}
+                    >
                       {t(
                         `report:state.${report.state as ReportState}`,
                         report.state

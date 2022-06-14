@@ -8,6 +8,7 @@ import {
   Button,
   Chip,
   Collapse,
+  Icon,
   IconButton,
   Paper,
   Stack,
@@ -19,6 +20,7 @@ import {
   Delete as DeleteIcon,
   ExpandMore as ExpandMoreIcon,
   SettingsBackupRestore as SettingsBackupRestoreIcon,
+  Groups as GroupsIcon,
 } from "@mui/icons-material";
 import TableList from "../../../../components/TableList";
 import { ClassType } from "../../../../typings/enum";
@@ -39,12 +41,14 @@ type Props = {
   loadData: Array<any>;
   reportId: string;
   fetchLoadData?: () => Promise<void | any>;
+  showDataUpdateButton?: boolean;
 };
 
 const ListClasses: React.FC<Props> = ({
   loadData,
   fetchLoadData,
   reportId,
+  showDataUpdateButton,
 }) => {
   const { t } = useTranslation(["report"], { i18n });
 
@@ -88,17 +92,22 @@ const ListClasses: React.FC<Props> = ({
         if (row.groups?.length) {
           return (
             <TableCell>
-              <CustomPopper>
-                <Stack direction="row" spacing={0.5} flexWrap="wrap">
-                  {row?.groups?.map((group, index) => (
-                    <div style={{ margin: 2 }} key={index}>
-                      <Tooltip title={group.speciality}>
-                        <Chip label={group.label} />
-                      </Tooltip>
-                    </div>
-                  ))}
-                </Stack>
-              </CustomPopper>
+              <Stack direction={"row"} alignItems={"center"}>
+                <Icon>
+                  <GroupsIcon color={"primary"} />
+                </Icon>
+                <CustomPopper>
+                  <Stack direction="row" spacing={0.5} flexWrap="wrap">
+                    {row?.groups?.map((group, index) => (
+                      <div style={{ margin: 2 }} key={index}>
+                        <Tooltip title={group.speciality}>
+                          <Chip label={group.label} />
+                        </Tooltip>
+                      </div>
+                    ))}
+                  </Stack>
+                </CustomPopper>
+              </Stack>
             </TableCell>
           );
         }
@@ -107,23 +116,23 @@ const ListClasses: React.FC<Props> = ({
     },
   ];
 
-  const renderActions = (row) => {
-    return (
-      <DropDownMenu
-        options={[
-          {
-            key: `delete-${row.id}`,
-            icon: () => <DeleteIcon color={"error"} />,
-            handleClick: async () => {
-              await removeLoadItemFromReport(row.id);
-              await fetchLoadData();
-            },
-            text: t("report:actions.deleteItemAction"),
-          },
-        ]}
-      />
-    );
-  };
+  // const renderActions = (row) => {
+  //   return (
+  //     <DropDownMenu
+  //       options={[
+  //         {
+  //           key: `delete-${row.id}`,
+  //           icon: () => <DeleteIcon color={"error"} />,
+  //           handleClick: async () => {
+  //             await removeLoadItemFromReport(row.id);
+  //             await fetchLoadData();
+  //           },
+  //           text: t("report:actions.deleteItemAction"),
+  //         },
+  //       ]}
+  //     />
+  //   );
+  // };
 
   return (
     <Accordion>
@@ -132,16 +141,18 @@ const ListClasses: React.FC<Props> = ({
       </AccordionSummary>
       <AccordionActions>
         <Stack direction="row">
-          <Button
-            variant="text"
-            startIcon={<SettingsBackupRestoreIcon />}
-            onClick={() => {
-              reloadDataToReport(reportId);
-              fetchLoadData();
-            }}
-          >
-            Обновить данные
-          </Button>
+          {showDataUpdateButton && (
+            <Button
+              variant="text"
+              startIcon={<SettingsBackupRestoreIcon />}
+              onClick={() => {
+                reloadDataToReport(reportId);
+                fetchLoadData();
+              }}
+            >
+              Обновить данные
+            </Button>
+          )}
         </Stack>
       </AccordionActions>
       <AccordionDetails>
@@ -150,7 +161,7 @@ const ListClasses: React.FC<Props> = ({
           rows={loadData}
           count={loadData.length}
           isLoading={isLoading}
-          renderActions={renderActions}
+          // renderActions={renderActions}
         />
       </AccordionDetails>
     </Accordion>
@@ -159,6 +170,7 @@ const ListClasses: React.FC<Props> = ({
 
 ListClasses.defaultProps = {
   fetchLoadData: () => undefined,
+  showDataUpdateButton: true,
 };
 
 export default ListClasses;

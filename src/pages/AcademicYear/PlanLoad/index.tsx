@@ -76,13 +76,14 @@ const PlanLoad: React.FC = () => {
             ) : (
               <Stack>
                 {!!teachers.value?.length &&
-                  teachers.value.map((teacher) => (
+                  teachers.value.map((teacher, index) => (
                     <TeacherLoadItem
                       firstName={teacher.firstName}
                       lastName={teacher.lastName}
                       middleName={teacher.middleName}
                       teacherId={teacher.id}
                       semesters={academicYear.value.semesters}
+                      expand={index === 0}
                     />
                   ))}
               </Stack>

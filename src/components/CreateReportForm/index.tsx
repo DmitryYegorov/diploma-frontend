@@ -9,6 +9,8 @@ import { useForm } from "react-hook-form";
 import { createReport } from "../../http/report";
 import { useAsyncFn } from "react-use";
 import toast from "react-hot-toast";
+import moment from "moment";
+import DatePicker from "../DatePicker";
 
 type Props = {
   invokeFetch?: () => Promise<void | any>;
@@ -16,10 +18,14 @@ type Props = {
 
 const CreateReportForm: React.FC<Props> = ({ invokeFetch }) => {
   const { t } = useTranslation(["common", "calendar", "report"], { i18n });
-  const { handleSubmit, register, setValue, control } = useForm();
-
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const [date, setDate] = useState(new Date());
+  const { handleSubmit, register, setValue, control } = useForm({
+    defaultValues: {
+      name: moment(date).format("MMMM yyyy"),
+      startDate: moment(date).startOf("month").toDate(),
+      endDate: moment(date).endOf("month").toDate(),
+    },
+  });
 
   useEffect(() => {
     register("name", { required: true });
@@ -45,34 +51,27 @@ const CreateReportForm: React.FC<Props> = ({ invokeFetch }) => {
           label={t("common:nameLabel")}
           fullWidth
           onChange={(e) => setValue("name", e.target.value as string)}
+          value={moment(date).format("MMMM yyyy")}
         />
       </Grid>
 
-      <Grid item xs={6}>
+      <Grid item xs={12}>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <DesktopDatePicker
-            label={t("calendar:startDate")}
-            inputFormat="dd/MM/yyyy"
-            value={startDate}
-            renderInput={(params) => <TextField {...params} fullWidth />}
-            onChange={(date) => {
-              setStartDate(date!);
-              setValue("startDate", date);
+          <DatePicker
+            label={t("report:period")}
+            views={["year", "month"]}
+            minDate={moment.utc().add(-1, "years").toDate()}
+            maxDate={moment.utc().add(1, "years").toDate()}
+            onChange={(month) => {
+              setDate(month);
+              setValue(
+                "startDate",
+                moment.utc(month).startOf("month").toDate()
+              );
+              setValue("endDate", moment.utc(month).endOf("month").toDate());
+              setValue("name", moment.utc(month).format("MMMM yyyy"));
             }}
-          />
-        </LocalizationProvider>
-      </Grid>
-      <Grid item xs={6}>
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <DesktopDatePicker
-            label={t("calendar:endDate")}
-            inputFormat="dd/MM/yyyy"
-            value={endDate}
-            renderInput={(params) => <TextField {...params} fullWidth />}
-            onChange={(date) => {
-              setEndDate(date!);
-              setValue("endDate", date);
-            }}
+            value={date}
           />
         </LocalizationProvider>
       </Grid>

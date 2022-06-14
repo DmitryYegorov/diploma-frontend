@@ -46,7 +46,8 @@ export const AppointmentMarkColors: Record<string, string> = {
 
 export const ReportStateConfig: Record<ReportState, any> = {
   [ReportState.DRAFT]: { color: blueGrey[600] },
-  [ReportState.SENT]: { color: deepOrange[700] },
+  [ReportState.SENT]: { color: cyan[700] },
+  [ReportState.REQUEST_CHANGES]: { color: deepOrange[700] },
   [ReportState.APPROVED]: { color: green[800] },
 };
 

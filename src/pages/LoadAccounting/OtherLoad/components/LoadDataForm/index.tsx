@@ -30,9 +30,6 @@ const LoadDataForm: React.FC<Props> = ({
 }) => {
   const editingMode = mode === "edit" && loadData;
 
-  // eslint-disable-next-line no-console
-  console.log(loadData);
-
   const defaultValues = editingMode
     ? {
         type: loadData.type,
@@ -75,7 +72,6 @@ const LoadDataForm: React.FC<Props> = ({
       if (res.data) {
         toast.success("Данные сохранены!");
       }
-      await onDataSending();
     } catch (e) {
       if (axios.isAxiosError(e)) {
         const { response } = e as AxiosError;

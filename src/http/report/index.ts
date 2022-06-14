@@ -70,3 +70,12 @@ export const fetchAllTotalReportList = async () =>
 
 export const fetchTotalReportById = async (id) =>
   http.get(`/report/total/${id}`);
+
+export const fetchReportNotes = async (reportId) =>
+  http.get(`/report/${reportId}/note`);
+
+export const updateReportNote = async (noteId: string, newNote: string) =>
+  http.put(`/report/note/${noteId}`, { note: newNote });
+
+export const removeReportNote = async (noteId: string) =>
+  http.delete(`/report/note/${noteId}`);

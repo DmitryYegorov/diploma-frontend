@@ -51,6 +51,7 @@ type TeacherLoadItemProps = {
   middleName: string;
   teacherId: string;
   semesters: Array<any>;
+  expand: boolean;
 };
 
 const TeacherLoadItem: React.FC<TeacherLoadItemProps> = ({
@@ -59,6 +60,7 @@ const TeacherLoadItem: React.FC<TeacherLoadItemProps> = ({
   lastName,
   teacherId,
   semesters,
+  expand,
 }) => {
   const { t } = useTranslation(["common", "plan", "event"], { i18n });
 
@@ -76,10 +78,8 @@ const TeacherLoadItem: React.FC<TeacherLoadItemProps> = ({
   const watch = useWatch({ control });
   const { semesterId } = watch;
 
-  // eslint-disable-next-line no-console
-  console.log(watch);
-
   const [displayMode, setDisplayMode] = React.useState<"read" | "edit">("read");
+  const [expanded, setExpanded] = React.useState<boolean>(expand);
 
   const [subjects, fetchSubjects] = useAsyncFn(async () => {
     const res = await getSubjectsList();
@@ -112,6 +112,10 @@ const TeacherLoadItem: React.FC<TeacherLoadItemProps> = ({
 
     return { list: list.data, mapped: mapped.data };
   }, []);
+
+  React.useEffect(() => {
+    if (expanded) fetchLoadPlan({ semesterId, teacherId });
+  }, [expanded]);
 
   const [addLoadPlanItemState, addLoadPlanItemSubmit] = useAsyncFn(
     async (data) => {
@@ -210,9 +214,10 @@ const TeacherLoadItem: React.FC<TeacherLoadItemProps> = ({
   return (
     <Accordion
       onChange={() => {
-        fetchLoadPlan({ semesterId, teacherId });
+        setExpanded(!expanded);
         setDisplayMode("edit");
       }}
+      expanded={expanded}
     >
       <AccordionSummary>
         <Typography variant="h6">{`${firstName} ${middleName[0]}. ${lastName[0]}`}</Typography>

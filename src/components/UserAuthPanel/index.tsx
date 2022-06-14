@@ -1,9 +1,17 @@
-import React from "react";
-import { Box, Stack, Typography, useMediaQuery } from "@mui/material";
+import React, { useEffect } from "react";
+import {
+  Badge,
+  Box,
+  IconButton,
+  Stack,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import {
   Logout as LogoutIcon,
   Summarize as SummarizeIcon,
   AssignmentTurnedIn as AssignmentTurnedInIcon,
+  Notifications as NotificationsIcon,
 } from "@mui/icons-material";
 import { useAppSelector } from "../../hooks/redux";
 import { useStyles } from "./styled";
@@ -13,6 +21,8 @@ import { UserRole } from "../../typings/enum";
 import { useTranslation } from "react-i18next";
 
 import i18n from "../../i18n";
+import { useAsyncFn } from "react-use";
+import { fetchUserNotifications } from "../../http/notifications";
 
 const UserAuthPanel: React.FC = () => {
   const {
@@ -51,6 +61,16 @@ const UserAuthPanel: React.FC = () => {
     navigate("/auth/login");
   };
 
+  const [notifications, fetchNotifications] = useAsyncFn(async () => {
+    const res = await fetchUserNotifications({ readed: false });
+
+    return res.data;
+  });
+
+  useEffect(() => {
+    fetchNotifications();
+  }, [fetchNotifications]);
+
   return (
     <div
       style={{
@@ -62,6 +82,16 @@ const UserAuthPanel: React.FC = () => {
       <Typography variant={isDesktop ? "h6" : "body2"} component="div">
         {userName}
       </Typography>
+      <IconButton style={{ color: "#ffffff" }}>
+        <Badge
+          badgeContent={
+            notifications?.value ? notifications.value.length : null
+          }
+          color={"error"}
+        >
+          <NotificationsIcon />
+        </Badge>
+      </IconButton>
       <DropDownMenu
         options={[
           ...(hasPermission ? adminItems : []),
